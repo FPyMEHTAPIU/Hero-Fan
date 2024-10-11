@@ -1,6 +1,7 @@
 const express = require('express')
 require('dotenv').config()
 const { Pool } = require('pg')
+const {json} = require("express");
 
 const app = express()
 const port = 3000
@@ -13,6 +14,18 @@ const pool = new Pool({
     host: 'localhost',
     database: 'sp-db',
     port: 5432
+})
+
+app.get('/sp-users', async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM users;`
+        )
+        res.json(result.rows)
+    } catch (error) {
+        console.error(error)
+        res.json({ error: 'Error getting sp users' })
+    }
 })
 
 app.listen(port, () => {
