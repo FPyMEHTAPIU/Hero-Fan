@@ -4,7 +4,7 @@
   "description": "A full-stack South Park Fan webpage created for the Web Express Coding Challenge at Hive Helsinki",
   "main": "index.js",
   "scripts": {
-    "start": "node backend.js",
+    "start": "node --env-file=.env backend.js",
     "dev": "nodemon backend.js",
     "start:errors": "node errorsHandled.backend.js",
     "test": "echo \"Error: no test specified\" && exit 1"

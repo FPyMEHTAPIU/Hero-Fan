@@ -31,16 +31,16 @@ app.get('/sp-users', async (req, res) => {
 })
 
 // Get all chars' info
-app.get('/sp-chars', async (req, res) => {
-    try {
-        const result = await pool.query(
-            `SELECT * FROM characters;`
-        )
-        res.json(result.rows)
-    } catch (error) {
-        console.error(error)
-        res.json({ error: 'Error getting sp characters' })
-    }
+app.get('/sp-chars/', async (req, res) => {
+    const result = await fetch('https://spapi.dev/api/characters')
+    const response = await result.json()
+
+    const filteredData = response.data.map(character => ({
+        id: character.id,
+        name: character.name
+    }))
+
+    res.json(filteredData)
 })
 
 //Get character's comments
@@ -56,23 +56,33 @@ app.get('/sp-comments', async (req, res) => {
 })
 
 // Create a new user
-app.post('/sp-users', async (req, res) => {
-    const { user } = req.body // fetch from the field
+app.post('/sp-users/', async (req, res) => {
+    try {
+        const userData = {
+            login: req.body.login,
+            password: req.body.password
+        }
 
-    if (length(user.password) < 8 || length(user.password) > 256) {
-        console.error('Password must be at least 8 characters and less then 256')
-    }
-    else {
-        const result = await pool.query(
-            `INSERT INTO users (login) VALUES ($1) RETURNING *;` +
-            `INSERT INTO passwords (password) VALUES ($2);`,
-            [user.login, user.password]
-        )
-        res.json(result.rows)
+        console.log(userData)
+
+        console.log(process.env)
+        if (userData.password.length < 8 || userData.password.length > 256) {
+            console.error('Password must be at least 8 characters and less than 256')
+        }
+        else {
+            const result = await pool.query(
+                `INSERT INTO users (login) VALUES ($1) RETURNING *;`,
+                [userData.login]
+            )
+            res.json(result.rows)
+        }
+    } catch (error) {
+        console.error(error)
+        res.json({ error: 'Error adding user' })
     }
 })
 
-add.post('/sp-comments', async (req, res) => {
+app.post('/sp-comments', async (req, res) => {
     const { comment } = req.body // fetch from the field
 
     if (length(comment.content) < 1) {
@@ -88,7 +98,7 @@ add.post('/sp-comments', async (req, res) => {
 })
 
 // Change login
-add.patch('/sp-users/login/:id', async (req, res) => {
+app.patch('/sp-users/login/:id', async (req, res) => {
     try {
         const user_id = parseInt(req.params.id)
         const { login } = req.body
@@ -105,7 +115,7 @@ add.patch('/sp-users/login/:id', async (req, res) => {
 })
 
 // Add or delete a character to/from the favorite list
-add.patch('/sp-favlist/:id', async (req, res) => {
+app.patch('/sp-favlist/:id', async (req, res) => {
     try {
         const char_id = parseInt(req.params.id)
         const user_id = parseInt(req.body.text)
