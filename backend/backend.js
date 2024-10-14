@@ -1,7 +1,7 @@
 const express = require('express')
 require('dotenv').config()
 const { Pool } = require('pg')
-const {json} = require("express");
+const { json } = require("express");
 const result = require("pg/lib/query");
 
 const app = express()
@@ -18,7 +18,7 @@ const pool = new Pool({
 })
 
 // Get all users' info
-app.get('/sp-users', async (req, res) => {
+app.get('/marv-users', async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT * FROM users;`
@@ -31,11 +31,22 @@ app.get('/sp-users', async (req, res) => {
 })
 
 // Get all chars' info
-app.get('/sp-chars/', async (req, res) => {
-    const result = await fetch('https://spapi.dev/api/characters')
+app.get('/marv-chars/', async (req, res) => {
+    const apiData = {
+        api: process.env.API_KEY,
+        ts: process.env.TIME_STAMP,
+        hash: process.env.MD5_KEY
+    }
+
+    const result = await fetch('http://gateway.marvel.com/v1/public/characters?' +
+        new URLSearchParams({
+            ts: apiData.ts,
+            apikey: apiData.api,
+            hash: apiData.hash
+        }).toString())
     const response = await result.json()
 
-    const filteredData = response.data.map(character => ({
+    const filteredData = response.data.results.map(character => ({
         id: character.id,
         name: character.name
     }))
@@ -44,7 +55,7 @@ app.get('/sp-chars/', async (req, res) => {
 })
 
 //Get character's comments
-app.get('/sp-comments', async (req, res) => {
+app.get('/marv-comments', async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT comments.* FROM comments JOIN characters WHERE characters.id = comments.char_id;`
@@ -56,16 +67,13 @@ app.get('/sp-comments', async (req, res) => {
 })
 
 // Create a new user
-app.post('/sp-users/', async (req, res) => {
+app.post('/marv-users/', async (req, res) => {
     try {
         const userData = {
             login: req.body.login,
             password: req.body.password
         }
 
-        console.log(userData)
-
-        console.log(process.env)
         if (userData.password.length < 8 || userData.password.length > 256) {
             console.error('Password must be at least 8 characters and less than 256')
         }
@@ -77,12 +85,14 @@ app.post('/sp-users/', async (req, res) => {
             res.json(result.rows)
         }
     } catch (error) {
-        console.error(error)
-        res.json({ error: 'Error adding user' })
+        if (error.code == '23505') // used username
+            res.json( {error: 'The username already exists!'} )
+        else
+            res.json({ error: 'Error adding user' })
     }
 })
 
-app.post('/sp-comments', async (req, res) => {
+app.post('/marv-comments', async (req, res) => {
     const { comment } = req.body // fetch from the field
 
     if (length(comment.content) < 1) {
@@ -98,7 +108,7 @@ app.post('/sp-comments', async (req, res) => {
 })
 
 // Change login
-app.patch('/sp-users/login/:id', async (req, res) => {
+app.patch('/marv-users/login/:id', async (req, res) => {
     try {
         const user_id = parseInt(req.params.id)
         const { login } = req.body
@@ -115,7 +125,7 @@ app.patch('/sp-users/login/:id', async (req, res) => {
 })
 
 // Add or delete a character to/from the favorite list
-app.patch('/sp-favlist/:id', async (req, res) => {
+app.patch('/marv-favlist/:id', async (req, res) => {
     try {
         const char_id = parseInt(req.params.id)
         const user_id = parseInt(req.body.text)
