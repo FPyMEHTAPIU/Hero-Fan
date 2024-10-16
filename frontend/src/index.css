@@ -5,11 +5,13 @@ h1 {
     font-size: 96px;
     color: white;
     -webkit-text-stroke: 1.5px black;
+    align-self: center;
 }
 
 body {
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Вертикальное размещение header и main */
+    align-items: center; /* Центрирование по горизонтали */
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../includes/marvel_logo.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -30,13 +32,15 @@ header {
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 15px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     vertical-align: middle;
-    width: 100%;
-    overflow: hidden;
-    margin: 30px 30px;
+    width: 90%;
+    margin: 30px 0; /* Отступы сверху и снизу */
+    padding: 0 40px;
     height: fit-content;
-    padding: 0 20px;
+    z-index: 1; /* Поверх остальных элементов */
+    position: sticky; /* Фиксированное положение при прокрутке */
+    top: 0;
 }
 
 #userblock {
@@ -64,4 +68,12 @@ header {
     display: inline-block;
     align-self: center;
     margin-top: 10px;
+}
+
+main {
+    margin-top: 20px; /* Обеспечивает отступ между header и main */
+    display: flex;
+    width: 90%;
+    height: fit-content;
+    flex-direction: column; /* Стандартное вертикальное выравнивание контента */
 }
