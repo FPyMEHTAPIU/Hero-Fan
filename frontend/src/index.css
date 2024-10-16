@@ -95,3 +95,27 @@ main {
     background-color: rgba(255, 129, 24, 1);
     border-radius: 20px;
 }
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 45%;
+    align-self: center;
+    margin: 40px auto;
+}
+
+.page-button {
+    display: flex;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background-color: #1810AC;
+    vertical-align: middle;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
