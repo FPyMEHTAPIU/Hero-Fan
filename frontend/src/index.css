@@ -1,4 +1,67 @@
 h1 {
+    display: flex;
+    justify-content: center;
     font-family: "Avengeance Mightiest Avenger";
     font-size: 96px;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../includes/marvel_logo.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    object-fit: cover;
+}
+
+.avatar {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+header {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    width: 100%;
+    overflow: hidden;
+    margin: 30px 30px;
+    height: fit-content;
+    padding: 0 20px;
+}
+
+#userblock {
+    display: inline-block;
+    align-self: center;
+    margin-top: 10px;
+}
+
+.username {
+    display: inline-block;
+    font-family: "Avengeance Mightiest Avenger";
+    font-size: 32px;
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+#logo {
+    display: inline-block;
+    align-self: center;
+    margin-top: 10px;
+    margin-right: 30px;
+}
+
+#search {
+    display: inline-block;
+    align-self: center;
+    margin-top: 10px;
 }
