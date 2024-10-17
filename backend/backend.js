@@ -102,7 +102,7 @@ app.post('/marv-comments', async (req, res) => {
     }
     else {
         const result = await pool.query(
-            `INSERT INTO comments (user_id, char_id, content) VALUES ($1, $2, $3) RETURNING *;` +
+            `INSERT INTO comments (user_id, char_id, content) VALUES ($1, $2, $3) RETURNING *;`,
             [comment.user_id, comment.char_id, comment.content]
         )
         res.json(result.rows)
