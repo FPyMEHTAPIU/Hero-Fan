@@ -48,7 +48,9 @@ app.get('/marv-chars/', async (req, res) => {
 
     const filteredData = response.data.results.map(character => ({
         id: character.id,
-        name: character.name
+        name: character.name,
+        description: character.description,
+        image: character.thumbnail.path + '.' + character.thumbnail.extension
     }))
 
     res.json(filteredData)
