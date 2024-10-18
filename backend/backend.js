@@ -18,7 +18,7 @@ const pool = new Pool({
 })
 
 // Get all users' info
-app.get('/marv-users', async (req, res) => {
+app.get('/api/marv-users', async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT * FROM users;`
@@ -31,14 +31,15 @@ app.get('/marv-users', async (req, res) => {
 })
 
 // Get all chars' info
-app.get('/marv-chars/', async (req, res) => {
+app.get('/api/marv-chars/', async (req, res) => {
     const apiData = {
         api: process.env.API_KEY,
         ts: process.env.TIME_STAMP,
         hash: process.env.MD5_KEY
     }
 
-    const result = await fetch('http://gateway.marvel.com/v1/public/characters?' +
+    const result =
+        await fetch('http://gateway.marvel.com/v1/public/characters?orderBy=modified&limit=100&' +
         new URLSearchParams({
             ts: apiData.ts,
             apikey: apiData.api,
@@ -46,7 +47,11 @@ app.get('/marv-chars/', async (req, res) => {
         }).toString())
     const response = await result.json()
 
-    const filteredData = response.data.results.map(character => ({
+    const filteredData = response.data.results
+        .filter(character =>
+            character.description && character.description.trim() !== '' &&
+            !character.thumbnail.path.includes('image_not_available'))
+        .map(character => ({
         id: character.id,
         name: character.name,
         description: character.description,
@@ -57,11 +62,13 @@ app.get('/marv-chars/', async (req, res) => {
 })
 
 //Get character's comments
-app.get('/marv-comments', async (req, res) => {
+app.get('/api/marv-comments', async (req, res) => {
     try {
         const result = await pool.query(
             `SELECT comments.* FROM comments JOIN characters WHERE characters.id = comments.char_id;`
         )
+
+        res.json(result.rows)
     } catch (error) {
         console.error(error)
         res.json({ error: 'Error getting character\'s comments' })
@@ -69,7 +76,7 @@ app.get('/marv-comments', async (req, res) => {
 })
 
 // Create a new user
-app.post('/marv-users/', async (req, res) => {
+app.post('/api/marv-users/', async (req, res) => {
     try {
         const userData = {
             login: req.body.login,
@@ -94,7 +101,7 @@ app.post('/marv-users/', async (req, res) => {
     }
 })
 
-app.post('/marv-comments', async (req, res) => {
+app.post('/api/marv-comments', async (req, res) => {
     const { comment } = req.body // fetch from the field
 
     if (length(comment.content) < 1) {
@@ -110,7 +117,7 @@ app.post('/marv-comments', async (req, res) => {
 })
 
 // Change login
-app.patch('/marv-users/login/:id', async (req, res) => {
+app.patch('/api/marv-users/login/:id', async (req, res) => {
     try {
         const user_id = parseInt(req.params.id)
         const { login } = req.body
@@ -127,7 +134,7 @@ app.patch('/marv-users/login/:id', async (req, res) => {
 })
 
 // Add or delete a character to/from the favorite list
-app.patch('/marv-favlist/:id', async (req, res) => {
+app.patch('/api/marv-favlist/:id', async (req, res) => {
     try {
         const char_id = parseInt(req.params.id)
         const user_id = parseInt(req.body.text)
