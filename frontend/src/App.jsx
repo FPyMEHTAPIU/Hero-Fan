@@ -17,8 +17,20 @@ const App = () => {
             .catch((error) => console.error("Error fetching characters", error))
     }
 
-    const renderItem = ({ item }) => {
-
+    const renderItems = ({ items }) => {
+        // fill each block from fetch by index and when reach and
+        // add the last element into a block - fetch again incremented offset
+        return (
+        <div class="hero">
+            <a src={items.charPage}><img src={items.image} class="hero"/></a>
+            <button class="star">
+                <img src="includes/Star%20Empty.svg"/>
+            </button>
+            <div class="char-name">
+                <p class="char-name">Hulk</p>
+            </div>
+        </div>
+        )
     }
     /*const fetchChars = async () => {
         try {

@@ -39,7 +39,7 @@ app.get('/api/marv-chars/', async (req, res) => {
     }
 
     const result =
-        await fetch('http://gateway.marvel.com/v1/public/characters?orderBy=modified&limit=100&' +
+        await fetch('http://gateway.marvel.com/v1/public/characters?limit=100&offset=100&' +
         new URLSearchParams({
             ts: apiData.ts,
             apikey: apiData.api,

@@ -106,9 +106,11 @@ main {
 
 .heroes {
     display: flex;
-    justify-content: center;
-    vertical-align: middle;
-    margin-bottom: 50px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-self: center;
+    width: 100%;
+    gap: 50px;
 }
 
 .hero {
@@ -120,9 +122,11 @@ main {
     background-size: cover;
     background-position: top;
     border-radius: 20px;
-    margin-right: 50px;
     position: relative;
     overflow: hidden;
+    min-width: 300px; /* Минимальная ширина блока */
+    max-width: 300px;
+    flex: 1 1;
 }
 
 .hero::before {
