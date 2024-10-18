@@ -10,8 +10,8 @@ h1 {
 
 body {
     display: flex;
-    flex-direction: column; /* Вертикальное размещение header и main */
-    align-items: center; /* Центрирование по горизонтали */
+    flex-direction: column;
+    align-items: center;
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../includes/marvel_logo.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -35,11 +35,11 @@ header {
     justify-content: space-between;
     vertical-align: middle;
     width: 90%;
-    margin: 30px 0; /* Отступы сверху и снизу */
+    margin: 30px 0;
     padding: 0 40px;
     height: fit-content;
-    z-index: 1; /* Поверх остальных элементов */
-    position: sticky; /* Фиксированное положение при прокрутке */
+    z-index: 10;
+    position: sticky;
     top: 0;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -97,11 +97,11 @@ header {
 }
 
 main {
-    margin-top: 20px; /* Обеспечивает отступ между header и main */
+    margin-top: 20px;
     display: flex;
     width: 90%;
     height: fit-content;
-    flex-direction: column; /* Стандартное вертикальное выравнивание контента */
+    flex-direction: column;
 }
 
 .heroes {
@@ -117,8 +117,75 @@ main {
     width: 300px;
     height: 300px;
     background-color: rgba(255, 129, 24, 1);
+    background-size: cover;
+    background-position: top;
     border-radius: 20px;
     margin-right: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 129, 24, 1);
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    transition: background-color 0.3s ease, filter 0.3s ease;
+}
+
+.hero:hover::before {
+    cursor: pointer;
+    filter: brightness(0.4);
+}
+
+.hero:hover .star, .hero:hover .char-name, .hero:hover .char-name p {
+    visibility: visible;
+}
+
+.star {
+    visibility: hidden;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px 12px auto auto;
+    z-index: 2;
+}
+
+.star:hover {
+    cursor: pointer;
+    background-color: #AFAFAF;
+    opacity: 0.15;
+    border-radius: 8px;
+}
+
+.char-name {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    height: 56px;
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    visibility: hidden;
+}
+
+.char-name p {
+    font-family: "Avengeance Mightiest Avenger";
+    font-size: 36px;
+    color: white;
+    margin: 0;
+    visibility: hidden;
+    z-index: 2;
 }
 
 .hero-last {
