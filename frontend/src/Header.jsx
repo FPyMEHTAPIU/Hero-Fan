@@ -3,6 +3,16 @@ import './Header.css';
 
 const Header = () => {
     const [isWindowShown, setIsWindowShown] = useState(false);
+    const [windowType, setWindowType] = useState('Log in');
+
+    const changeWindowType = () => {
+        if (windowType === 'Log in') {
+            setWindowType('Register');
+        }
+        else {
+            setWindowType('Log in');
+        }
+    }
 
     const openPopup = () => {
         setIsWindowShown(true);
@@ -24,26 +34,38 @@ const Header = () => {
                 <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar" />
                 <p className="username">Log in</p>
             </button>
-            {isWindowShown && <Popup onClose={closePopup} />}
+            {isWindowShown && <Popup winType={windowType} onChange={changeWindowType} onClose={closePopup} />}
         </header>
     );
 };
 
-const Popup = ({ onClose }) => {
+const Popup = ({ winType, onChange, onClose }) => {
     return (
         <div className="popup-overlay">
             <div className="popup">
-                <h2>Sign in</h2>
+                <h2>{winType}</h2>
                 <button className="cross-button" onClick={onClose}>
                     <img src="../includes/cross.svg" alt="Close" />
                 </button>
                 <div className="popup-content">
                     <p className="input-name">Login</p>
-                    <input name="login input" />
+                    <input name="login input"/>
                     <p className="input-name">Password</p>
-                    <input name="password input" />
+                    <input name="password input" type="password"/>
+                    {winType === 'Register' && (
+                        <>
+                            <p className="input-name">Confirm Password</p>
+                            <input
+                                name="confirmPassword"
+                                type="password"
+                            />
+                        </>
+                    )}
                 </div>
-                <button className="confirm-button">Log in</button>
+                <button className="switch" onClick={onChange}>
+                    <p>Don't have an account? Create the new one!</p>
+                </button>
+                <button className="confirm-button">{winType}</button>
             </div>
         </div>
     );
