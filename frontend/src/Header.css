@@ -1,0 +1,142 @@
+.avatar {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+header {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin: 30px auto;
+    padding: 0 40px;
+    height: fit-content;
+    z-index: 10;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(8px);
+}
+
+#userblock {
+    display: inline-block;
+    align-self: center;
+    margin-top: 10px;
+}
+
+#userblock:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+}
+
+#userblock:active {
+    filter: brightness(0.8);
+}
+
+.username {
+    display: inline-block;
+    font-family: "Avengeance Mightiest Avenger";
+    font-size: 32px;
+    color: white;
+    -webkit-text-stroke: 1px black;
+}
+
+#logo, #search {
+    display: inline-block;
+    align-self: center;
+    margin-top: 10px;
+}
+
+#logo:hover, #search:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+}
+
+#logo:active, #search:active {
+    filter: brightness(0.8);
+}
+
+.popup-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    position: fixed;
+}
+
+.popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup h2 {
+    margin: 0 0 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.cross-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.cross-button img {
+    width: 20px;
+    height: 20px;
+}
+
+.popup-content {
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-name {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.confirm-button {
+    background-color: #6200ea;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.confirm-button:hover {
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+}
+
+.confirm-button:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}
