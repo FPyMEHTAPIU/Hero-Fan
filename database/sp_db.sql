@@ -6,7 +6,9 @@ CREATE TABLE users (
 
 CREATE TABLE characters (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
+    login VARCHAR(255) NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    image TEXT,
     description TEXT,
     likes INTEGER,
     dislikes INTEGER
@@ -23,10 +25,4 @@ CREATE TABLE comments (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     char_id INTEGER REFERENCES characters(id) ON DELETE CASCADE,
     content TEXT
-);
-
-CREATE TABLE passwords (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    value VARCHAR(256)
 );

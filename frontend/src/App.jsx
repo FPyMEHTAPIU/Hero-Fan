@@ -31,7 +31,27 @@ const App = () => {
                 </div>
             </div>
         ));
-        return <div className="heroes">{heroList}</div>;
+        return (
+            <main>
+                <h1>Choose your hero!</h1>
+                <div className="heroes">{heroList}</div>
+                <div className="pagination">
+                    <a href="" className="page-button page-button-left"><img src="includes/Left_arrow.svg"/></a>
+                    <div className="divider"></div>
+                    <a href="" className="page-button">1</a>
+                    <div className="divider"></div>
+                    <a href="" className="page-button">2</a>
+                    <div className="divider"></div>
+                    <a href="" className="page-button">3</a>
+                    <div className="divider"></div>
+                    <a href="" className="page-button">4</a>
+                    <div className="divider"></div>
+                    <a href="" className="page-button">5</a>
+                    <div className="divider"></div>
+                    <a href="" className="page-button page-button-right"><img src="includes/Right_arrow.svg"/></a>
+                </div>
+            </main>
+        );
     };
 
     return renderItems(marvList);

@@ -35,7 +35,7 @@ header {
     justify-content: space-between;
     vertical-align: middle;
     width: 90%;
-    margin: 30px 0;
+    margin: 30px auto;
     padding: 0 40px;
     height: fit-content;
     z-index: 10;
@@ -97,7 +97,7 @@ header {
 }
 
 main {
-    margin-top: 20px;
+    margin: auto;
     display: flex;
     width: 90%;
     height: fit-content;
@@ -194,7 +194,7 @@ button {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.8);
     width: 100%;
-    height: 56px;
+    height: 100px;
     position: absolute;
     bottom: 0;
     z-index: 2;
@@ -203,11 +203,13 @@ button {
 
 .char-name p {
     font-family: "Avengeance Mightiest Avenger";
-    font-size: 36px;
+    font-size: 24px;
     color: white;
     margin: 0;
     visibility: hidden;
     z-index: 2;
+    text-align: center;
+    vertical-align: center;
 }
 
 .hero-last {
