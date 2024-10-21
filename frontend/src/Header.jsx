@@ -52,44 +52,75 @@ const Header = () => {
     );
 };
 
+const allowedPattern = /^[a-zA-Z0-9_@$%!^&*]+$/;
+
 const Popup = ({
                    winType, onChange, onClose,
-                   password, setPassword, confirmPassword, setConfirmPassword }) => {
-    return ( createPortal(
-    <div className="popup-overlay">
-        <div className="popup">
-            <h2>{winType}</h2>
-            <button className="cross-button" onClick={onClose}>
-                <img src="../includes/cross.svg" alt="Close"/>
-            </button>
-            <div className="popup-content">
-                <p className="input-name">Login</p>
-                <input name="login input"/>
-                <p className="input-name">Password</p>
-                <input
-                    name="password input"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                {winType === 'Register' && (
-                    <>
-                        <p className="input-name">Confirm Password</p>
-                        <input
-                            name="confirmPassword"
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                    </>
-                )}
+                   password, setPassword, confirmPassword, setConfirmPassword
+               }) => {
+    const [login, setLogin] = useState('');
+    const [loginMessage, setLoginMessage] = useState('');
+
+    const handleBeforeInput = (e, setMessage) => {
+        const char = e.data;
+
+        if (char && !allowedPattern.test(char)) {
+            setMessage('Only allowed characters: a-z, A-Z, 0-9, _@$%!^&*');
+            e.preventDefault();
+        } else {
+            setMessage('');
+        }
+    };
+
+    return createPortal(
+        <div className="popup-overlay">
+            <div className="popup">
+                <h2>{winType}</h2>
+                <button className="cross-button" onClick={onClose}>
+                    <img src="../includes/cross.svg" alt="Close" />
+                </button>
+                <div className="popup-content">
+                    <p className="input-name">Login</p>
+                    <input
+                        id="login-field"
+                        name="login input"
+                        value={login}
+                        onChange={(e) => setLogin(e.target.value)}
+                        onBeforeInput={(e) => handleBeforeInput(e, setLoginMessage)}
+                    />
+                    {loginMessage && <p id="login-message" style={{ color: 'red' }}>{loginMessage}</p>}
+
+                    <p className="input-name">Password</p>
+                    <input
+                        id="password-field"
+                        name="password input"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onBeforeInput={(e) => handleBeforeInput(e, setLoginMessage)}
+                    />
+
+                    {winType === 'Register' && (
+                        <>
+                            <p className="input-name">Confirm Password</p>
+                            <input
+                                id="confirm-field"
+                                name="confirmPassword"
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                onBeforeInput={(e) => handleBeforeInput(e, setLoginMessage)}
+                            />
+                        </>
+                    )}
+                </div>
+
+                <button className="switch" onClick={onChange}>
+                    <p>Don't have an account? Create a new one!</p>
+                </button>
+                <button className="confirm-button">{winType}</button>
             </div>
-            <button className="switch" onClick={onChange}>
-                <p>Don't have an account? Create the new one!</p>
-            </button>
-            <button className="confirm-button">{winType}</button>
-        </div>
-    </div>, document.body)
+        </div>, document.body
     );
 };
 
