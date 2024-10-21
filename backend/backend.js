@@ -16,6 +16,7 @@ const sequelize = new Sequelize(
 
 const app = express()
 const port = 3000
+const numOfCharacters = 1600
 
 app.use(express.json())
 
@@ -26,6 +27,20 @@ const pool = new Pool({
     database: 'marv-db',
     port: 5432
 })
+
+const filterData = (response) => {
+    const result = response.data.results
+        .filter(character =>
+            !character.thumbnail.path.includes('image_not_available'))
+        .map(character => ({
+            id: character.id,
+            name: character.name,
+            description: character.description,
+            image: character.thumbnail.path + '.' + character.thumbnail.extension
+        }));
+
+    return result;
+}
 
 // Get all users' info
 app.get('/api/marv-users', async (req, res) => {
@@ -51,8 +66,7 @@ app.get('/api/marv-chars-api/', async (req, res) => {
     try {
         const fetchPromises = [];
 
-        for (let i = 0; i < 1600; i += 100) {
-            console.log(`Fetching offset: ${i}`); // Логируем текущий offset
+        for (let i = 0; i < numOfCharacters; i += 100) {
             fetchPromises.push(
                 fetch(
                     'http://gateway.marvel.com/v1/public/characters?limit=100&offset=' +
@@ -71,19 +85,8 @@ app.get('/api/marv-chars-api/', async (req, res) => {
         for (const result of results) {
             if (result.ok) {
                 const response = await result.json();
-                console.log('Fetched data:', response); // Логируем результат запроса
 
-                const filteredData = response.data.results
-                    .filter(character =>
-                        !character.thumbnail.path.includes('image_not_available'))
-                    .map(character => ({
-                        id: character.id,
-                        name: character.name,
-                        description: character.description,
-                        image: character.thumbnail.path + '.' + character.thumbnail.extension
-                    }));
-
-                console.log('Filtered data:', filteredData); // Логируем отфильтрованные данные
+                const filteredData = filterData(response);
 
                 const insertPromises = filteredData.map(character =>
                     pool.query(
@@ -95,7 +98,6 @@ app.get('/api/marv-chars-api/', async (req, res) => {
                 );
 
                 await Promise.all(insertPromises);
-                console.log(`Inserted ${filteredData.length} characters`); // Логируем количество вставленных данных
             } else {
                 console.error(`Failed to fetch data for offset: ${i}, Status: ${result.status}`);
             }
@@ -106,18 +108,64 @@ app.get('/api/marv-chars-api/', async (req, res) => {
 })
 
 app.get('/api/marv-chars-db/', async (req, res) => {
-    const apiData = {
-        api: process.env.API_KEY,
-        ts: process.env.TIME_STAMP,
-        hash: process.env.MD5_KEY
-    }
-
     const result = await pool.query(
         'SELECT * FROM characters;'
     )
 
     res.json(result.rows);
 })
+
+app.get('/api/marv-update-chars-db/', async (req, res) => {
+    const apiData = {
+        api: process.env.API_KEY,
+        ts: process.env.TIME_STAMP,
+        hash: process.env.MD5_KEY
+    }
+
+    try {
+        const fetchPromises = [];
+
+        for (let i = 0; i < numOfCharacters; i += 100) {
+            fetchPromises.push(
+                fetch(
+                    'http://gateway.marvel.com/v1/public/characters?limit=100&offset=' +
+                    i.toString() + '&' +
+                    new URLSearchParams({
+                        ts: apiData.ts,
+                        apikey: apiData.api,
+                        hash: apiData.hash
+                    }).toString()
+                )
+            );
+        }
+
+        const results = await Promise.all(fetchPromises);
+
+        for (const result of results) {
+            if (result.ok) {
+                const response = await result.json();
+
+                const filteredData = filterData(response);
+
+                const insertPromises = filteredData.map(character =>
+                    pool.query(
+                        `UPDATE characters SET name = $2, image = $3, description = $4
+                         WHERE id = $1;`,
+                        [character.id, character.name, character.image, character.description]
+                    )
+                );
+
+                await Promise.all(insertPromises);
+                console.log(`Updated ${filteredData.length} characters`);
+            } else {
+                console.error(`Failed to fetch data for offset: ${i}, Status: ${result.status}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching or inserting data:', error);
+    }
+})
+
 
 //Get character's comments
 app.get('/api/marv-comments', async (req, res) => {

@@ -28,13 +28,13 @@ const Header = () => {
     return (
         <header>
             <div id="logo">
-                <img src="../includes/HERO%20FAN.svg" alt="Logo" />
+                <img src="../includes/HERO%20FAN.svg" alt="Logo"/>
             </div>
             <div id="search">
-                <img src="../includes/Search Type=Default.svg" alt="Search" />
+                <img src="../includes/Search Type=Default.svg" alt="Search"/>
             </div>
             <button id="userblock" onClick={openPopup}>
-                <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar" />
+                <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar"/>
                 <p className="username">Log in</p>
             </button>
             {isWindowShown && <Popup
@@ -42,15 +42,19 @@ const Header = () => {
                 password={password} setPassword={setPassword}
                 confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}
             />}
-            <button id="DANGER" onClick={fetchAPI}>
+            <button id="DANGER" onClick={createByAPI}>
                 <p>DANGER!!!</p>
+            </button>
+            <button id="UPDATER" onClick={updateByAPI}>
+                <p>UPDATE DB!!!</p>
             </button>
         </header>
     );
 };
 
-const Popup = ({ winType, onChange, onClose,
-               password, setPassword, confirmPassword, setConfirmPassword }) => {
+const Popup = ({
+                   winType, onChange, onClose,
+                   password, setPassword, confirmPassword, setConfirmPassword }) => {
     return ( createPortal(
     <div className="popup-overlay">
         <div className="popup">
@@ -89,8 +93,14 @@ const Popup = ({ winType, onChange, onClose,
     );
 };
 
-const fetchAPI = () => {
+const createByAPI = () => {
     fetch('/api/marv-chars-api')
+        .then((response) => response.json())
+        .catch((error) => console.error('Error fetching characters', error));
+}
+
+const updateByAPI = () => {
+    fetch('/api/marv-update-chars-db')
         .then((response) => response.json())
         .catch((error) => console.error('Error fetching characters', error));
 }

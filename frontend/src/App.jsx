@@ -4,6 +4,28 @@ import './App.css'
 const App = () => {
     const [marvList, setMarvList] = useState([]);
 
+    // TODO:
+    // replace isClicked by isInFavorites and check it from DB
+    const ToggleButton = () => {
+        const [isClicked, setIsClicked] = useState(false);
+
+        const handleClickStar = () => {
+            setIsClicked(!isClicked);
+        };
+
+        return (
+            <button
+                onClick={handleClickStar}
+                className={isClicked ? 'star-filled' : 'star'}
+            >
+                <img
+                    src={isClicked ? "../includes/Star%20Filled.svg" : "../includes/Star%20Empty.svg"}
+                    alt="Star icon"
+                />
+            </button>
+        )
+    }
+
     useEffect(() => {
         refreshList();
     }, []);
@@ -24,9 +46,7 @@ const App = () => {
                 <a href={character.charPage}>
                     <img src={character.image} alt={character.name} className="hero-image" />
                 </a>
-                <button className="star">
-                    <img src="../includes/Star%20Empty.svg" alt="Star icon" />
-                </button>
+                <ToggleButton />
                 <div className="char-name">
                     <p className="char-name">{character.name}</p>
                 </div>
@@ -35,6 +55,7 @@ const App = () => {
         return (
             <main>
                 <h1>Choose your hero!</h1>
+                <h2>Page 1</h2>
                 <div className="heroes">{heroList}</div>
                 <div className="pagination">
                     <a href="" className="page-button page-button-left"><img src="includes/Left_arrow.svg"/></a>

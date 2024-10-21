@@ -149,3 +149,10 @@ input {
     color: white;
     align-items: center;
 }
+
+#UPDATER {
+    display: flex;
+    justify-content: center;
+    color: white;
+    align-items: center;
+}
