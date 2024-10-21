@@ -9,7 +9,7 @@ const App = () => {
     }, []);
 
     const refreshList = () => {
-        fetch('/api/marv-chars')
+        fetch('/api/marv-chars-db')
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);

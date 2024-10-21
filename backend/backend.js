@@ -3,6 +3,16 @@ require('dotenv').config()
 const { Pool } = require('pg')
 const { json } = require("express");
 const result = require("pg/lib/query");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize(
+    'marv-db',
+    process.env.POSTGRES_USER,
+    process.env.POSTGRES_PASSWORD,
+    {
+        host: 'localhost',
+        dialect: 'postgres',
+    }
+);
 
 const app = express()
 const port = 3000
@@ -13,7 +23,7 @@ const pool = new Pool({
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     host: 'localhost',
-    database: 'sp-db',
+    database: 'marv-db',
     port: 5432
 })
 
@@ -31,34 +41,82 @@ app.get('/api/marv-users', async (req, res) => {
 })
 
 // Get all chars' info
-app.get('/api/marv-chars/', async (req, res) => {
+app.get('/api/marv-chars-api/', async (req, res) => {
     const apiData = {
         api: process.env.API_KEY,
         ts: process.env.TIME_STAMP,
         hash: process.env.MD5_KEY
     }
 
-    const result =
-        await fetch('http://gateway.marvel.com/v1/public/characters?limit=100&offset=100&' +
-        new URLSearchParams({
-            ts: apiData.ts,
-            apikey: apiData.api,
-            hash: apiData.hash
-        }).toString())
-    const response = await result.json()
+    try {
+        const fetchPromises = [];
 
-    const filteredData = response.data.results
-        .filter(character =>
-            character.description && character.description.trim() !== '' &&
-            !character.thumbnail.path.includes('image_not_available'))
-        .map(character => ({
-        id: character.id,
-        name: character.name,
-        description: character.description,
-        image: character.thumbnail.path + '.' + character.thumbnail.extension
-    }))
+        for (let i = 0; i < 1600; i += 100) {
+            console.log(`Fetching offset: ${i}`); // Логируем текущий offset
+            fetchPromises.push(
+                fetch(
+                    'http://gateway.marvel.com/v1/public/characters?limit=100&offset=' +
+                    i.toString() + '&' +
+                    new URLSearchParams({
+                        ts: apiData.ts,
+                        apikey: apiData.api,
+                        hash: apiData.hash
+                    }).toString()
+                )
+            );
+        }
 
-    res.json(filteredData)
+        const results = await Promise.all(fetchPromises);
+
+        for (const result of results) {
+            if (result.ok) {
+                const response = await result.json();
+                console.log('Fetched data:', response); // Логируем результат запроса
+
+                const filteredData = response.data.results
+                    .filter(character =>
+                        !character.thumbnail.path.includes('image_not_available'))
+                    .map(character => ({
+                        id: character.id,
+                        name: character.name,
+                        description: character.description,
+                        image: character.thumbnail.path + '.' + character.thumbnail.extension
+                    }));
+
+                console.log('Filtered data:', filteredData); // Логируем отфильтрованные данные
+
+                const insertPromises = filteredData.map(character =>
+                    pool.query(
+                        `INSERT INTO characters (id, name, image, description)
+                         VALUES ($1, $2, $3, $4)
+                         ON CONFLICT (id) DO NOTHING;`,
+                        [character.id, character.name, character.image, character.description]
+                    )
+                );
+
+                await Promise.all(insertPromises);
+                console.log(`Inserted ${filteredData.length} characters`); // Логируем количество вставленных данных
+            } else {
+                console.error(`Failed to fetch data for offset: ${i}, Status: ${result.status}`);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching or inserting data:', error);
+    }
+})
+
+app.get('/api/marv-chars-db/', async (req, res) => {
+    const apiData = {
+        api: process.env.API_KEY,
+        ts: process.env.TIME_STAMP,
+        hash: process.env.MD5_KEY
+    }
+
+    const result = await pool.query(
+        'SELECT * FROM characters;'
+    )
+
+    res.json(result.rows);
 })
 
 //Get character's comments

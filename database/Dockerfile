@@ -1,5 +1,5 @@
 FROM postgres:latest
 
-ENV POSTGRES_DB=sp-db
+ENV POSTGRES_DB=marv-db
 
-COPY sp_db.sql /docker-entrypoint-initdb.d/
+COPY marv_db.sql /docker-entrypoint-initdb.d/

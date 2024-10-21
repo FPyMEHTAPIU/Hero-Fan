@@ -42,6 +42,9 @@ const Header = () => {
                 password={password} setPassword={setPassword}
                 confirmPassword={confirmPassword} setConfirmPassword={setConfirmPassword}
             />}
+            <button id="DANGER" onClick={fetchAPI}>
+                <p>DANGER!!!</p>
+            </button>
         </header>
     );
 };
@@ -85,5 +88,11 @@ const Popup = ({ winType, onChange, onClose,
     </div>, document.body)
     );
 };
+
+const fetchAPI = () => {
+    fetch('/api/marv-chars-api')
+        .then((response) => response.json())
+        .catch((error) => console.error('Error fetching characters', error));
+}
 
 export default Header;

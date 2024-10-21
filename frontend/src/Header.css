@@ -142,3 +142,10 @@ input {
     filter: brightness(0.8);
     -webkit-filter: brightness(0.8);
 }
+
+#DANGER {
+    display: flex;
+    justify-content: center;
+    color: white;
+    align-items: center;
+}
