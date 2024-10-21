@@ -1,6 +1,16 @@
-.avatar {
-    display: inline-block;
-    margin-right: 10px;
+@font-face {
+    font-family: "AA Stetica Medium";
+    src: url('../includes/fonts/stetica/AA Stetica Medium.otf')
+}
+
+@font-face {
+    font-family: "AA Stetica Regular";
+    src: url('../includes/fonts/stetica/AA Stetica Regular.otf')
+}
+
+@font-face {
+    font-family: "Gagalin";
+    src: url('../includes/fonts/Gagalin-Regular.otf')
 }
 
 header {
@@ -33,6 +43,11 @@ header {
     filter: brightness(0.8);
 }
 
+.avatar {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 .username {
     display: inline-block;
     font-family: "Avengeance Mightiest Avenger";
@@ -59,6 +74,7 @@ header {
 .popup-overlay {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(15px);
@@ -73,44 +89,66 @@ header {
 }
 
 .popup {
-    background-color: white;
-    padding: 20px;
+    background-color: #1810AC;
+    padding: 55px 110px;
     border-radius: 10px;
     width: 400px;
     position: relative;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    min-width: 608px;
 }
 
-.popup h2 {
-    margin: 0 0 20px;
-    font-size: 24px;
-    color: #333;
+#popup-header {
+    margin: 0 auto 40px auto;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    font-size: 96px;
+    color: white;
+    font-family: "Gagalin", sans-serif;
+    font-weight: 400;
+    -webkit-text-stroke-width: 0.65px;
 }
 
 .cross-button {
+    top: 0;
+    right: 0;
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
+    border-radius: 4px;
+    margin: 40px 40px auto auto;
+    width: 64px;
+    height: 64px;
+}
+
+.cross-button:hover {
     cursor: pointer;
+    background-color: rgba(175, 175, 175, 0.15);
+    filter: brightness(1.2);
+}
+
+.cross-button:active {
+    filter: brightness(0.8);
 }
 
 .cross-button img {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
+    align-items: center;
 }
 
 .popup-content {
-    margin-bottom: 20px;
     width: 100%;
     box-sizing: border-box;
 }
 
 .input-name {
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #555;
+    margin: auto;
+    font-family: "Gagalin", sans-serif;
+    font-weight: 400;
+    font-size: 48px;
+    color: #fff;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
 }
 
 input {
@@ -121,16 +159,27 @@ input {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    margin-bottom: 40px;
 }
 
 .confirm-button {
-    background-color: #6200ea;
+    background-color: #570A08;
+    font-family: "Gagalin", sans-serif;
+    font-size: 64px;
+    text-align: center;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
     color: white;
-    padding: 10px;
     border: none;
-    border-radius: 4px;
-    width: 100%;
+    border-radius: 15px;
+    width: 340px;
+    height: 105px;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    margin: auto;
     cursor: pointer;
+    align-items: center;
 }
 
 .confirm-button:hover {
@@ -155,4 +204,23 @@ input {
     justify-content: center;
     color: white;
     align-items: center;
+}
+
+#switch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 20px;
+    color: white;
+    height: fit-content;
+}
+
+#switch:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#switch:active {
+    filter: brightness(0.8);
 }

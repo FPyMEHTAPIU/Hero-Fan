@@ -52,14 +52,16 @@ const Header = () => {
     );
 };
 
-const allowedPattern = /^[a-zA-Z0-9_@$%!^&*]+$/;
+const allowedPattern = /^[a-zA-Z0-9_@$%!^&*]+$/; // Разрешённые символы
 
 const Popup = ({
                    winType, onChange, onClose,
                    password, setPassword, confirmPassword, setConfirmPassword
                }) => {
     const [login, setLogin] = useState('');
-    const [loginMessage, setLoginMessage] = useState('');
+    const [loginError, setLoginError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     const handleBeforeInput = (e, setMessage) => {
         const char = e.data;
@@ -74,10 +76,10 @@ const Popup = ({
 
     return createPortal(
         <div className="popup-overlay">
+            <h2 id="popup-header">{winType}</h2>
             <div className="popup">
-                <h2>{winType}</h2>
                 <button className="cross-button" onClick={onClose}>
-                    <img src="../includes/cross.svg" alt="Close" />
+                    <img src="../includes/Cross.svg" alt="Close"/>
                 </button>
                 <div className="popup-content">
                     <p className="input-name">Login</p>
@@ -86,9 +88,9 @@ const Popup = ({
                         name="login input"
                         value={login}
                         onChange={(e) => setLogin(e.target.value)}
-                        onBeforeInput={(e) => handleBeforeInput(e, setLoginMessage)}
+                        onBeforeInput={(e) => handleBeforeInput(e, setLoginError)}
                     />
-                    {loginMessage && <p id="login-message" style={{ color: 'red' }}>{loginMessage}</p>}
+                    {loginError && <p id="login-message" style={{color: 'red'}}>{loginError}</p>}
 
                     <p className="input-name">Password</p>
                     <input
@@ -97,8 +99,9 @@ const Popup = ({
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        onBeforeInput={(e) => handleBeforeInput(e, setLoginMessage)}
+                        onBeforeInput={(e) => handleBeforeInput(e, setPasswordError)}
                     />
+                    {passwordError && <p id="password-message" style={{color: 'red'}}>{passwordError}</p>}
 
                     {winType === 'Register' && (
                         <>
@@ -109,14 +112,19 @@ const Popup = ({
                                 type="password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                onBeforeInput={(e) => handleBeforeInput(e, setLoginMessage)}
+                                onBeforeInput={(e) => handleBeforeInput(e, setConfirmPasswordError)}
                             />
+                            {confirmPasswordError &&
+                                <p id="confirm-message" style={{color: 'red'}}>{confirmPasswordError}</p>}
                         </>
                     )}
                 </div>
 
-                <button className="switch" onClick={onChange}>
-                    <p>Don't have an account? Create a new one!</p>
+                <button id="switch" onClick={onChange}>
+                    <p>{winType === 'Log in' ?
+                        'Don\'t have an account? Create the new one!' :
+                        'Already have an account? Go to the log in page!'}
+                    </p>
                 </button>
                 <button className="confirm-button">{winType}</button>
             </div>
