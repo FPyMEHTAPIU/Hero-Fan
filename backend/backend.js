@@ -55,6 +55,48 @@ app.get('/api/marv-users', async (req, res) => {
     }
 })
 
+// check username while trying log in
+app.get('/api/login/:username', async (req, res) => {
+    const username = req.params.username;
+
+    try {
+        const result = await pool.query(
+            `SELECT login FROM users
+            WHERE login = $1;`,
+            [username]
+        )
+        res.json(result.rows)
+    } catch (error) {
+        console.error(error)
+        res.json({ error: 'User doesn\'t exist!' })
+    }
+})
+
+app.get('/api/password/', async (req, res) => {
+    const userData = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    try {
+        const result = await pool.query(
+            `SELECT * FROM users
+            WHERE login = $1;`,
+            [userData.username]
+        )
+
+        if (result.rows.password !== userData.password) {
+            throw new Error('Incorrect password!');
+        }
+        res.json(result.rows)
+    } catch (error) {
+        console.error(error)
+        if (error !== 'Incorrect password!') {
+            res.json({ error: 'User doesn\'t exist!' })
+        }
+    }
+})
+
 // Get all chars' info
 app.get('/api/marv-chars-api/', async (req, res) => {
     const apiData = {

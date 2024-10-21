@@ -74,6 +74,20 @@ const Popup = ({
         }
     };
 
+    const attemptLogin = (username, password) => {
+        fetch(`/api/login/${username}`)
+            .then((response) => response.json())
+            .catch((error) => console.error('Error trying log in', error));
+
+        fetch('/api/password', {username: username, password: password})
+            .then((response) => response.json())
+            .catch((error) => console.error('Passwords don\'t match!', error));
+    }
+
+    const registerUser = (username, password) => {
+
+    }
+
     return createPortal(
         <div className="popup-overlay">
             <h2 id="popup-header">{winType}</h2>
@@ -126,7 +140,11 @@ const Popup = ({
                         'Already have an account? Go to the log in page!'}
                     </p>
                 </button>
-                <button className="confirm-button">{winType}</button>
+                <button
+                    className="confirm-button"
+                    onClick={winType === 'Log in' ? attemptLogin(login, password) : registerUser(login, password)}
+                >{winType}
+                </button>
             </div>
         </div>, document.body
     );
