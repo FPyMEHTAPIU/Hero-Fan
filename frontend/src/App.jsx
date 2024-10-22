@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
 import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
+import Pagination from "./Pagination.jsx";
 import './App.css'
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);
+    const charactersOnPage = 16;
+    const navigate = useNavigate();
+    const {page} = useParams();
+    const currentPage = parseInt(page) || 1;
+
     const {
         isWindowShown,
         windowType,
@@ -17,8 +24,6 @@ const App = () => {
         closePopup
     } = usePopup();
 
-    // TODO:
-    // replace isClicked by isInFavorites and check it from DB
     const ToggleButton = ({characterName}) => {
         const [isClicked, setIsClicked] = useState(false);
 
@@ -75,14 +80,18 @@ const App = () => {
         fetch('/api/marv-chars-db')
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setMarvList(data);
             })
             .catch((error) => console.error('Error fetching characters', error));
     };
 
-    const renderItems = (marvList) => {
-        const heroList = marvList.map((character) => (
+    const totalPages = Math.ceil(marvList.length / charactersOnPage);
+    const lastCharIndex = currentPage * charactersOnPage;
+    const firstCharIndex = lastCharIndex - charactersOnPage;
+    const currentCharacters = marvList.slice(firstCharIndex, lastCharIndex);
+
+    const renderItems = (currentCharacters) => {
+        return currentCharacters.map((character) => (
             <div className="hero" key={character.id}>
                 <a href={character.charPage}>
                     <img src={character.image} alt={character.name} className="hero-image" />
@@ -93,46 +102,42 @@ const App = () => {
                 </div>
             </div>
         ));
-        return (
-            <main>
-                <h1>Choose your hero!</h1>
-                <h2>Page 1</h2>
-                <div className="heroes">{heroList}</div>
-                <div className="pagination">
-                    <a href="" className="page-button page-button-left"><img src="includes/Left_arrow.svg"/></a>
-                    <div className="divider"></div>
-                    <a href="" className="page-button">1</a>
-                    <div className="divider"></div>
-                    <a href="" className="page-button">2</a>
-                    <div className="divider"></div>
-                    <a href="" className="page-button">3</a>
-                    <div className="divider"></div>
-                    <a href="" className="page-button">4</a>
-                    <div className="divider"></div>
-                    <a href="" className="page-button">5</a>
-                    <div className="divider"></div>
-                    <a href="" className="page-button page-button-right"><img src="includes/Right_arrow.svg"/></a>
-                </div>
-            </main>
-        );
     };
 
     return (
-        <>
-            {renderItems(marvList)}
+        <main>
+            <h1>Choose your hero!</h1>
+            <h2>Page {currentPage}</h2>
+            <div className="heroes">{renderItems(currentCharacters)}</div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => navigate(`/${page}`)}
+            />
             {isWindowShown && (
-                <Popup
-                    winType={windowType}
-                    onChange={changeWindowType}
-                    onClose={closePopup}
-                    password={password}
-                    setPassword={setPassword}
-                    confirmPassword={confirmPassword}
-                    setConfirmPassword={setConfirmPassword}
-                />
-            )}
-        </>
+                    <Popup
+                        winType={windowType}
+                        onChange={changeWindowType}
+                        onClose={closePopup}
+                        password={password}
+                        setPassword={setPassword}
+                        confirmPassword={confirmPassword}
+                        setConfirmPassword={setConfirmPassword}
+                    />
+                )}
+        </main>
     );
 };
 
-export default App;
+const RoutingApp = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/:page" element={<App />} />
+                <Route exact path="/" element={<App page="1" />} />
+            </Routes>
+        </Router>
+    );
+};
+
+export default RoutingApp;
