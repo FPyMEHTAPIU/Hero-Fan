@@ -26,7 +26,7 @@ const App = () => {
             const token = localStorage.getItem('token');
 
             if (!token) {
-                openPopup(); // Открыть PopUp, если пользователь не авторизован
+                openPopup();
             } else {
                 const login = localStorage.getItem('login');
                 if (login) {
@@ -35,7 +35,7 @@ const App = () => {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`, // Передаем токен для авторизации
+                                'Authorization': `Bearer ${token}`,
                             },
                             body: JSON.stringify({
                                 login: login,
@@ -46,7 +46,6 @@ const App = () => {
                         const response = await addToFavRes.json();
                         console.log(response);
 
-                        // Обработка успешного добавления в избранное
                         setIsClicked(!isClicked);
                     } catch (error) {
                         console.error('Error adding to favorites:', error);

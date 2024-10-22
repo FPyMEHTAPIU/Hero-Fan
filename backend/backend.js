@@ -188,7 +188,6 @@ app.post('/api/marv-chars/fav', async (req, res) => {
         WHERE name = $1;`,
         [charName]
     );
-    console.log(charId.rows);
 
     if (charId.rows.length === 0)
         return res.status(400).json({ error: 'Character not found' });
@@ -202,15 +201,30 @@ app.post('/api/marv-chars/fav', async (req, res) => {
     if (userId.rows.length === 0)
         return res.status(400).json({ error: 'User not found' });
 
-    console.log(charId.rows);
-    const result = await pool.query(
-        `INSERT INTO favorites (user_id, char_id)
-        VALUES ($1, $2);`,
-        [userId, charId]
-    );
+    console.log(userId.rows[0].id, charId.rows[0].id)
 
-    console.log(result.rows);
-    res.json(result.rows);
+    const charInFav = await pool.query(
+        `SELECT * FROM favorite_list
+         WHERE user_id = $1 AND char_id = $2;`,
+        [userId.rows[0].id, charId.rows[0].id]
+    )
+
+    if (charInFav.rows.length === 0) {
+        const result = await pool.query(
+            `INSERT INTO favorite_list (user_id, char_id)
+            VALUES ($1, $2);`,
+            [userId.rows[0].id, charId.rows[0].id]
+        );
+        res.json(result.rows);
+    }
+    else {
+        const result = await pool.query(
+            `DELETE FROM favorite_list 
+            WHERE user_id = $1 AND char_id = $2;`,
+            [userId.rows[0].id, charId.rows[0].id]
+        );
+        res.json(result.rows);
+    }
 })
 
 app.get('/api/marv-update-chars-db/', async (req, res) => {
