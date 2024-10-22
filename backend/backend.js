@@ -65,9 +65,10 @@ app.get('/api/login/:username', async (req, res) => {
             WHERE login = $1;`,
             [username]
         )
+        if (result.rows == '')
+            throw new Error('User doesn\'t exist!');
         res.json(result.rows)
     } catch (error) {
-        console.error(error)
         res.json({ error: 'User doesn\'t exist!' })
     }
 })

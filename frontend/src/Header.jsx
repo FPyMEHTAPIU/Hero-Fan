@@ -62,6 +62,7 @@ const Popup = ({
     const [loginError, setLoginError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleBeforeInput = (e, setMessage) => {
         const char = e.data;
@@ -74,19 +75,43 @@ const Popup = ({
         }
     };
 
-    const attemptLogin = (username, password) => {
-        fetch(`/api/login/${username}`)
-            .then((response) => response.json())
-            .catch((error) => console.error('Error trying log in', error));
+    const attemptLogin = async (username, password, setErrorMessage) => {
+        try {
+            const loginResponse = await fetch(`/api/login/${username}`);
+            const loginData = await loginResponse.json();
 
-        fetch('/api/password', {username: username, password: password})
-            .then((response) => response.json())
-            .catch((error) => console.error('Passwords don\'t match!', error));
-    }
+            if (loginResponse.ok && loginData.length > 0) {
+                const passwordResponse = await fetch('/api/password', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (passwordResponse.ok) {
+                    console.log('Login successful!');
+                } else {
+                    setErrorMessage('Incorrect password. Please try again.');
+                }
+            } else {
+                setErrorMessage('User does not exist. Please register first.');
+            }
+        } catch (error) {
+            console.error('Error during login process:', error);
+            setErrorMessage('An error occurred. Please try again later.');
+        }
+    };
+
 
     const registerUser = (username, password) => {
 
     }
+
+    const handleLogin = async () => {
+        await attemptLogin(login, password, setErrorMessage);
+    };
+
 
     return createPortal(
         <div className="popup-overlay">
@@ -96,40 +121,54 @@ const Popup = ({
                     <img src="../includes/Cross.svg" alt="Close"/>
                 </button>
                 <div className="popup-content">
-                    <p className="input-name">Login</p>
-                    <input
-                        id="login-field"
-                        name="login input"
-                        value={login}
-                        onChange={(e) => setLogin(e.target.value)}
-                        onBeforeInput={(e) => handleBeforeInput(e, setLoginError)}
-                    />
-                    {loginError && <p id="login-message" style={{color: 'red'}}>{loginError}</p>}
-
-                    <p className="input-name">Password</p>
-                    <input
-                        id="password-field"
-                        name="password input"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onBeforeInput={(e) => handleBeforeInput(e, setPasswordError)}
-                    />
-                    {passwordError && <p id="password-message" style={{color: 'red'}}>{passwordError}</p>}
+                    <div className="input-div">
+                        <p className="input-name">Login</p>
+                        <input
+                            id="login-field"
+                            name="login input"
+                            value={login}
+                            onChange={(e) => {
+                                setLogin(e.target.value);
+                                setErrorMessage('');
+                            }}
+                            onBeforeInput={(e) => handleBeforeInput(e, setLoginError)}
+                        />
+                        {loginError && <p id="login-message" className="error-message">{loginError}</p>}
+                    </div>
+                    <div className="input-div">
+                        <p className="input-name">Password</p>
+                        <input
+                            id="password-field"
+                            name="password input"
+                            type="password"
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrorMessage('');
+                            }}
+                            onBeforeInput={(e) => handleBeforeInput(e, setPasswordError)}
+                        />
+                        {passwordError && <p id="password-message" style={{color: 'red'}}>{passwordError}</p>}
+                    </div>
 
                     {winType === 'Register' && (
                         <>
-                            <p className="input-name">Confirm Password</p>
-                            <input
-                                id="confirm-field"
-                                name="confirmPassword"
-                                type="password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                onBeforeInput={(e) => handleBeforeInput(e, setConfirmPasswordError)}
-                            />
-                            {confirmPasswordError &&
-                                <p id="confirm-message" style={{color: 'red'}}>{confirmPasswordError}</p>}
+                            <div className="input-div">
+                                <p className="input-name">Confirm Password</p>
+                                <input
+                                    id="confirm-field"
+                                    name="confirmPassword"
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => {
+                                        setConfirmPassword(e.target.value);
+                                        setErrorMessage('');
+                                    }}
+                                    onBeforeInput={(e) => handleBeforeInput(e, setConfirmPasswordError)}
+                                />
+                                {confirmPasswordError &&
+                                    <p id="confirm-message" style={{color: 'red'}}>{confirmPasswordError}</p>}
+                            </div>
                         </>
                     )}
                 </div>
@@ -140,9 +179,16 @@ const Popup = ({
                         'Already have an account? Go to the log in page!'}
                     </p>
                 </button>
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <button
                     className="confirm-button"
-                    onClick={winType === 'Log in' ? attemptLogin(login, password) : registerUser(login, password)}
+                    onClick={() => {
+                        if (winType === 'Log in') {
+                            handleLogin()
+                        } else {
+                            registerUser(login, password);
+                        }
+                    }}
                 >{winType}
                 </button>
             </div>
