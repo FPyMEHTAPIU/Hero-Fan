@@ -77,25 +77,27 @@ const Popup = ({
 
     const attemptLogin = async (username, password, setErrorMessage) => {
         try {
-            const loginResponse = await fetch(`/api/login/${username}`);
+            const loginResponse = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    login: username,
+                    password: password
+                })
+            });
+
             const loginData = await loginResponse.json();
 
-            if (loginResponse.ok && loginData.length > 0) {
-                const passwordResponse = await fetch('/api/password', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password })
-                });
+            if (loginResponse.ok && loginData.token) {
+                localStorage.setItem('token', loginData.token);
+                console.log('Login successful!');
 
-                if (passwordResponse.ok) {
-                    console.log('Login successful!');
-                } else {
-                    setErrorMessage('Incorrect password. Please try again.');
-                }
+                // Можно выполнить редирект на защищённую страницу
+                window.location.href = '/protected';
             } else {
-                setErrorMessage('User does not exist. Please register first.');
+                setErrorMessage(loginData.error || 'Login failed. Please try again.');
             }
         } catch (error) {
             console.error('Error during login process:', error);

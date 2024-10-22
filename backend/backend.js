@@ -1,7 +1,9 @@
 const express = require('express')
-require('dotenv').config()
-const { Pool } = require('pg')
-const { json } = require("express");
+require('dotenv').config();
+const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const result = require("pg/lib/query");
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize(
@@ -17,6 +19,8 @@ const sequelize = new Sequelize(
 const app = express()
 const port = 3000
 const numOfCharacters = 1600
+const secret = process.env.SECRET_KEY
+const users = [];
 
 app.use(express.json())
 
@@ -56,20 +60,37 @@ app.get('/api/marv-users', async (req, res) => {
 })
 
 // check username while trying log in
-app.get('/api/login/:username', async (req, res) => {
-    const username = req.params.username;
+app.post('/api/login', async (req, res) => {
+    const {login, password} = req.body;
 
     try {
         const result = await pool.query(
-            `SELECT login FROM users
-            WHERE login = $1;`,
-            [username]
+            `SELECT login FROM users 
+             WHERE login = $1;`,
+            [login]
         )
-        if (result.rows == '')
-            throw new Error('User doesn\'t exist!');
-        res.json(result.rows)
+        console.log(login);
+        console.log(result.rows)
+        if (result.rows.length === 0)
+            return res.status(400).json({ error: 'User not found' });
+
+        const passwordDB = await pool.query(
+            `SELECT password FROM users
+            WHERE login = $1;`,
+            [login]
+        )
+        console.log(passwordDB.rows);
+        const passwordCheck = await bcrypt.compare(password, passwordDB.rows[0].password);
+        if (!passwordCheck) {
+            return res.status(400).json({ error: 'Invalid password' });
+        }
+
+        const token = jwt.sign( { login }, secret, { expiresIn: '10m' });
+        console.log(token)
+        res.json({ token })
     } catch (error) {
-        res.json({ error: 'User doesn\'t exist!' })
+        console.error(error);
+        res.status(500).json({ error: 'An error occurred. Please try again later.' });
     }
 })
 
@@ -237,11 +258,13 @@ app.post('/api/new-user/', async (req, res) => {
             throw new Error('Password');
         }
         else {
+            const hashedPassword = await bcrypt.hash(userData.password, 10);
+
             const result = await pool.query(
                 `INSERT INTO users (login, password) VALUES ($1, $2) RETURNING *;`,
-                [userData.login, userData.password]
+                [userData.login, hashedPassword]
             )
-            res.json(result.rows)
+            res.status(201).json({ message: 'User registered successfully!' });
         }
     } catch (error) {
         if (error.toString().includes('Password')) { // used username
