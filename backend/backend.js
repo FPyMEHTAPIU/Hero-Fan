@@ -176,6 +176,43 @@ app.get('/api/marv-chars-db/', async (req, res) => {
     res.json(result.rows);
 })
 
+// Add character to favorites
+app.post('/api/marv-chars/fav', async (req, res) => {
+    const { login, charName } = {
+        login: req.body.login,
+        charName: req.body.name
+    };
+
+    const charId = await pool.query(
+        `SELECT id FROM characters
+        WHERE name = $1;`,
+        [charName]
+    );
+    console.log(charId.rows);
+
+    if (charId.rows.length === 0)
+        return res.status(400).json({ error: 'Character not found' });
+
+    const userId = await pool.query(
+        `SELECT id FROM users
+        WHERE login = $1;`,
+        [login]
+    );
+
+    if (userId.rows.length === 0)
+        return res.status(400).json({ error: 'User not found' });
+
+    console.log(charId.rows);
+    const result = await pool.query(
+        `INSERT INTO favorites (user_id, char_id)
+        VALUES ($1, $2);`,
+        [userId, charId]
+    );
+
+    console.log(result.rows);
+    res.json(result.rows);
+})
+
 app.get('/api/marv-update-chars-db/', async (req, res) => {
     const apiData = {
         api: process.env.API_KEY,

@@ -1,24 +1,20 @@
 import React, { useState } from 'react';
 import Popup from "./Popup.jsx";
+import usePopup from "./UsePopup.jsx";
 import './Header.css';
 
 const Header = () => {
-    const [isWindowShown, setIsWindowShown] = useState(false);
-    const [windowType, setWindowType] = useState('Log in');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-
-    const changeWindowType = () => {
-        setWindowType(windowType === 'Log in' ? 'Register' : 'Log in');
-    };
-
-    const openPopup = () => {
-        setIsWindowShown(true);
-    };
-
-    const closePopup = () => {
-        setIsWindowShown(false);
-    };
+    const {
+        isWindowShown,
+        windowType,
+        password,
+        confirmPassword,
+        setPassword,
+        setConfirmPassword,
+        changeWindowType,
+        openPopup,
+        closePopup
+    } = usePopup();
 
     return (
         <header>

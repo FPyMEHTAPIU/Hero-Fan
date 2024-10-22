@@ -1,21 +1,58 @@
 import { useState, useEffect } from 'react';
+import Popup from "./Popup.jsx";
+import usePopup from "./UsePopup.jsx";
 import './App.css'
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);
+    const {
+        isWindowShown,
+        windowType,
+        password,
+        confirmPassword,
+        setPassword,
+        setConfirmPassword,
+        changeWindowType,
+        openPopup,
+        closePopup
+    } = usePopup();
 
     // TODO:
     // replace isClicked by isInFavorites and check it from DB
-    const ToggleButton = () => {
+    const ToggleButton = ({characterName}) => {
         const [isClicked, setIsClicked] = useState(false);
 
-        const handleClickStar = () => {
+        const handleClickStar = async () => {
             const token = localStorage.getItem('token');
 
             if (!token) {
+                openPopup(); // Открыть PopUp, если пользователь не авторизован
+            } else {
+                const login = localStorage.getItem('login');
+                if (login) {
+                    try {
+                        const addToFavRes = await fetch('/api/marv-chars/fav', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`, // Передаем токен для авторизации
+                            },
+                            body: JSON.stringify({
+                                login: login,
+                                name: characterName
+                            })
+                        });
 
+                        const response = await addToFavRes.json();
+                        console.log(response);
+
+                        // Обработка успешного добавления в избранное
+                        setIsClicked(!isClicked);
+                    } catch (error) {
+                        console.error('Error adding to favorites:', error);
+                    }
+                }
             }
-            setIsClicked(!isClicked);
         };
 
         return (
@@ -51,7 +88,7 @@ const App = () => {
                 <a href={character.charPage}>
                     <img src={character.image} alt={character.name} className="hero-image" />
                 </a>
-                <ToggleButton />
+                <ToggleButton characterName={character.name} />
                 <div className="char-name">
                     <p className="char-name">{character.name}</p>
                 </div>
@@ -81,7 +118,22 @@ const App = () => {
         );
     };
 
-    return renderItems(marvList);
+    return (
+        <>
+            {renderItems(marvList)}
+            {isWindowShown && (
+                <Popup
+                    winType={windowType}
+                    onChange={changeWindowType}
+                    onClose={closePopup}
+                    password={password}
+                    setPassword={setPassword}
+                    confirmPassword={confirmPassword}
+                    setConfirmPassword={setConfirmPassword}
+                />
+            )}
+        </>
+    );
 };
 
 export default App;
