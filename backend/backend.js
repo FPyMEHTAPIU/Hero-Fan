@@ -73,6 +73,7 @@ app.get('/api/login/:username', async (req, res) => {
     }
 })
 
+// password comparison
 app.get('/api/password/', async (req, res) => {
     const userData = {
         username: req.body.username,
@@ -225,7 +226,7 @@ app.get('/api/marv-comments', async (req, res) => {
 })
 
 // Create a new user
-app.post('/api/marv-users/', async (req, res) => {
+app.post('/api/new-user/', async (req, res) => {
     try {
         const userData = {
             login: req.body.login,
@@ -233,18 +234,19 @@ app.post('/api/marv-users/', async (req, res) => {
         }
 
         if (userData.password.length < 8 || userData.password.length > 256) {
-            console.error('Password must be at least 8 characters and less than 256')
+            throw new Error('Password');
         }
         else {
             const result = await pool.query(
-                `INSERT INTO users (login) VALUES ($1) RETURNING *;`,
-                [userData.login]
+                `INSERT INTO users (login, password) VALUES ($1, $2) RETURNING *;`,
+                [userData.login, userData.password]
             )
             res.json(result.rows)
         }
     } catch (error) {
-        if (error.code == '23505') // used username
-            res.json( {error: 'The username already exists!'} )
+        if (error.toString().includes('Password')) { // used username
+            res.json({ error: 'Password must be at least 8 characters and less than 256'});
+        }
         else
             res.json({ error: 'Error adding user' })
     }

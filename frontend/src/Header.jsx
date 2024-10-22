@@ -103,9 +103,35 @@ const Popup = ({
         }
     };
 
+    const handleRegister = async () => {
+        await registerUser(login, password);
+    };
 
-    const registerUser = (username, password) => {
+    const registerUser = async (username, password) => {
+        try {
+            const registerResponse = await fetch('/api/new-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    login: username,
+                    password: password
+                })
+            });
 
+            const responseData = await registerResponse.json();
+            console.log(registerResponse)
+            console.log(responseData)
+            if (registerResponse.ok) {
+                console.log('You\'ve successfully created your account!');
+            } else {
+                setErrorMessage('Registration error. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error during login process:', error);
+            setErrorMessage('An error occurred. Please try again later.');
+        }
     }
 
     const handleLogin = async () => {
@@ -186,7 +212,7 @@ const Popup = ({
                         if (winType === 'Log in') {
                             handleLogin()
                         } else {
-                            registerUser(login, password);
+                            handleRegister()
                         }
                     }}
                 >{winType}
