@@ -10,6 +10,11 @@ const App = () => {
         const [isClicked, setIsClicked] = useState(false);
 
         const handleClickStar = () => {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+
+            }
             setIsClicked(!isClicked);
         };
 

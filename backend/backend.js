@@ -69,8 +69,6 @@ app.post('/api/login', async (req, res) => {
              WHERE login = $1;`,
             [login]
         )
-        console.log(login);
-        console.log(result.rows)
         if (result.rows.length === 0)
             return res.status(400).json({ error: 'User not found' });
 
@@ -79,14 +77,12 @@ app.post('/api/login', async (req, res) => {
             WHERE login = $1;`,
             [login]
         )
-        console.log(passwordDB.rows);
         const passwordCheck = await bcrypt.compare(password, passwordDB.rows[0].password);
         if (!passwordCheck) {
             return res.status(400).json({ error: 'Invalid password' });
         }
 
         const token = jwt.sign( { login }, secret, { expiresIn: '10m' });
-        console.log(token)
         res.json({ token })
     } catch (error) {
         console.error(error);

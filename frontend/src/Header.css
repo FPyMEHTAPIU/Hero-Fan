@@ -142,7 +142,8 @@ header {
 }
 
 .input-name {
-    margin: auto;
+    margin: 0 0 10px 0;
+    height: fit-content;
     font-family: "Gagalin", sans-serif;
     font-weight: 400;
     font-size: 48px;
@@ -226,10 +227,11 @@ input {
 
 .error-message {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     color: red;
-    font-family: "Gagalin", sans-serif;
-    margin-bottom: 10px;
+    font-family: "AA Stetica Regular", sans-serif;
+    margin: 5px 0 0 0;
+    font-size: 15px;
 }
 
 .input-div {
