@@ -5,6 +5,8 @@
     width: auto;
     align-self: center;
     margin: 80px auto;
+    padding: 24px 89px 32px;
+    border-top: #E9EAEB 2px solid;
 }
 
 .page-button {
