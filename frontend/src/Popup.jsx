@@ -43,7 +43,6 @@ const Popup = ({
             if (loginResponse.ok && loginData.token) {
                 localStorage.setItem('token', loginData.token);
                 localStorage.setItem('login', username);
-                console.log('Login successful!');
 
                 // Можно выполнить редирект на защищённую страницу
                 window.location.href = '/protected';

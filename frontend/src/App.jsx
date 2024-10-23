@@ -26,35 +26,28 @@ const App = () => {
 
     const ToggleButton = ({characterName}) => {
         const [isClicked, setIsClicked] = useState(false);
+        const token = localStorage.getItem('token');
 
         const handleClickStar = async () => {
-            const token = localStorage.getItem('token');
-
             if (!token) {
                 openPopup();
             } else {
-                const login = localStorage.getItem('login');
-                if (login) {
-                    try {
-                        const addToFavRes = await fetch('/api/marv-chars/fav', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`,
-                            },
-                            body: JSON.stringify({
-                                login: login,
-                                name: characterName
-                            })
-                        });
-
-                        const response = await addToFavRes.json();
-                        console.log(response);
-
-                        setIsClicked(!isClicked);
-                    } catch (error) {
-                        console.error('Error adding to favorites:', error);
-                    }
+                try {
+                    const addToFavRes = await fetch('/api/marv-chars/fav', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            name: characterName
+                        })
+                    });
+                    const response = await addToFavRes.json();
+                    console.log(response);
+                    setIsClicked(!isClicked);
+                } catch (error) {
+                    console.error('Error adding to favorites:', error);
                 }
             }
         };

@@ -82,7 +82,7 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
-// password comparison
+// password comparison ??
 app.get('/api/password/', async (req, res) => {
     const userData = {
         username: req.body.username,
@@ -170,10 +170,7 @@ app.get('/api/marv-chars-db/', async (req, res) => {
 
 // Add character to favorites
 app.post('/api/marv-chars/fav', async (req, res) => {
-    const { login, charName } = {
-        login: req.body.login,
-        charName: req.body.name
-    };
+    const charName = req.body.name;
 
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -223,6 +220,10 @@ app.post('/api/marv-chars/fav', async (req, res) => {
         );
         res.json(result.rows);
     }
+})
+
+app.get('/api/marv-chars/fav-check', async (req, res) => {
+
 })
 
 app.get('/api/marv-update-chars-db/', async (req, res) => {
@@ -277,7 +278,7 @@ app.get('/api/marv-update-chars-db/', async (req, res) => {
 })
 
 
-//Get character's comments
+//Get character's comments ??
 app.get('/api/marv-comments', async (req, res) => {
     try {
         const result = await pool.query(
@@ -352,36 +353,6 @@ app.patch('/api/marv-users/login/:id', async (req, res) => {
     }
 })
 
-// Add or delete a character to/from the favorite list
-app.patch('/api/marv-favlist/:id', async (req, res) => {
-    try {
-        const char_id = parseInt(req.params.id)
-        const user_id = parseInt(req.body.text)
-
-        const { char_in_list } = await pool.query(
-            `SELECT * FROM favorite_list WHERE $1 = char_id;`,
-            [char_id]
-        )
-        if (!char_in_list) {
-            // add try/catch
-            const result = await pool.query(
-                `INSERT INTO favorite_list (user_id, char_id) VALUES ($1, $2);`,
-                [user_id, char_id]
-            )
-            res.json(result.rows)
-        }
-        else {
-            const result = await pool.query(
-                `DELETE FROM favorite_list WHERE $1 = char_id;`,
-                [char_id]
-            )
-            res.json(result.rows)
-        }
-    } catch (error) {
-        console.error(error)
-        res.json({ error: 'Error adding/deleting the character to/from favorite list' })
-    }
-})
 
 app.listen(port, () => {
     console.log(`A big hello from port ${port}`)
