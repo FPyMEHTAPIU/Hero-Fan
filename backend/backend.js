@@ -36,6 +36,21 @@ const filterData = (response) => {
     return result;
 }
 
+const checkAuthorization = (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token)
+        return res.status(401).json({message: 'Token not found!'});
+
+    try {
+        const decoded = jwt.verify(token, secret);
+        return decoded;
+    } catch (error) {
+        return res.status(403).json({ message: 'Invalid or expired token!' });
+    }
+}
+
 // Get all users' info
 app.get('/api/marv-users', async (req, res) => {
     try {
@@ -172,21 +187,7 @@ app.get('/api/marv-chars-db/', async (req, res) => {
 app.post('/api/marv-chars/fav', async (req, res) => {
     const charName = req.body.name;
 
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token)
-        return res.status(401).json({message: 'Token not found!'});
-
-    const decode = (token, secret) => {
-        try {
-            return jwt.verify(token, secret);
-        } catch (error) {
-            return res.status(403).json({message: 'Invalid or expired token!'});
-        }
-    }
-
-    const decoded = decode(token, secret);
+    const decoded = checkAuthorization(req, res);
     const userId = decoded.id;
 
     const charId = await pool.query(

@@ -28,6 +28,13 @@ const App = () => {
         const [isClicked, setIsClicked] = useState(false);
         const token = localStorage.getItem('token');
 
+        const handleFillStar = async () => {
+            if (!token)
+                return false;
+
+            const charInFav = await fetch()
+        }
+
         const handleClickStar = async () => {
             if (!token) {
                 openPopup();
