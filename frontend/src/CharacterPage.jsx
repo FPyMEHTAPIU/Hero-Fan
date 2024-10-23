@@ -49,7 +49,7 @@ const CharacterPage = () => {
                         <div id="main-info">
                             <p id="char-name">{charData[0].name}</p>
                             <p>
-                                {charData[0].description ? charData[0].description :
+                                {charData[0].description !== '' ? charData[0].description :
                                     'Can\'t say much about this character yet, but who knows what their story will be...'}
                             </p>
                         </div>

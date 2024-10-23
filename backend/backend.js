@@ -373,6 +373,25 @@ app.get('/api/marv-chars/:id', async (req, res) => {
     }
 })
 
+// USED ONLY ONCE WHEN UPDATE/FETCH DB AT FIRST TIME - replaces empty description by custom one
+app.patch('/api/marv-char/update-description', async (req, res) => {
+    const description = req.body.description;
+
+    if (!description)
+        return res.status(400).json({message: 'description is empty, fill it!'});
+
+    const result = await pool.query(
+        `UPDATE characters SET description = $1
+        WHERE description IS NULL
+        OR description = '' 
+        RETURNING *;`,
+        [description]
+    );
+
+
+    res.json(result.rows);
+});
+
 //Get character's comments ??
 app.get('/api/marv-comments', async (req, res) => {
     try {
