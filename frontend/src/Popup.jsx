@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import './Popup.css'
 
 const allowedPattern = /^[a-zA-Z0-9_@$%!^&*]+$/;
 
