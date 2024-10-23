@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './App.css'
 import './Userpage.css'
@@ -11,12 +11,15 @@ const UserPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = getToken();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserData = async () => {
             await checkToken();
-            if (!token)
+            if (!token) {
+                navigate('/1');
                 return;
+            }
             try {
                 const response = await fetch(`/api/marv-users/${id}`, {
                     headers: {
@@ -57,10 +60,12 @@ const UserPage = () => {
     return (
         <main>
             <div id="user-line">
+                <div id="user-icon">
+                    <img src="../includes/User%20Default_Cover.svg" alt="userPhoto"/>
+                </div>
                 <div id="user-data">
-                    <img src="../includes/userIcon.svg" alt="userPhoto"/>
                     <div id="login-block">
-                        <p>{userData[0].login}</p>
+                        {userData[0].login}
                         <button
                             id="change-login"
 
@@ -73,8 +78,8 @@ const UserPage = () => {
                             id="change-password"
 
                         >
-                            <p>Change password</p>
-                            <img src="../includes/Right_arrow.svg" alt="Change Password"/>
+                            Change password
+                            <img src="../includes/Password%20Arrow.svg" alt="Change Password"/>
                         </button>
                     </div>
                 </div>
@@ -82,11 +87,11 @@ const UserPage = () => {
                     id="logout"
                 >
                     Logout
-                    <img src="../includes/Exit.svg" alt="Log out"/>
+                    <img src="../includes/Log%20out.svg" alt="Log out"/>
                 </button>
             </div>
             <div id="favorites">
-                <p>Favorite heroes</p>
+                Favorite heroes
                 <div className="heroes">
 
                 </div>

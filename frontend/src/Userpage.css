@@ -1,12 +1,161 @@
 #user-line {
     display: flex;
+    align-self: center;
     padding: 30px;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 15px;
+    position: relative;
 }
 
 #user-data {
     width: fit-content;
+    display: grid;
+    justify-content: flex-start;
 }
 
+#user-icon {
+    display: flex;
+    width: 140px;
+    height: 140px;
+    background-color: #7B61FF;
+    justify-content: center;
+    vertical-align: center;
+    align-items: center;
+    border-radius: 80px;
+    margin-right: 60px;
+}
+
+#user-icon img {
+    width: 46px;
+    height: 46px;
+    align-items: center;
+}
+
+#login-block {
+    font-family: "Gagalin", sans-serif;
+    font-size: 96px;
+    font-weight: 400;
+    -webkit-text-stroke: 1px black;
+    color: white;
+    height: fit-content;
+    max-height: 96px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}
+
+#change-login {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-self: start;
+    margin-left: 20px;
+    margin-top: 0;
+    padding: 0;
+}
+
+#change-login:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+}
+
+#change-login:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}
+
+#password-block {
+    margin-top: auto;
+    max-height: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: auto;
+}
+
+#change-password {
+    font-family: "Gagalin", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: #A2A2A2;
+    align-self: center;
+    align-content: center;
+    align-items: center;
+}
+
+#change-password:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+}
+
+#change-password:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}
+
+#change-password img {
+    margin: 5px auto 5px 21px;
+    width: 14px;
+    height: 14px;
+    align-self: center;
+}
+
+#logout {
+    display: flex;
+    align-self: center;
+    margin-right: 0;
+    margin-left: auto;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 32px;
+    color: white;
+    height: auto;
+    padding: 10px 24px;
+}
+
+#logout:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    cursor: pointer;
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+}
+
+#logout:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}
+
+#logout img {
+    margin-left: 12px;
+}
+
+#favorites {
+    font-family: "Gagalin", sans-serif;
+    font-weight: normal;
+    font-size: 64px;
+    color: white;
+    display: grid;
+    justify-content: center;
+    margin: 40px auto 30px;
+    -webkit-text-stroke: 0.5px black;
+}
+
+#show-more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 32px;
+    color: white;
+    padding: 10px 24px;
+}
+
+#show-more img {
+    margin-left: 16px;
+}

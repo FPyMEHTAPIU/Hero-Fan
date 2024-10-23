@@ -110,7 +110,6 @@ app.get('/api/marv-users/:id', async (req, res) => {
             [userId]
         );
 
-        console.log(response.rows);
         res.json(response.rows);
     } catch (error) {
         console.error(error)
