@@ -1,0 +1,12 @@
+#user-line {
+    display: flex;
+    padding: 30px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+}
+
+#user-data {
+    width: fit-content;
+}
+

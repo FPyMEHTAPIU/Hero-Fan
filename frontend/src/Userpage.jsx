@@ -1,14 +1,15 @@
 import React from "react";
 import {useState, useEffect} from "react";
 import './App.css'
+import './Userpage.css'
 
 // TODO: show user's id in URL like '/user/1'
 const UserPage = () => {
     return (
         <main>
             <div id="user-line">
-                <img src="../includes/userIcon.svg" alt="userPhoto" />
                 <div id="user-data">
+                    <img src="../includes/userIcon.svg" alt="userPhoto"/>
                     <div id="login-block">
                         <p>Username</p>
                         <button

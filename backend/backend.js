@@ -4,17 +4,7 @@ const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
-const result = require("pg/lib/query");
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize(
-    'marv-db',
-    process.env.POSTGRES_USER,
-    process.env.POSTGRES_PASSWORD,
-    {
-        host: 'localhost',
-        dialect: 'postgres',
-    }
-);
+
 
 const app = express()
 const port = 3000
@@ -65,12 +55,14 @@ app.post('/api/login', async (req, res) => {
 
     try {
         const result = await pool.query(
-            `SELECT login FROM users 
+            `SELECT id, login FROM users 
              WHERE login = $1;`,
             [login]
         )
         if (result.rows.length === 0)
             return res.status(400).json({ error: 'User not found' });
+
+        const id = result.rows[0].id
 
         const passwordDB = await pool.query(
             `SELECT password FROM users
@@ -82,7 +74,7 @@ app.post('/api/login', async (req, res) => {
             return res.status(400).json({ error: 'Invalid password' });
         }
 
-        const token = jwt.sign( { login }, secret, { expiresIn: '10m' });
+        const token = jwt.sign( { id, login }, secret, { expiresIn: '1h' });
         res.json({ token })
     } catch (error) {
         console.error(error);
@@ -183,6 +175,23 @@ app.post('/api/marv-chars/fav', async (req, res) => {
         charName: req.body.name
     };
 
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token)
+        return res.status(401).json({message: 'Token not found!'});
+
+    const decode = (token, secret) => {
+        try {
+            return jwt.verify(token, secret);
+        } catch (error) {
+            return res.status(403).json({message: 'Invalid or expired token!'});
+        }
+    }
+
+    const decoded = decode(token, secret);
+    const userId = decoded.id;
+
     const charId = await pool.query(
         `SELECT id FROM characters
         WHERE name = $1;`,
@@ -192,28 +201,17 @@ app.post('/api/marv-chars/fav', async (req, res) => {
     if (charId.rows.length === 0)
         return res.status(400).json({ error: 'Character not found' });
 
-    const userId = await pool.query(
-        `SELECT id FROM users
-        WHERE login = $1;`,
-        [login]
-    );
-
-    if (userId.rows.length === 0)
-        return res.status(400).json({ error: 'User not found' });
-
-    console.log(userId.rows[0].id, charId.rows[0].id)
-
     const charInFav = await pool.query(
         `SELECT * FROM favorite_list
          WHERE user_id = $1 AND char_id = $2;`,
-        [userId.rows[0].id, charId.rows[0].id]
+        [userId, charId.rows[0].id]
     )
 
     if (charInFav.rows.length === 0) {
         const result = await pool.query(
             `INSERT INTO favorite_list (user_id, char_id)
             VALUES ($1, $2);`,
-            [userId.rows[0].id, charId.rows[0].id]
+            [userId, charId.rows[0].id]
         );
         res.json(result.rows);
     }
@@ -221,7 +219,7 @@ app.post('/api/marv-chars/fav', async (req, res) => {
         const result = await pool.query(
             `DELETE FROM favorite_list 
             WHERE user_id = $1 AND char_id = $2;`,
-            [userId.rows[0].id, charId.rows[0].id]
+            [userId, charId.rows[0].id]
         );
         res.json(result.rows);
     }
