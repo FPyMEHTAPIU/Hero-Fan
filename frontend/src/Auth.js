@@ -21,4 +21,9 @@ export const checkToken = async () => {
         console.error('Invalid or expired token. Removing token...');
         localStorage.removeItem('token');
     }
+
+    if (isTokenValid.status === 200) {
+        const res = await isTokenValid.json();
+        return (res.login);
+    }
 };

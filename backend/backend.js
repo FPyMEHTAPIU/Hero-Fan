@@ -60,7 +60,7 @@ app.get ('/api/marv-user/check-token', (req, res) => {
 
     try {
         const decoded = jwt.verify(token, secret);
-        return res.status(200).json({message: 'Token is valid!'});
+        return res.status(200).json(decoded);
     } catch (error) {
         return res.status(403).json({ message: 'Invalid or expired token!' });
     }

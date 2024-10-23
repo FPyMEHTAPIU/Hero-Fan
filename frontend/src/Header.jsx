@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
+import { getToken, checkToken} from "./Auth.js";
 import './Header.css';
 
 const Header = () => {
+    const token = getToken();
+    const [username, setUsername] = useState('Log in')
+
     const {
         isWindowShown,
         windowType,
@@ -16,6 +20,19 @@ const Header = () => {
         closePopup
     } = usePopup();
 
+    const handleChangeUsername = async () => {
+        const username = await checkToken();
+        if (!token) {
+            setUsername('Log in');
+        } else {
+            setUsername(username);
+        }
+    }
+
+    useEffect(() => {
+        handleChangeUsername();
+    }, [token]);
+
     return (
         <header>
             <a href="/1" id="logo">
@@ -27,7 +44,7 @@ const Header = () => {
             </div>
             <button id="userblock" onClick={openPopup}>
                 <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar"/>
-                <p className="username">Log in</p>
+                <p className="username">{username}</p>
             </button>
 
             {isWindowShown && (
