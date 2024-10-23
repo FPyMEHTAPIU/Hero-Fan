@@ -3,6 +3,7 @@ import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination.jsx";
+import { getToken, checkToken} from "./Auth.js";
 import './App.css';
 
 const App = () => {
@@ -12,26 +13,7 @@ const App = () => {
     const navigate = useNavigate();
     const { page } = useParams();
     const currentPage = parseInt(page) || 1;
-    const token = localStorage.getItem('token');
-
-    const checkToken = async () => {
-        if (!token) {
-            console.log('Token not found');
-            return;
-        }
-        const isTokenValid = await fetch('/api/marv-user/check-token', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
-        });
-
-        if (isTokenValid.status === 403) {
-            console.error('Invalid or expired token. Removing token...');
-            localStorage.removeItem('token');
-        }
-    };
+    const token = getToken();
 
     const {
         isWindowShown,
@@ -62,6 +44,7 @@ const App = () => {
     };
 
     useEffect(() => {
+        checkToken();
         refreshList();
         fetchFavorites();
     }, []);
@@ -74,6 +57,8 @@ const App = () => {
         }, [favList, characterName]);
 
         const handleClickStar = async () => {
+            await checkToken();
+
             if (!token) {
                 openPopup();
             } else {
