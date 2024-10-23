@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
 import { getToken, checkToken} from "./Auth.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './Header.css';
 
 const Header = () => {
-    const token = getToken();
+    const [token, setToken] = useState(getToken());
     const [username, setUsername] = useState('Log in');
     const navigate = useNavigate();
+    const location = useLocation();
 
     const {
         isWindowShown,
@@ -23,22 +24,37 @@ const Header = () => {
     } = usePopup();
 
     const handleChangeUsername = async () => {
-        const username = (await checkToken()).login;
-        if (!token) {
-            setUsername('Log in');
-        } else {
-            setUsername(username);
-        }
+        const token = getToken();
+        //console.log(token, await checkToken())
+        const username = token ? (await checkToken()).login : 'Log in';
+        setUsername(username);
     }
 
     useEffect(() => {
         handleChangeUsername();
-    }, [token]);
+    }, [token, location]);
 
     const openUserProfile = async () => {
-        const userId = (await checkToken()).id;
-        console.log(userId);
+        const newToken = await checkToken();
+        if (!newToken) {
+            await handleChangeUsername();
+            return ;
+        }
+
+        const userId = newToken.id;
+        //console.log(userId);
         navigate(`/user/${userId}`);
+    };
+
+    const handeUserBlock = async () => {
+        const newToken = getToken();
+
+        if (newToken) {
+            openUserProfile();
+        }
+        else {
+            openPopup();
+        }
     };
 
     return (
@@ -52,7 +68,7 @@ const Header = () => {
             </div>
             <button
                 id="userblock"
-                onClick={token ? openUserProfile : openPopup}
+                onClick={handeUserBlock}
             >
                 <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar"/>
                 <p className="username">{username}</p>

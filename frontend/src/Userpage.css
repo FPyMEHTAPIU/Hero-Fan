@@ -159,3 +159,16 @@
 #show-more img {
     margin-left: 16px;
 }
+
+#show-more:hover {
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 10px;
+    cursor: pointer;
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+}
+
+#show-more:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}

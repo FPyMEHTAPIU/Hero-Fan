@@ -4,9 +4,9 @@ import usePopup from "./UsePopup.jsx";
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination.jsx";
 import UserPage from "./Userpage.jsx";
+import Header from "./Header.jsx";
 import { getToken, checkToken} from "./Auth.js";
 import './App.css';
-import Header from "./Header.jsx";
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);
@@ -49,7 +49,7 @@ const App = () => {
         checkToken();
         refreshList();
         fetchFavorites();
-    }, []);
+    }, [token]);
 
     const ToggleButton = ({ characterName }) => {
         const [isClicked, setIsClicked] = useState(false);
@@ -170,5 +170,4 @@ const RoutingApp = () => {
         </Router>
     );
 };
-
 export default RoutingApp;

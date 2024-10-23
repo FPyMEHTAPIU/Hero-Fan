@@ -356,6 +356,22 @@ app.get('/api/marv-update-chars-db/', async (req, res) => {
     }
 })
 
+app.get('/api/marv-chars/:id', async (req, res) => {
+    try {
+        const charId = parseInt(req.params.id);
+
+        const response = await pool.query(
+            `SELECT * FROM characters
+            WHERE id = $1;`,
+            [charId]
+        );
+
+        res.json(response.rows);
+    } catch (error) {
+        console.error(error)
+        res.json({ error: 'Error getting character\'s info' });
+    }
+})
 
 //Get character's comments ??
 app.get('/api/marv-comments', async (req, res) => {

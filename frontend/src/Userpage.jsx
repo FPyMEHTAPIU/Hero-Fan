@@ -1,16 +1,15 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { getToken, checkToken } from "./Auth.js";
 import './App.css'
 import './Userpage.css'
-import { getToken, checkToken } from "./Auth.js";
 
-// TODO: show user's id in URL like '/user/1'
 const UserPage = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const token = getToken();
+    const [token, setToken] = useState(getToken());
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,7 +41,7 @@ const UserPage = () => {
         };
 
         fetchUserData();
-        console.log(userData);
+        //console.log(userData);
     }, [id]);
 
     if (loading) {
@@ -55,6 +54,12 @@ const UserPage = () => {
 
     if (!userData) {
         return <div>No user data found</div>;
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setToken(getToken());
+        navigate('/1');
     }
 
     return (
@@ -85,6 +90,7 @@ const UserPage = () => {
                 </div>
                 <button
                     id="logout"
+                    onClick={handleLogout}
                 >
                     Logout
                     <img src="../includes/Log%20out.svg" alt="Log out"/>
