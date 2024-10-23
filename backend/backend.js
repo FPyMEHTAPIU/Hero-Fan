@@ -250,32 +250,38 @@ app.post('/api/marv-chars/fav', async (req, res) => {
     }
 })
 
-app.post('/api/marv-chars/fav-check', async (req, res) => {
-    const charName = req.body.name;
-
+// Get all chars from favlist
+app.get('/api/marv-chars/fav-list', async (req, res) => {
     const decoded = checkAuthorization(req, res);
 
-    console.log(res.statusCode);
     if (decoded === 401 || decoded === 403)
-        return res.status(200).json({ message: 'Empty' });
+        return res.status(403).json({ message: 'Invalid or expired token' });
 
     const userId = decoded.id;
 
-    const charId = await getCharId(charName);
+    try {
+        const favChars = await pool.query(
+            `SELECT c.name
+             FROM favorite_list f
+             JOIN characters c ON f.char_id = c.id
+             WHERE f.user_id = $1;`,
+            [userId]
+        );
 
-    if (charId.rows.length === 0)
-        return res.status(400).json({ error: 'Character not found' });
+        if (favChars.rows.length === 0) {
+            return res.status(200).json([]);
+        }
 
-    const charInFav = await checkCharInFav(userId, charId.rows[0].id);
+        const favCharNames = favChars.rows.map(row => row.name);
 
-    if (charInFav.rows.length === 0) {
-        return res.status(200).json({ message: 'Empty' });
+        return res.status(200).json(favCharNames);
+    } catch (error) {
+        console.error('Error fetching favorite characters:', error);
+        return res.status(500).json({ error: 'Server error' });
     }
-    else {
-        return res.status(200).json({ message: 'Filled' });
-    }
-})
+});
 
+// Update DB
 app.get('/api/marv-update-chars-db/', async (req, res) => {
     const apiData = {
         api: process.env.API_KEY,
@@ -363,7 +369,7 @@ app.post('/api/new-user/', async (req, res) => {
             res.status(201).json({ message: 'User registered successfully!' });
         }
     } catch (error) {
-        if (error.toString().includes('Password')) { // used username
+        if (error.toString().includes('Password')) {
             res.json({ error: 'Password must be at least 8 characters and less than 256'});
         }
         else
@@ -372,7 +378,7 @@ app.post('/api/new-user/', async (req, res) => {
 })
 
 app.post('/api/marv-comments', async (req, res) => {
-    const { comment } = req.body // fetch from the field
+    const { comment } = req.body;
 
     if (length(comment.content) < 1) {
         console.error('Fill the comment\'s field!')

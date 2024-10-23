@@ -3,14 +3,14 @@ import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination.jsx";
-import './App.css'
+import './App.css';
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);
     const [favList, setFavList] = useState([]);
     const charactersOnPage = 16;
     const navigate = useNavigate();
-    const {page} = useParams();
+    const { page } = useParams();
     const currentPage = parseInt(page) || 1;
     const token = localStorage.getItem('token');
 
@@ -33,7 +33,6 @@ const App = () => {
         }
     };
 
-
     const {
         isWindowShown,
         windowType,
@@ -46,42 +45,40 @@ const App = () => {
         closePopup
     } = usePopup();
 
-    const ToggleButton = ({characterName}) => {
+    const fetchFavorites = async () => {
+        if (!token) return;
+
+        try {
+            const response = await fetch('/api/marv-chars/fav-list', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            setFavList(data);
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
+        }
+    };
+
+    useEffect(() => {
+        refreshList();
+        fetchFavorites();
+    }, []);
+
+    const ToggleButton = ({ characterName }) => {
         const [isClicked, setIsClicked] = useState(false);
 
-
-        const handleFillStar = async () => {
-            try {
-                await checkToken();
-                const charInFav = await fetch('/api/marv-chars/fav-check', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        name: characterName
-                    })
-                });
-
-                const response = await charInFav.json();
-                console.log(characterName, response)
-                setIsClicked(response.message === 'Filled');
-            } catch (error) {
-                console.error('Error checking if character is in favorites:', error);
-            }
-        };
-
         useEffect(() => {
-            handleFillStar();
-        }, [characterName, token]);
+            setIsClicked(favList.includes(characterName));
+        }, [favList, characterName]);
 
         const handleClickStar = async () => {
             if (!token) {
                 openPopup();
             } else {
                 try {
-                    const addToFavRes = await fetch('/api/marv-chars/fav', {
+                    const response = await fetch('/api/marv-chars/fav', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -91,14 +88,19 @@ const App = () => {
                             name: characterName
                         })
                     });
-                    const response = await addToFavRes.json();
-                    console.log(response);
+
+                    const result = await response.json();
                     if (response.ok) {
-                        setIsClicked(!isClicked);
-                        refreshList();
+                        setFavList(prevFavList => {
+                            if (isClicked) {
+                                return prevFavList.filter(fav => fav !== characterName);
+                            } else {
+                                return [...prevFavList, characterName];
+                            }
+                        });
                     }
                 } catch (error) {
-                    console.error('Error adding to favorites:', error);
+                    console.error('Error adding/removing from favorites:', error);
                 }
             }
         };
@@ -113,13 +115,8 @@ const App = () => {
                     alt="Star icon"
                 />
             </button>
-
-        )
-    }
-
-    useEffect(() => {
-        refreshList();
-    }, []);
+        );
+    };
 
     const refreshList = () => {
         fetch('/api/marv-chars-db')
@@ -160,16 +157,16 @@ const App = () => {
                 onPageChange={(page) => navigate(`/${page}`)}
             />
             {isWindowShown && (
-                    <Popup
-                        winType={windowType}
-                        onChange={changeWindowType}
-                        onClose={closePopup}
-                        password={password}
-                        setPassword={setPassword}
-                        confirmPassword={confirmPassword}
-                        setConfirmPassword={setConfirmPassword}
-                    />
-                )}
+                <Popup
+                    winType={windowType}
+                    onChange={changeWindowType}
+                    onClose={closePopup}
+                    password={password}
+                    setPassword={setPassword}
+                    confirmPassword={confirmPassword}
+                    setConfirmPassword={setConfirmPassword}
+                />
+            )}
         </main>
     );
 };
