@@ -44,8 +44,7 @@ const Popup = ({
                 localStorage.setItem('token', loginData.token);
                 localStorage.setItem('login', username);
 
-                // Можно выполнить редирект на защищённую страницу
-                window.location.href = '/protected';
+                window.location.href = '/1';
             } else {
                 setErrorMessage(loginData.error || 'Login failed. Please try again.');
             }

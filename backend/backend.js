@@ -50,22 +50,6 @@ const checkAuthorization = (req, res) => {
     }
 }
 
-// check Authorization
-app.get ('/api/marv-user/check-token', (req, res) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token)
-        return res.status(401).json({message: 'Token not found!'});
-
-    try {
-        const decoded = jwt.verify(token, secret);
-        return res.status(200).json(decoded);
-    } catch (error) {
-        return res.status(403).json({ message: 'Invalid or expired token!' });
-    }
-});
-
 const getCharId = (charName) => {
     return ( pool.query(
         `SELECT id FROM characters
@@ -82,6 +66,22 @@ const checkCharInFav = (userId, charId) => {
     ));
 };
 
+// check Authorization
+app.get ('/api/marv-user/check-token', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token)
+        return res.status(401).json({message: 'Token not found!'});
+
+    try {
+        const decoded = jwt.verify(token, secret);
+        return res.status(200).json(decoded);
+    } catch (error) {
+        return res.status(403).json({ message: 'Invalid or expired token!' });
+    }
+});
+
 // Get all users' info
 app.get('/api/marv-users', async (req, res) => {
     try {
@@ -94,6 +94,29 @@ app.get('/api/marv-users', async (req, res) => {
         res.json({ error: 'Error getting sp users' })
     }
 })
+
+// Get user's info
+app.get('/api/marv-users/:id', async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+
+        const response = await pool.query(
+            `SELECT u.login, u.photo, ARRAY_AGG(f.char_id) AS favorite_characters
+            FROM users u
+            LEFT JOIN favorite_list f
+            ON u.id = f.user_id
+            WHERE u.id = $1
+            GROUP BY u.id;`,
+            [userId]
+        );
+
+        console.log(response.rows);
+        res.json(response.rows);
+    } catch (error) {
+        console.error(error)
+        res.json({ error: 'Error getting user\'s info' });
+    }
+});
 
 // check username while trying log in
 app.post('/api/login', async (req, res) => {
@@ -154,7 +177,7 @@ app.get('/api/password/', async (req, res) => {
     }
 })
 
-// Get all chars' info
+// Get all chars' info from API
 app.get('/api/marv-chars-api/', async (req, res) => {
     const apiData = {
         api: process.env.API_KEY,
@@ -206,6 +229,7 @@ app.get('/api/marv-chars-api/', async (req, res) => {
     }
 })
 
+// Get all chars' info from DB
 app.get('/api/marv-chars-db/', async (req, res) => {
     const result = await pool.query(
         'SELECT * FROM characters;'

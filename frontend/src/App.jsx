@@ -3,8 +3,10 @@ import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination.jsx";
+import UserPage from "./Userpage.jsx";
 import { getToken, checkToken} from "./Auth.js";
 import './App.css';
+import Header from "./Header.jsx";
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);
@@ -159,8 +161,10 @@ const App = () => {
 const RoutingApp = () => {
     return (
         <Router>
+            <Header />
             <Routes>
                 <Route path="/:page" element={<App />} />
+                <Route path="/user/:id" element={<UserPage />} />
                 <Route exact path="/" element={<App page="1" />} />
             </Routes>
         </Router>

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
 import { getToken, checkToken} from "./Auth.js";
+import { useNavigate } from "react-router-dom";
 import './Header.css';
 
 const Header = () => {
     const token = getToken();
-    const [username, setUsername] = useState('Log in')
+    const [username, setUsername] = useState('Log in');
+    const navigate = useNavigate();
 
     const {
         isWindowShown,
@@ -21,7 +23,7 @@ const Header = () => {
     } = usePopup();
 
     const handleChangeUsername = async () => {
-        const username = await checkToken();
+        const username = (await checkToken()).login;
         if (!token) {
             setUsername('Log in');
         } else {
@@ -33,6 +35,12 @@ const Header = () => {
         handleChangeUsername();
     }, [token]);
 
+    const openUserProfile = async () => {
+        const userId = (await checkToken()).id;
+        console.log(userId);
+        navigate(`/user/${userId}`);
+    };
+
     return (
         <header>
             <a href="/1" id="logo">
@@ -42,7 +50,10 @@ const Header = () => {
                 <img src="../includes/Search.svg" alt="Search"/>
                 <p className="username">Search</p>
             </div>
-            <button id="userblock" onClick={openPopup}>
+            <button
+                id="userblock"
+                onClick={token ? openUserProfile : openPopup}
+            >
                 <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar"/>
                 <p className="username">{username}</p>
             </button>

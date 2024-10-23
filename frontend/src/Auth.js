@@ -23,7 +23,6 @@ export const checkToken = async () => {
     }
 
     if (isTokenValid.status === 200) {
-        const res = await isTokenValid.json();
-        return (res.login);
+        return await isTokenValid.json();
     }
 };
