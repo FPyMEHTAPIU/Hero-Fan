@@ -18,11 +18,12 @@ const Header = () => {
 
     return (
         <header>
-            <div id="logo">
+            <a href="/1" id="logo">
                 <img src="../includes/HERO%20FAN.svg" alt="Logo"/>
-            </div>
+            </a>
             <div id="search">
-                <img src="../includes/Search Type=Default.svg" alt="Search"/>
+                <img src="../includes/Search.svg" alt="Search"/>
+                <p className="username">Search</p>
             </div>
             <button id="userblock" onClick={openPopup}>
                 <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar"/>

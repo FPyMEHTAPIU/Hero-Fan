@@ -32,6 +32,8 @@ header {
     display: inline-block;
     align-self: center;
     margin-top: 10px;
+    align-items: center;
+    justify-content: center;
 }
 
 #userblock:hover {
@@ -55,6 +57,11 @@ header {
     font-size: 32px;
     color: white;
     -webkit-text-stroke: 0.5px black;
+}
+
+#search img {
+    display: inline-block;
+    margin-right: 10px;
 }
 
 #logo, #search {
@@ -89,6 +96,7 @@ header {
     position: fixed;
 }
 
+/* TODO: reduce popup to 80% */
 .popup {
     background-color: #1810AC;
     padding: 55px 110px;
