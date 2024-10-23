@@ -41,15 +41,46 @@ const checkAuthorization = (req, res) => {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token)
-        return res.status(401).json({message: 'Token not found!'});
-
+        return 401;
     try {
         const decoded = jwt.verify(token, secret);
         return decoded;
     } catch (error) {
-        return res.status(403).json({ message: 'Invalid or expired token!' });
+        return 403;
     }
 }
+
+// check Authorization
+app.get ('/api/marv-user/check-token', (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token)
+        return res.status(401).json({message: 'Token not found!'});
+
+    try {
+        const decoded = jwt.verify(token, secret);
+        return res.status(200).json({message: 'Token is valid!'});
+    } catch (error) {
+        return res.status(403).json({ message: 'Invalid or expired token!' });
+    }
+});
+
+const getCharId = (charName) => {
+    return ( pool.query(
+        `SELECT id FROM characters
+        WHERE name = $1;`,
+        [charName]
+    ));
+};
+
+const checkCharInFav = (userId, charId) => {
+    return ( pool.query(
+        `SELECT * FROM favorite_list
+         WHERE user_id = $1 AND char_id = $2;`,
+        [userId, charId]
+    ));
+};
 
 // Get all users' info
 app.get('/api/marv-users', async (req, res) => {
@@ -188,22 +219,18 @@ app.post('/api/marv-chars/fav', async (req, res) => {
     const charName = req.body.name;
 
     const decoded = checkAuthorization(req, res);
+
+    if (decoded === 401 || decoded === 403)
+        return res.status(200).json({ message: 'Empty' });
+
     const userId = decoded.id;
 
-    const charId = await pool.query(
-        `SELECT id FROM characters
-        WHERE name = $1;`,
-        [charName]
-    );
+    const charId = await getCharId(charName);
 
     if (charId.rows.length === 0)
         return res.status(400).json({ error: 'Character not found' });
 
-    const charInFav = await pool.query(
-        `SELECT * FROM favorite_list
-         WHERE user_id = $1 AND char_id = $2;`,
-        [userId, charId.rows[0].id]
-    )
+    const charInFav = await checkCharInFav(userId, charId.rows[0].id);
 
     if (charInFav.rows.length === 0) {
         const result = await pool.query(
@@ -223,8 +250,30 @@ app.post('/api/marv-chars/fav', async (req, res) => {
     }
 })
 
-app.get('/api/marv-chars/fav-check', async (req, res) => {
+app.post('/api/marv-chars/fav-check', async (req, res) => {
+    const charName = req.body.name;
 
+    const decoded = checkAuthorization(req, res);
+
+    console.log(res.statusCode);
+    if (decoded === 401 || decoded === 403)
+        return res.status(200).json({ message: 'Empty' });
+
+    const userId = decoded.id;
+
+    const charId = await getCharId(charName);
+
+    if (charId.rows.length === 0)
+        return res.status(400).json({ error: 'Character not found' });
+
+    const charInFav = await checkCharInFav(userId, charId.rows[0].id);
+
+    if (charInFav.rows.length === 0) {
+        return res.status(200).json({ message: 'Empty' });
+    }
+    else {
+        return res.status(200).json({ message: 'Filled' });
+    }
 })
 
 app.get('/api/marv-update-chars-db/', async (req, res) => {

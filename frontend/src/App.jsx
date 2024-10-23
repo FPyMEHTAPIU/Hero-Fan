@@ -7,10 +7,32 @@ import './App.css'
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);
+    const [favList, setFavList] = useState([]);
     const charactersOnPage = 16;
     const navigate = useNavigate();
     const {page} = useParams();
     const currentPage = parseInt(page) || 1;
+    const token = localStorage.getItem('token');
+
+    const checkToken = async () => {
+        if (!token) {
+            console.log('Token not found');
+            return;
+        }
+        const isTokenValid = await fetch('/api/marv-user/check-token', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        if (isTokenValid.status === 403) {
+            console.error('Invalid or expired token. Removing token...');
+            localStorage.removeItem('token');
+        }
+    };
+
 
     const {
         isWindowShown,
@@ -26,14 +48,33 @@ const App = () => {
 
     const ToggleButton = ({characterName}) => {
         const [isClicked, setIsClicked] = useState(false);
-        const token = localStorage.getItem('token');
+
 
         const handleFillStar = async () => {
-            if (!token)
-                return false;
+            try {
+                await checkToken();
+                const charInFav = await fetch('/api/marv-chars/fav-check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        name: characterName
+                    })
+                });
 
-            const charInFav = await fetch()
-        }
+                const response = await charInFav.json();
+                console.log(characterName, response)
+                setIsClicked(response.message === 'Filled');
+            } catch (error) {
+                console.error('Error checking if character is in favorites:', error);
+            }
+        };
+
+        useEffect(() => {
+            handleFillStar();
+        }, [characterName, token]);
 
         const handleClickStar = async () => {
             if (!token) {
@@ -52,7 +93,10 @@ const App = () => {
                     });
                     const response = await addToFavRes.json();
                     console.log(response);
-                    setIsClicked(!isClicked);
+                    if (response.ok) {
+                        setIsClicked(!isClicked);
+                        refreshList();
+                    }
                 } catch (error) {
                     console.error('Error adding to favorites:', error);
                 }
@@ -69,6 +113,7 @@ const App = () => {
                     alt="Star icon"
                 />
             </button>
+
         )
     }
 
