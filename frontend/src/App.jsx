@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
+import { getToken, checkToken} from "./Auth.js";
 import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
-import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination.jsx";
 import UserPage from "./Userpage.jsx";
 import Header from "./Header.jsx";
-import { getToken, checkToken} from "./Auth.js";
+import CharacterPage from "./CharacterPage.jsx";
+
 import './App.css';
 
 const App = () => {
@@ -122,7 +124,7 @@ const App = () => {
     const renderItems = (currentCharacters) => {
         return currentCharacters.map((character) => (
             <div className="hero" key={character.id}>
-                <a href={character.charPage}>
+                <a href={`/character/${character.id}`}>
                     <img src={character.image} alt={character.name} className="hero-image" />
                 </a>
                 <ToggleButton characterName={character.name} />
@@ -165,6 +167,7 @@ const RoutingApp = () => {
             <Routes>
                 <Route path="/:page" element={<App />} />
                 <Route path="/user/:id" element={<UserPage />} />
+                <Route path="/character/:id" element={<CharacterPage />} />
                 <Route exact path="/" element={<App page="1" />} />
             </Routes>
         </Router>
