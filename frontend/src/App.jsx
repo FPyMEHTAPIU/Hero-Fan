@@ -123,15 +123,17 @@ const App = () => {
 
     const renderItems = (currentCharacters) => {
         return currentCharacters.map((character) => (
-            <div className="hero" key={character.id}>
-                <a href={`/character/${character.id}`}>
-                    <img src={character.image} alt={character.name} className="hero-image" />
-                </a>
-                <ToggleButton characterName={character.name} />
+            <button
+                className="hero" key={character.id}
+                onClick={() => navigate(`/character/${character.id}`)}
+            >
+                <img src={character.image} alt={character.name} className="hero-image"/>
+
+                <ToggleButton characterName={character.name}/>
                 <div className="char-name">
                     <p className="char-name">{character.name}</p>
                 </div>
-            </div>
+            </button>
         ));
     };
 
