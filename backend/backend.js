@@ -443,6 +443,15 @@ app.post('/api/new-user/', async (req, res) => {
             password: req.body.password
         }
 
+        const loginCheck = await pool.query(
+            `SELECT login FROM users
+            WHERE login = $1;`,
+            [userData.login]
+        )
+
+        if (loginCheck.rows.length !== 0)
+            throw new Error('Duplicate');
+
         if (userData.password.length < 8 || userData.password.length > 256) {
             throw new Error('Password');
         }
@@ -453,14 +462,18 @@ app.post('/api/new-user/', async (req, res) => {
                 `INSERT INTO users (login, password) VALUES ($1, $2) RETURNING *;`,
                 [userData.login, hashedPassword]
             )
+
             res.status(201).json({ message: 'User registered successfully!' });
         }
     } catch (error) {
         if (error.toString().includes('Password')) {
-            res.json({ error: 'Password must be at least 8 characters and less than 256'});
+            res.status(400).json({ error: 'Password must be at least 8 characters and less than 256'});
+        }
+        else if (error.toString().includes('Duplicate')) {
+            res.status(409).json({ error: 'That username already exists. Please try another one!' });
         }
         else
-            res.json({ error: 'Error adding user' })
+            res.status(400).json({ error: 'Error adding user' })
     }
 })
 

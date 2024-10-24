@@ -71,16 +71,25 @@ const Popup = ({
                 })
             });
 
-            const responseData = await registerResponse.json();
-            if (registerResponse.ok) {
+            if (registerResponse.status === 409) {
+                throw new Error('That username already exists. Please try another one!');
+            }
+            else if (registerResponse.ok) {
                 console.log('You\'ve successfully created your account!');
                 onClose();
             } else {
                 setErrorMessage('Registration error. Please try again.');
             }
         } catch (error) {
-            console.error('Error during login process:', error);
-            setErrorMessage('An error occurred. Please try again later.');
+            console.log(error);
+            if (error.toString().includes('That username already exists. Please try another one!')) {
+                console.error(error);
+                setErrorMessage('That username already exists. Please try another one!');
+            }
+            else {
+                console.error(error);
+                setErrorMessage('An error occurred. Please try again later.');
+            }
         }
     };
 
