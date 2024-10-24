@@ -63,7 +63,9 @@ const Header = () => {
                 <img src="../includes/HERO%20FAN.svg" alt="Logo"/>
             </a>
             <div id="search">
-                <img src="../includes/Search.svg" alt="Search"/>
+                <div id="search-back">
+                    <img src="../includes/Search.svg" alt="Search"/>
+                </div>
                 <p className="username">Search</p>
             </div>
             <button

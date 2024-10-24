@@ -60,8 +60,28 @@ header {
     -webkit-text-stroke: 0.5px black;
 }
 
-#search img {
-    display: inline-block;
+#search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#search-back img {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    max-width: 26px;
+    max-height: 26px;
+}
+
+#search-back {
+    display: flex;
+    padding: 9px 7px;
+    width: 48px;
+    height: 48px;
+    background-color: #1810AC;
+    border-radius: 50px;
+    justify-content: center;
     margin-right: 10px;
 }
 

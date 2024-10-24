@@ -21,6 +21,8 @@ const App = () => {
     const { page } = useParams();
     const currentPage = parseInt(page) || 1;
     const token = getToken();
+    const [isSortClicked, setIsSortClicked] = useState(false);
+    const [ascOrder, setAscOrder] = useState(false);
 
     const {
         isWindowShown,
@@ -59,14 +61,57 @@ const App = () => {
     const totalPages = Math.ceil(marvList.length / charactersOnPage);
     const lastCharIndex = currentPage * charactersOnPage;
     const firstCharIndex = lastCharIndex - charactersOnPage;
-    const currentCharacters = marvList.slice(firstCharIndex, lastCharIndex);
+    const [currentCharacters, setCurrentCharacters] = useState([]);
+    //const currentCharacters = marvList.slice(firstCharIndex, lastCharIndex);
+
+    const fetchOrderedCharacters = async () => {
+        try {
+            const response = await fetch(`/api/marv-chars-db/sorted`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    order: ascOrder
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch ordered characters!');
+            }
+            const data = await response.json();
+            setMarvList(data);
+        } catch (error) {
+            console.error({error: 'Failed to fetch ordered characters!'});
+        }
+    };
+
+    const handleChangeOrder = () => {
+        setAscOrder(!ascOrder);  // Меняем порядок сортировки перед запросом
+        setIsSortClicked(true);
+        fetchOrderedCharacters();
+    };
+
+    useEffect(() => {
+        setCurrentCharacters(marvList.slice(firstCharIndex, lastCharIndex));
+    }, [marvList, currentPage]);
 
     return (
         <main>
             <h1>Choose your hero!</h1>
             <h2>Page {currentPage}</h2>
+            <button
+                id="sort"
+                onClick={handleChangeOrder}
+            >
+                {isSortClicked ?
+                    (ascOrder ? <p>Sort Z to A</p> : <p>Sort A to Z</p>)
+                    : <p>Sort A to Z</p>
+                }
+                <img src="../includes/Sort.svg" alt="Sort"/>
+            </button>
             <div className="heroes">
-                {renderItems(
+                {currentCharacters && renderItems(
                     currentCharacters,
                     favList,
                     setFavList,

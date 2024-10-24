@@ -210,6 +210,26 @@ app.get('/api/marv-chars-db/', async (req, res) => {
     res.json(result.rows);
 })
 
+app.post('/api/marv-chars-db/sorted', async (req, res) => {
+    try {
+        const ascOrder = req.body.order;
+
+        if (ascOrder) {
+            const result = await pool.query(
+                'SELECT * FROM characters ORDER BY name ASC;'
+            )
+            res.json(result.rows);
+        } else {
+            const result = await pool.query(
+                'SELECT * FROM characters ORDER BY name DESC;'
+            )
+            res.json(result.rows);
+        }
+    } catch (error) {
+        console.error({error: 'Error ordering characters!'});
+    }
+})
+
 // Get all chars info in favs from DB
 app.post('/api/marv-chars-db/fav', async (req, res) => {
     try {
@@ -266,7 +286,6 @@ app.post('/api/marv-chars/fav', async (req, res) => {
         res.json(result.rows);
     }
 })
-
 
 // Get all chars from favlist
 app.get('/api/marv-chars/fav-list/:id', async (req, res) => {
