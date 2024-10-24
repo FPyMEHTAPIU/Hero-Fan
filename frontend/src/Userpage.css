@@ -140,10 +140,13 @@
     font-weight: normal;
     font-size: 64px;
     color: white;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     margin: 40px auto 30px;
     -webkit-text-stroke: 0.5px black;
+    width: 100%;
+    text-align: center;
 }
 
 #show-more-user {
@@ -171,4 +174,13 @@
 #show-more-user:active {
     filter: brightness(0.8);
     -webkit-filter: brightness(0.8);
+}
+
+#heroes-user {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    justify-content: center;
+    gap: 50px;
+    margin: 30px auto;
+    width: 100%;
 }

@@ -159,7 +159,7 @@ const UserPage = () => {
             </div>
             <div id="favorites">
                 Favorite heroes
-                <div className="heroes">
+                <div id="heroes-user">
                     {renderItems(
                         marvList,
                         favList,
