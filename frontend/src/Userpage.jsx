@@ -64,7 +64,7 @@ const UserPage = () => {
 
         console.log(favList);
 
-    }, [id]);
+    }, [id, personalFavList]);
 
     useEffect(() => {
         const fetchCharData = async (favList) => {
@@ -106,7 +106,6 @@ const UserPage = () => {
             const userId = tokenData.id;
 
             setUserId(userId);
-            console.log(userId)
             await fetchFavorites(setPersonalFavList, userId);
         };
 
@@ -152,7 +151,7 @@ const UserPage = () => {
                     id="logout"
                     onClick={handleLogout}
                 >
-                    Logout
+                    Log out
                     <img src="../includes/Log%20out.svg" alt="Log out"/>
                 </button> : <></>}
             </div>

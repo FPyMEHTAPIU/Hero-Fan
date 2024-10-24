@@ -18,7 +18,7 @@
 }
 
 #char-image {
-    align-self: center;
+    align-self: start;
     justify-content: center;
     aspect-ratio: 1/1;
     height: 100%;
