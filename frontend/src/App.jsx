@@ -7,7 +7,8 @@ import Pagination from "./Pagination.jsx";
 import UserPage from "./Userpage.jsx";
 import Header from "./Header.jsx";
 import CharacterPage from "./CharacterPage.jsx";
-import ToggleButton from "./ToggleButton.jsx";
+import renderItems from "./RenderItems.jsx";
+import fetchFavorites from "./FetchFavorites.js";
 
 import './App.css';
 
@@ -35,25 +36,8 @@ const App = () => {
     useEffect(() => {
         checkToken();
         refreshList();
-        fetchFavorites();
+        fetchFavorites(setFavList);
     }, [token]);
-
-    const fetchFavorites = async () => {
-        if (!token) return;
-
-        try {
-            const response = await fetch('/api/marv-chars/fav-list', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = await response.json();
-            setFavList(data);
-        } catch (error) {
-            console.error('Error fetching favorites:', error);
-        }
-    };
-
 
     const refreshList = () => {
         fetch('/api/marv-chars-db')
@@ -69,33 +53,19 @@ const App = () => {
     const firstCharIndex = lastCharIndex - charactersOnPage;
     const currentCharacters = marvList.slice(firstCharIndex, lastCharIndex);
 
-    const renderItems = (currentCharacters) => {
-        return currentCharacters.map((character) => (
-            <button
-                className="hero" key={character.id}
-                onClick={() => navigate(`/character/${character.id}`)}
-            >
-                <img src={character.image} alt={character.name} className="hero-image"/>
-
-                <ToggleButton
-                    characterName={character.name}
-                    favList={favList}
-                    setFavList={setFavList}
-                    onClick={(e) => e.stopPropagation()}
-                    openPopup={openPopup}
-                />
-                <div className="char-name">
-                    <p className="char-name">{character.name}</p>
-                </div>
-            </button>
-        ));
-    };
-
     return (
         <main>
             <h1>Choose your hero!</h1>
             <h2>Page {currentPage}</h2>
-            <div className="heroes">{renderItems(currentCharacters)}</div>
+            <div className="heroes">
+                {renderItems(
+                    currentCharacters,
+                    favList,
+                    setFavList,
+                    openPopup,
+                    navigate
+                )}
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

@@ -210,6 +210,29 @@ app.get('/api/marv-chars-db/', async (req, res) => {
     res.json(result.rows);
 })
 
+// Get all chars info in favs from DB
+app.post('/api/marv-chars-db/fav', async (req, res) => {
+    try {
+        const charNames = req.body.names;
+
+        // Проверка, что charNames - это массив
+        if (!Array.isArray(charNames) || charNames.length === 0) {
+            return res.status(400).json({ error: 'Invalid input, names should be a non-empty array.' });
+        }
+
+        // Создаем строку для запроса
+        const placeholders = charNames.map((_, index) => ` $${index + 1}`).join(',');
+        const query = `SELECT * FROM characters WHERE name IN (${placeholders})`;
+
+        const result = await pool.query(query, charNames);
+
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+
 // Add character to favorites
 app.post('/api/marv-chars/fav', async (req, res) => {
     const charName = req.body.name;

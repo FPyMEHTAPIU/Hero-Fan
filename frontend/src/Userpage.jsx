@@ -1,8 +1,13 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "./Auth.js";
+import fetchFavorites from "./FetchFavorites.js";
+import usePopup from "./UsePopup.jsx";
+import renderItems from "./RenderItems.jsx";
+
 import './App.css'
 import './Userpage.css'
+import Popup from "./Popup.jsx";
 
 const UserPage = () => {
     const { id } = useParams();
@@ -11,6 +16,19 @@ const UserPage = () => {
     const [error, setError] = useState(null);
     const [token, setToken] = useState(getToken());
     const navigate = useNavigate();
+    const [favList, setFavList] = useState([]);
+    const [marvList, setMarvList] = useState([]);
+    const {
+        isWindowShown,
+        windowType,
+        password,
+        confirmPassword,
+        setPassword,
+        setConfirmPassword,
+        changeWindowType,
+        openPopup,
+        closePopup
+    } = usePopup();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -32,6 +50,7 @@ const UserPage = () => {
                 const data = await response.json();
                 // console.log (data);
                 setUserData(data);
+                fetchFavorites(setFavList);
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -41,8 +60,50 @@ const UserPage = () => {
         };
 
         fetchUserData();
-        //console.log(userData);
+        fetchFavorites(setFavList);
+
+        console.log(favList);
+
     }, [id]);
+
+    useEffect(() => {
+        const fetchCharData = async (favList) => {
+            await checkToken();
+            if (!token) {
+                navigate('/1');
+                return;
+            }
+            try {
+                if (favList.length === 0)
+                    return;
+                const response = await fetch('/api/marv-chars-db/fav', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        names: favList
+                    })
+                });
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch char data!');
+                }
+                const data = await response.json();
+                setMarvList(data);
+            } catch (error) {
+                console.error(error);
+                setError('Error fetching char data');
+            }
+        };
+
+        fetchCharData(favList);
+        console.log(marvList);
+    }, [favList])
+
+    useEffect(() => {
+        checkToken();
+    }, [token]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -99,7 +160,13 @@ const UserPage = () => {
             <div id="favorites">
                 Favorite heroes
                 <div className="heroes">
-
+                    {renderItems(
+                        marvList,
+                        favList,
+                        setFavList,
+                        openPopup,
+                        navigate
+                    )}
                 </div>
                 <button
                     id="show-more-user"
@@ -108,6 +175,17 @@ const UserPage = () => {
                     <img src="../includes/Down_arrow.svg" alt="Show More"/>
                 </button>
             </div>
+            {isWindowShown && (
+                <Popup
+                    winType={windowType}
+                    onChange={changeWindowType}
+                    onClose={closePopup}
+                    password={password}
+                    setPassword={setPassword}
+                    confirmPassword={confirmPassword}
+                    setConfirmPassword={setConfirmPassword}
+                />
+            )}
         </main>
     )
 }
