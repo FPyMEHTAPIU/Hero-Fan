@@ -9,6 +9,7 @@ import Header from "./Header.jsx";
 import CharacterPage from "./CharacterPage.jsx";
 import renderItems from "./RenderItems.jsx";
 import fetchFavorites from "./FetchFavorites.js";
+import Footer from "./Footer.jsx";
 
 import './App.css';
 
@@ -96,6 +97,7 @@ const RoutingApp = () => {
                 <Route path="/character/:id" element={<CharacterPage />} />
                 <Route exact path="/" element={<App page="1" />} />
             </Routes>
+            <Footer />
         </Router>
     );
 };

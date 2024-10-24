@@ -1,0 +1,71 @@
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    width: 100%;
+}
+
+#footer-content {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(0,0,0,0.8);
+    padding: 57px 40px;
+    border-radius: 15px;
+    justify-self: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.buttons {
+    display: flex;
+    align-content: center;
+    justify-content: start;
+    margin-left: 0;
+    width: 100%;
+}
+
+.social {
+    justify-content: end;
+    margin-right: 0;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 32px;
+    color: white;
+    padding: 10px 24px;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 15px;
+    filter: brightness(1.2);
+    -webkit-filter: brightness(1.2);
+}
+
+.button:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}
+
+.social {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+#credits {
+    margin: 40px auto;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    font-family: "AA Stetica Regular", sans-serif;
+    font-size: 32px;
+    color: white;
+}
