@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import './Popup.css'
 import {getToken, checkToken } from "./Auth.js";
-import {useParams} from "react-router-dom";
-import reactRefresh from "eslint-plugin-react-refresh";
-
-const allowedPattern = /^[a-zA-Z0-9_@$%!^&*]+$/;
+import handleBeforeInput from "./InputCheck.js";
 
 const Popup = ({
                    winType, onChange, onClose,
@@ -16,18 +13,6 @@ const Popup = ({
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [userId, setUserId] = useState(0);
-
-    const handleBeforeInput = (e, setMessage) => {
-        const char = e.data;
-
-        if (char && !allowedPattern.test(char)) {
-            setMessage('Only allowed characters: a-z, A-Z, 0-9, _@$%!^&*');
-            e.preventDefault();
-        } else {
-            setMessage('');
-        }
-    };
 
     const attemptLogin = async (username, password, setErrorMessage) => {
         try {

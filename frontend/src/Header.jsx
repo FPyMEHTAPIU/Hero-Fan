@@ -3,6 +3,8 @@ import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
 import { getToken, checkToken} from "./Auth.js";
 import { useNavigate, useLocation } from "react-router-dom";
+import handleBeforeInput from "./InputCheck.js";
+
 import './Header.css';
 
 const Header = () => {
@@ -10,6 +12,9 @@ const Header = () => {
     const [username, setUsername] = useState('Log in');
     const navigate = useNavigate();
     const location = useLocation();
+    const [charName, setCharName] = useState('')
+    const [isSearchClicked, setIsSearchClicked] = useState(false);
+    const [searchError, setSearchError] = useState('');
 
     const {
         isWindowShown,
@@ -56,17 +61,64 @@ const Header = () => {
         }
     };
 
+    const handleSearchClick = () => {
+        setIsSearchClicked(true)
+    };
+
+    const search = async () => {
+
+    }
+
+    const handleSearch = async () => {
+        await search();
+    }
+
     return (
         <header>
             <a href="/1" id="logo">
                 <img src="../includes/HERO%20FAN.svg" alt="Logo"/>
             </a>
-            <div id="search">
-                <div id="search-back">
-                    <img src="../includes/Search.svg" alt="Search"/>
-                </div>
-                <p className="username">Search</p>
-            </div>
+            { !isSearchClicked &&
+                <button
+                    className="search"
+                    onClick={handleSearchClick}
+                >
+                    <div id="search-back">
+                        <img src="../includes/Search.svg" alt="Search"/>
+                    </div>
+                    <p className="username">Search</p>
+                </button>
+            }
+            {isSearchClicked &&
+                <div className="search blue-back">
+                    <button
+                        className="search-button"
+                        onClick={handleSearch}
+                    >
+                        <div id="search-back" style={{ marginRight: '0px'}}>
+                            <img src="../includes/Search.svg" alt="Search"/>
+                        </div>
+                    </button>
+                    <div id="search-line">
+                        <input
+                            id={charName.length === 0 ? "search-empty" : "search-typing"}
+                            name="search input"
+                            value={charName}
+                            onChange={(e) => {
+                                setCharName(e.target.value);
+                            }}
+                            onBeforeInput={(e) => handleBeforeInput(e, setSearchError)}
+                        />
+                        <button id="clear-cross"
+                                onClick={charName.length > 0 ? handleClear : {}}
+                        >
+                            <img
+                                src="../includes/Cross.svg" alt="Clear"
+                                style={charName.length === 0 ? {visibility: 'hidden'} : {visibility: 'visible'}}
+                            />
+                        </button>
+                    </div>
+                </div>}
             <button
                 id="userblock"
                 onClick={handeUserBlock}
