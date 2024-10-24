@@ -123,7 +123,7 @@ const UserPage = () => {
         navigate('/1');
     }
 
-    const handleChangeLogin = async (newLogin, password) => {
+    const handleChangeLogin = async () => {
         if (userId != id) {
             console.error('You can only change your username!');
             return;
@@ -132,6 +132,16 @@ const UserPage = () => {
         changeWindowTypeMan('Change login');
         openPopup();
     };
+
+    const handleChangePassword = async () => {
+        if (userId != id) {
+            console.error('You can only change your password!');
+            return;
+        }
+
+        changeWindowTypeMan('Change password');
+        openPopup();
+    }
 
     return (
         <main>
@@ -154,7 +164,7 @@ const UserPage = () => {
                     <div id="password-block">
                         <button
                             id="change-password"
-
+                            onClick={handleChangePassword}
                         >
                             Change password
                             <img src="../includes/Password%20Arrow.svg" alt="Change Password"/>

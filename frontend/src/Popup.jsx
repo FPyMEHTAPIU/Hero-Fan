@@ -118,6 +118,7 @@ const Popup = ({
             });
 
             if (!response.ok) {
+                setErrorMessage('Failed to update username!');
                 throw new Error('Failed to update username!');
             }
             console.log('successfully');
@@ -135,6 +136,38 @@ const Popup = ({
          await changeLogin();
     };
 
+    const changePassword = async () => {
+        const token = await checkToken();
+        const userId = token.id;
+
+        try {
+            const response = await fetch(`/api/marv-users/password/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    password: login,
+                    newPassword: password
+                })
+            });
+
+            if (!response.ok) {
+                setErrorMessage('Failed to update password!');
+                throw new Error('Failed to update password!');
+            }
+            console.log('successfully');
+            onChange();
+            onClose();
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleChangePassword = async () => {
+        await changePassword();
+    }
+
     return createPortal(
         <div className="popup-overlay">
             <h2 id="popup-header">{winType}</h2>
@@ -144,9 +177,10 @@ const Popup = ({
                 </button>
                 <div className="popup-content">
                     <div className="input-div">
-                        {winType === 'Change login' ?
-                            <p className="input-name">New Username</p> :
-                            <p className="input-name">Username</p>
+                        {winType === 'Change login' ? <p className="input-name">New Username</p> :
+                            (winType === 'Change password' ?
+                                <p className="input-name">Old Password</p> :
+                                <p className="input-name">Username</p>)
                         }
                         <input
                             id="login-field"
@@ -157,6 +191,7 @@ const Popup = ({
                                 setErrorMessage('');
                             }}
                             onBeforeInput={(e) => handleBeforeInput(e, setLoginError)}
+                            type={winType === 'Change password' ? 'password' : 'text'}
                         />
                         {loginError && <p id="login-message" className="error-message">{loginError}</p>}
                     </div>
@@ -220,8 +255,15 @@ const Popup = ({
                                 handleRegister();
                         } else if (winType === 'Change login') {
                             handleChangeLogin();
-                        }
-                    }
+                        } else if (winType === 'Change password') {
+                            if (login === password) {
+                                setErrorMessage('New and old passwords are equal!');
+                            }
+                            else if (password !== confirmPassword)
+                                setErrorMessage('New passwords don\'t match');
+                            else
+                                handleChangePassword();
+                    }}
                     }
                 >
                     {winType}

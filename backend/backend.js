@@ -65,6 +65,19 @@ const checkCharInFav = (userId, charId) => {
     ));
 };
 
+const checkPassword = async (user_id, password, res) => {
+    const passwordDB = await pool.query(
+        `SELECT password FROM users
+             WHERE id = $1;`,
+        [user_id]
+    )
+    const passwordCheck = await bcrypt.compare(password, passwordDB.rows[0].password);
+    if (!passwordCheck) {
+        return res.status(400).json({ error: 'Invalid password' });
+    }
+    return ('Valid!')
+}
+
 // check Authorization
 app.get ('/api/marv-user/check-token', (req, res) => {
     const authHeader = req.headers['authorization'];
@@ -480,11 +493,9 @@ app.post('/api/new-user/', async (req, res) => {
 // Change login
 app.patch('/api/marv-users/login/:id', async (req, res) => {
     try {
-        console.log(req.params);
         const user_id = parseInt(req.params.id)
         const { login, password } = req.body
 
-        console.log(user_id, login, password);
         const loginCheck = await pool.query(
             `SELECT * FROM users
             WHERE login = $1;`,
@@ -519,6 +530,28 @@ app.patch('/api/marv-users/login/:id', async (req, res) => {
             console.error(error)
             res.json({ error: 'Error updating user\'s login' })
         }
+    }
+})
+
+// Change password
+app.patch('/api/marv-users/password/:id', async (req, res) => {
+    try {
+        const user_id = parseInt(req.params.id)
+        const { password, newPassword } = req.body
+
+        const response = await checkPassword(user_id, password, res);
+        if (response !== 'Valid!')
+            return res.json();
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const result = await pool.query(
+            `UPDATE users SET password = $1 WHERE id = $2;`,
+            [hashedPassword, user_id]
+        );
+        res.json(result.rows)
+    } catch (error) {
+        console.error(error)
+        res.json({ error: 'Error updating user\'s login' })
     }
 })
 
