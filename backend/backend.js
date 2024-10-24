@@ -215,12 +215,10 @@ app.post('/api/marv-chars-db/fav', async (req, res) => {
     try {
         const charNames = req.body.names;
 
-        // Проверка, что charNames - это массив
         if (!Array.isArray(charNames) || charNames.length === 0) {
             return res.status(400).json({ error: 'Invalid input, names should be a non-empty array.' });
         }
 
-        // Создаем строку для запроса
         const placeholders = charNames.map((_, index) => ` $${index + 1}`).join(',');
         const query = `SELECT * FROM characters WHERE name IN (${placeholders})`;
 
@@ -269,20 +267,20 @@ app.post('/api/marv-chars/fav', async (req, res) => {
     }
 })
 
+
 // Get all chars from favlist
-app.get('/api/marv-chars/fav-list', async (req, res) => {
+app.get('/api/marv-chars/fav-list/:id', async (req, res) => {
     const decoded = checkAuthorization(req, res);
 
     if (decoded === 401 || decoded === 403)
         return res.status(403).json({ message: 'Invalid or expired token' });
 
-    const userId = decoded.id;
-
     try {
+        const userId = parseInt(req.params.id);
         const favChars = await pool.query(
             `SELECT c.name
              FROM favorite_list f
-             JOIN characters c ON f.char_id = c.id
+                      JOIN characters c ON f.char_id = c.id
              WHERE f.user_id = $1;`,
             [userId]
         );

@@ -50,7 +50,7 @@ const UserPage = () => {
                 const data = await response.json();
                 // console.log (data);
                 setUserData(data);
-                fetchFavorites(setFavList);
+                fetchFavorites(setFavList, id);
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -60,7 +60,7 @@ const UserPage = () => {
         };
 
         fetchUserData();
-        fetchFavorites(setFavList);
+        fetchFavorites(setFavList, id);
 
         console.log(favList);
 
@@ -85,7 +85,6 @@ const UserPage = () => {
                         names: favList
                     })
                 });
-                console.log(response);
                 if (!response.ok) {
                     throw new Error('Failed to fetch char data!');
                 }

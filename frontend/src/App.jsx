@@ -35,9 +35,17 @@ const App = () => {
     } = usePopup();
 
     useEffect(() => {
-        checkToken();
-        refreshList();
-        fetchFavorites(setFavList);
+        const fetchData = async () => {
+            await checkToken();
+            await refreshList();
+
+            const tokenData = await checkToken();
+            const id = tokenData.id;
+
+            await fetchFavorites(setFavList, id);
+        };
+
+        fetchData();
     }, [token]);
 
     const refreshList = () => {
