@@ -41,7 +41,7 @@
     height: fit-content;
     max-height: 96px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     width: auto;
 }
@@ -177,6 +177,7 @@
 }
 
 #heroes-user {
+    justify-items: center;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     justify-content: center;

@@ -74,6 +74,7 @@ const Popup = ({
             const responseData = await registerResponse.json();
             if (registerResponse.ok) {
                 console.log('You\'ve successfully created your account!');
+                onClose();
             } else {
                 setErrorMessage('Registration error. Please try again.');
             }
@@ -154,14 +155,17 @@ const Popup = ({
                         : 'Already have an account? Go to the log in page!'}
                     </p>
                 </button>
-                {errorMessage && <div className="error-message">{errorMessage}</div>}
+                {errorMessage && <div id="big-message" className="error-message">{errorMessage}</div>}
                 <button
                     className="confirm-button"
                     onClick={() => {
                         if (winType === 'Log in') {
                             handleLogin();
                         } else {
-                            handleRegister();
+                            if (password !== confirmPassword)
+                                setErrorMessage('Passwords don\'t match');
+                            else
+                                handleRegister();
                         }
                     }}
                 >{winType}
