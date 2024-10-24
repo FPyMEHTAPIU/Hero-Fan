@@ -18,6 +18,8 @@ header {
     border-radius: 15px;
     display: flex;
     justify-content: space-between;
+    align-content: center;
+    align-items: center;
     width: 90%;
     margin: 30px auto;
     padding: 0 40px;
@@ -31,7 +33,6 @@ header {
 #userblock {
     display: inline-block;
     align-self: center;
-    margin-top: 10px;
     align-items: center;
     justify-content: center;
 }
@@ -64,10 +65,10 @@ header {
     margin-right: 10px;
 }
 
-#logo, #search {
+#logo {
+    margin-top: 10px;
     display: inline-block;
     align-self: center;
-    margin-top: 10px;
 }
 
 #logo:hover, #search:hover {

@@ -85,16 +85,18 @@ const Header = () => {
                     setConfirmPassword={setConfirmPassword}
                 />
             )}
+        </header>
+    );
+};
 
-            <button id="DANGER" onClick={createByAPI}>
+/*
+
+<button id="DANGER" onClick={createByAPI}>
                 <p>DANGER!!!</p>
             </button>
             <button id="UPDATER" onClick={updateByAPI}>
                 <p>UPDATE DB!!!</p>
             </button>
-        </header>
-    );
-};
 
 const createByAPI = () => {
     fetch('/api/marv-chars-api')
@@ -107,5 +109,7 @@ const updateByAPI = () => {
         .then((response) => response.json())
         .catch((error) => console.error('Error fetching characters', error));
 }
+*/
+
 
 export default Header;
