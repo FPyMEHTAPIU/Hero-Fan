@@ -1,8 +1,11 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "./Auth.js";
-import './CharacterPage.css'
+import usePopup from "./UsePopup.jsx";
 import ToggleButton from "./ToggleButton.jsx";
+
+import './CharacterPage.css'
+import Popup from "./Popup.jsx";
 
 const CharacterPage = () => {
     const { id } = useParams();
@@ -11,6 +14,17 @@ const CharacterPage = () => {
     const token = getToken();
     const navigate = useNavigate();
     const [favList, setFavList] = useState([]);
+    const {
+        isWindowShown,
+        windowType,
+        password,
+        confirmPassword,
+        setPassword,
+        setConfirmPassword,
+        changeWindowType,
+        openPopup,
+        closePopup
+    } = usePopup();
 
     useEffect(() => {
         checkToken();
@@ -92,6 +106,7 @@ const CharacterPage = () => {
                             characterName={charData[0].name}
                             favList={favList}
                             setFavList={setFavList}
+                            openPopup={openPopup}
                         />
                     }
                 </div>
@@ -104,6 +119,17 @@ const CharacterPage = () => {
                     </button>
                 </div>
             </div>
+            {isWindowShown && (
+                <Popup
+                    winType={windowType}
+                    onChange={changeWindowType}
+                    onClose={closePopup}
+                    password={password}
+                    setPassword={setPassword}
+                    confirmPassword={confirmPassword}
+                    setConfirmPassword={setConfirmPassword}
+                />
+            )}
         </main>
     )
 }

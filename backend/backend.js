@@ -10,7 +10,6 @@ const app = express()
 const port = 3000
 const numOfCharacters = 1600
 const secret = process.env.SECRET_KEY
-const users = [];
 
 app.use(express.json())
 
@@ -147,32 +146,6 @@ app.post('/api/login', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'An error occurred. Please try again later.' });
-    }
-})
-
-// password comparison ??
-app.get('/api/password/', async (req, res) => {
-    const userData = {
-        username: req.body.username,
-        password: req.body.password
-    }
-
-    try {
-        const result = await pool.query(
-            `SELECT * FROM users
-            WHERE login = $1;`,
-            [userData.username]
-        )
-
-        if (result.rows.password !== userData.password) {
-            throw new Error('Incorrect password!');
-        }
-        res.json(result.rows)
-    } catch (error) {
-        console.error(error)
-        if (error !== 'Incorrect password!') {
-            res.json({ error: 'User doesn\'t exist!' })
-        }
     }
 })
 
@@ -422,20 +395,6 @@ app.patch('/api/marv-char/update-description', async (req, res) => {
     res.json(result.rows);
 });
 
-//Get character's comments ??
-app.get('/api/marv-comments', async (req, res) => {
-    try {
-        const result = await pool.query(
-            `SELECT comments.* FROM comments JOIN characters WHERE characters.id = comments.char_id;`
-        )
-
-        res.json(result.rows)
-    } catch (error) {
-        console.error(error)
-        res.json({ error: 'Error getting character\'s comments' })
-    }
-})
-
 // Create a new user
 app.post('/api/new-user/', async (req, res) => {
     try {
@@ -465,21 +424,6 @@ app.post('/api/new-user/', async (req, res) => {
     }
 })
 
-app.post('/api/marv-comments', async (req, res) => {
-    const { comment } = req.body;
-
-    if (length(comment.content) < 1) {
-        console.error('Fill the comment\'s field!')
-    }
-    else {
-        const result = await pool.query(
-            `INSERT INTO comments (user_id, char_id, content) VALUES ($1, $2, $3) RETURNING *;`,
-            [comment.user_id, comment.char_id, comment.content]
-        )
-        res.json(result.rows)
-    }
-})
-
 // Change login
 app.patch('/api/marv-users/login/:id', async (req, res) => {
     try {
@@ -496,7 +440,6 @@ app.patch('/api/marv-users/login/:id', async (req, res) => {
         res.json({ error: 'Error updating user\'s login' })
     }
 })
-
 
 app.listen(port, () => {
     console.log(`A big hello from port ${port}`)

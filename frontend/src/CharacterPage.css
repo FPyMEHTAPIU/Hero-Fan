@@ -98,6 +98,7 @@ ul {
 #show-more img {
     width: 16px;
     height: 16px;
+    margin-left: 8px;
 }
 
 #actions {
@@ -114,6 +115,10 @@ ul {
     height: fit-content;
     align-self: start;
     justify-self: end;
+}
+
+.star {
+    visibility: visible;
 }
 
 #likes {
