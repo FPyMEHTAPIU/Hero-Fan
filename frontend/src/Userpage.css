@@ -16,6 +16,7 @@
     width: fit-content;
     display: grid;
     justify-content: flex-start;
+    align-items: center;
 }
 
 #user-icon {

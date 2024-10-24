@@ -18,6 +18,7 @@ const UserPage = () => {
     const [favList, setFavList] = useState([]);
     const [personalFavList, setPersonalFavList] = useState([]);
     const [marvList, setMarvList] = useState([]);
+    const [userId, setUserId] = useState(0);
 
     const {
         isWindowShown,
@@ -104,6 +105,8 @@ const UserPage = () => {
             const tokenData = await checkToken();
             const userId = tokenData.id;
 
+            setUserId(userId);
+            console.log(userId)
             await fetchFavorites(setPersonalFavList, userId);
         };
 
@@ -125,13 +128,15 @@ const UserPage = () => {
                 <div id="user-data">
                     <div id="login-block">
                         {userData && userData[0].login}
+                        {id == userId ?
                         <button
                             id="change-login"
 
                         >
                             <img src="../includes/Edit.svg" alt="Change Username"/>
-                        </button>
+                        </button> : <></>}
                     </div>
+                    {id == userId ?
                     <div id="password-block">
                         <button
                             id="change-password"
@@ -140,15 +145,16 @@ const UserPage = () => {
                             Change password
                             <img src="../includes/Password%20Arrow.svg" alt="Change Password"/>
                         </button>
-                    </div>
+                    </div> : <></>}
                 </div>
+                {id == userId ?
                 <button
                     id="logout"
                     onClick={handleLogout}
                 >
                     Logout
                     <img src="../includes/Log%20out.svg" alt="Log out"/>
-                </button>
+                </button> : <></>}
             </div>
             <div id="favorites">
                 Favorite heroes
