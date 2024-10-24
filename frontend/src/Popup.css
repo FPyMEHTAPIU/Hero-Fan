@@ -142,7 +142,7 @@ input {
     border: none;
     border-radius: 15px;
     width: 340px;
-    height: 105px;
+    height: fit-content;
     align-self: center;
     display: flex;
     justify-content: center;

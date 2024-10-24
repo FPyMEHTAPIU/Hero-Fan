@@ -480,17 +480,45 @@ app.post('/api/new-user/', async (req, res) => {
 // Change login
 app.patch('/api/marv-users/login/:id', async (req, res) => {
     try {
+        console.log(req.params);
         const user_id = parseInt(req.params.id)
-        const { login } = req.body
+        const { login, password } = req.body
+
+        console.log(user_id, login, password);
+        const loginCheck = await pool.query(
+            `SELECT * FROM users
+            WHERE login = $1;`,
+            [login]
+        );
+
+        if (loginCheck.rows.length !== 0) {
+            return res.status(409).json({ error:'Duplicate'});
+        }
+
+        const passwordDB = await pool.query(
+            `SELECT password FROM users
+             WHERE id = $1;`,
+            [user_id]
+        )
+        const passwordCheck = await bcrypt.compare(password, passwordDB.rows[0].password);
+        if (!passwordCheck) {
+            return res.status(400).json({ error: 'Invalid password' });
+        }
 
         const result = await pool.query(
-            `UPDATE users SET login = $1 WHERE id = $2 RETURNING *;`,
-            [login.login, user_id]
+            `UPDATE users SET login = $1 WHERE id = $2;`,
+            [login, user_id]
         )
         res.json(result.rows)
     } catch (error) {
-        console.error(error)
-        res.json({ error: 'Error updating user\'s login' })
+        if (error === 'Duplicate') {
+            console.error(error);
+            res.json({error: "Unable to use provided login. User already exists!"})
+        }
+        else {
+            console.error(error)
+            res.json({ error: 'Error updating user\'s login' })
+        }
     }
 })
 

@@ -19,6 +19,7 @@ const UserPage = () => {
     const [personalFavList, setPersonalFavList] = useState([]);
     const [marvList, setMarvList] = useState([]);
     const [userId, setUserId] = useState(0);
+    const [login, setLogin] = useState(localStorage.getItem('login'));
 
     const {
         isWindowShown,
@@ -28,6 +29,7 @@ const UserPage = () => {
         setPassword,
         setConfirmPassword,
         changeWindowType,
+        changeWindowTypeMan,
         openPopup,
         closePopup
     } = usePopup();
@@ -35,6 +37,9 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             await checkToken();
+            setLogin(localStorage.getItem('login'));
+            console.log(login);
+
             if (!token) {
                 navigate('/1');
                 return;
@@ -64,7 +69,7 @@ const UserPage = () => {
 
         console.log(favList);
 
-    }, [id, personalFavList]);
+    }, [id, personalFavList, login]);
 
     useEffect(() => {
         const fetchCharData = async (favList) => {
@@ -118,6 +123,16 @@ const UserPage = () => {
         navigate('/1');
     }
 
+    const handleChangeLogin = async (newLogin, password) => {
+        if (userId != id) {
+            console.error('You can only change your username!');
+            return;
+        }
+
+        changeWindowTypeMan('Change login');
+        openPopup();
+    };
+
     return (
         <main>
             <div id="user-line">
@@ -130,7 +145,7 @@ const UserPage = () => {
                         {id == userId ?
                         <button
                             id="change-login"
-
+                            onClick={handleChangeLogin}
                         >
                             <img src="../includes/Edit.svg" alt="Change Username"/>
                         </button> : <></>}

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import './Popup.css'
+import {getToken, checkToken } from "./Auth.js";
+import {useParams} from "react-router-dom";
+import reactRefresh from "eslint-plugin-react-refresh";
 
 const allowedPattern = /^[a-zA-Z0-9_@$%!^&*]+$/;
 
@@ -13,6 +16,7 @@ const Popup = ({
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [userId, setUserId] = useState(0);
 
     const handleBeforeInput = (e, setMessage) => {
         const char = e.data;
@@ -97,6 +101,40 @@ const Popup = ({
         await attemptLogin(login, password, setErrorMessage);
     };
 
+    const changeLogin = async () => {
+        const token = await checkToken();
+        const userId = token.id;
+
+        try {
+            const response = await fetch(`/api/marv-users/login/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    login: login,
+                    password: password
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update username!');
+            }
+            console.log('successfully');
+            localStorage.removeItem('login');
+            localStorage.setItem('login', login);
+            onChange();
+            onClose();
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleChangeLogin = async () => {
+         await changeLogin();
+    };
+
     return createPortal(
         <div className="popup-overlay">
             <h2 id="popup-header">{winType}</h2>
@@ -106,7 +144,10 @@ const Popup = ({
                 </button>
                 <div className="popup-content">
                     <div className="input-div">
-                        <p className="input-name">Username</p>
+                        {winType === 'Change login' ?
+                            <p className="input-name">New Username</p> :
+                            <p className="input-name">Username</p>
+                        }
                         <input
                             id="login-field"
                             name="login input"
@@ -134,8 +175,7 @@ const Popup = ({
                         />
                         {passwordError && <p id="password-message" className="error-message">{passwordError}</p>}
                     </div>
-
-                    {winType === 'Register' && (
+                    {winType === 'Register' || winType === 'Change password' && (
                         <>
                             <div className="input-div">
                                 <p className="input-name">Confirm Password</p>
@@ -158,26 +198,33 @@ const Popup = ({
                     )}
                 </div>
 
-                <button id="switch" onClick={onChange}>
-                    <p>{winType === 'Log in'
-                        ? 'Don\'t have an account? Create the new one!'
-                        : 'Already have an account? Go to the log in page!'}
-                    </p>
-                </button>
+                {winType === 'Log in' || winType === 'Register' ?
+                    <button id="switch" onClick={onChange}>
+                        <p>{winType === 'Log in'
+                            ? 'Don\'t have an account? Create the new one!'
+                            : 'Already have an account? Go to the log in page!'}
+                        </p>
+                    </button>
+                    : <></>
+                }
                 {errorMessage && <div id="big-message" className="error-message">{errorMessage}</div>}
                 <button
                     className="confirm-button"
                     onClick={() => {
                         if (winType === 'Log in') {
                             handleLogin();
-                        } else {
+                        } else if (winType === 'Register') {
                             if (password !== confirmPassword)
                                 setErrorMessage('Passwords don\'t match');
                             else
                                 handleRegister();
+                        } else if (winType === 'Change login') {
+                            handleChangeLogin();
                         }
-                    }}
-                >{winType}
+                    }
+                    }
+                >
+                    {winType}
                 </button>
             </div>
         </div>,

@@ -25,8 +25,7 @@ const Header = () => {
 
     const handleChangeUsername = async () => {
         const token = getToken();
-        //console.log(token, await checkToken())
-        const username = token ? (await checkToken()).login : 'Log in';
+        const username = token ? localStorage.getItem('login') : 'Log in';
         setUsername(username);
     }
 

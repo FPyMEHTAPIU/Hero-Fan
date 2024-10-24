@@ -10,6 +10,10 @@ const usePopup = () => {
         setWindowType(windowType === 'Log in' ? 'Register' : 'Log in');
     };
 
+    const changeWindowTypeMan = (newType) => {
+        setWindowType(newType);
+    };
+
     const openPopup = () => {
         setIsWindowShown(true);
     };
@@ -26,6 +30,7 @@ const usePopup = () => {
         setPassword,
         setConfirmPassword,
         changeWindowType,
+        changeWindowTypeMan,
         openPopup,
         closePopup,
     };
