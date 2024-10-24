@@ -87,16 +87,6 @@ const CharacterPage = () => {
                                     'Can\'t say much about this character yet, but who knows what their story will be...'}
                             </p>
                         </div>
-                        <div id="events">
-                            <p>{charData[0].name} appeared in these movies:</p>
-                            <ul>
-                                <li><p>some fetched info</p></li>
-                            </ul>
-                            <button id="show-more">
-                                Show more
-                                <img src="../includes/Down_arrow.svg" alt="Show more"/>
-                            </button>
-                        </div>
                     </div>
                 </div>
             )}

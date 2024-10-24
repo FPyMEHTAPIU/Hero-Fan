@@ -166,12 +166,6 @@ const UserPage = () => {
                         navigate
                     )}
                 </div>
-                <button
-                    id="show-more-user"
-                >
-                    Show More
-                    <img src="../includes/Down_arrow.svg" alt="Show More"/>
-                </button>
             </div>
             {isWindowShown && (
                 <Popup
