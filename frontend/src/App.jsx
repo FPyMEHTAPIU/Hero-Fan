@@ -36,7 +36,6 @@ const App = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await checkToken();
             await refreshList();
 
             const tokenData = await checkToken();

@@ -12,12 +12,13 @@ import Popup from "./Popup.jsx";
 const UserPage = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [token, setToken] = useState(getToken());
     const navigate = useNavigate();
     const [favList, setFavList] = useState([]);
+    const [personalFavList, setPersonalFavList] = useState([]);
     const [marvList, setMarvList] = useState([]);
+
     const {
         isWindowShown,
         windowType,
@@ -51,11 +52,9 @@ const UserPage = () => {
                 // console.log (data);
                 setUserData(data);
                 fetchFavorites(setFavList, id);
-                setLoading(false);
             } catch (error) {
                 console.error(error);
                 setError('Error fetching user data');
-                setLoading(false);
             }
         };
 
@@ -101,20 +100,15 @@ const UserPage = () => {
     }, [favList])
 
     useEffect(() => {
-        checkToken();
+        const fetchData = async () => {
+            const tokenData = await checkToken();
+            const userId = tokenData.id;
+
+            await fetchFavorites(setPersonalFavList, userId);
+        };
+
+        fetchData();
     }, [token]);
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
-
-    if (!userData) {
-        return <div>No user data found</div>;
-    }
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -130,7 +124,7 @@ const UserPage = () => {
                 </div>
                 <div id="user-data">
                     <div id="login-block">
-                        {userData[0].login}
+                        {userData && userData[0].login}
                         <button
                             id="change-login"
 
@@ -161,8 +155,8 @@ const UserPage = () => {
                 <div id="heroes-user">
                     {renderItems(
                         marvList,
-                        favList,
-                        setFavList,
+                        personalFavList,
+                        setPersonalFavList,
                         openPopup,
                         navigate
                     )}
