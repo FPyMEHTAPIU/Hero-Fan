@@ -13,10 +13,6 @@ const CharacterPage = () => {
     useEffect(() => {
         const fetchCharData = async () => {
             await checkToken();
-            if (!token) {
-                navigate('/1');
-                return;
-            }
             try {
                 const response = await fetch(`/api/marv-chars/${id}`, {
                     headers: {
@@ -25,14 +21,14 @@ const CharacterPage = () => {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch user data!');
+                    throw new Error('Failed to fetch character data!');
                 }
                 const data = await response.json();
                 console.log (data);
                 setCharData(data);
             } catch (error) {
                 console.error(error);
-                setError('Error fetching user data');
+                setError('Error fetching character data');
             }
         };
 
@@ -44,10 +40,10 @@ const CharacterPage = () => {
         <main>
             {charData && (
                 <div id="char-content">
-                    <img src={charData[0].image} alt="Character"/>
-                    <div className="text-info">
+                    <img id="char-image" src={charData[0].image} alt="Character"/>
+                    <div id="text-info">
                         <div id="main-info">
-                            <p id="char-name">{charData[0].name}</p>
+                            <h2 id="char-name">{charData[0].name}</h2>
                             <p>
                                 {charData[0].description !== '' ? charData[0].description :
                                     'Can\'t say much about this character yet, but who knows what their story will be...'}
@@ -55,7 +51,9 @@ const CharacterPage = () => {
                         </div>
                         <div id="events">
                             <p>{charData[0].name} appeared in these movies:</p>
-                            <p>some fetched info</p>
+                            <ul>
+                                <li><p>some fetched info</p></li>
+                            </ul>
                             <button id="show-more">
                                 Show more
                                 <img src="../includes/Down_arrow.svg" alt="Show more"/>
