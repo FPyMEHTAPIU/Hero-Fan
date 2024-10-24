@@ -1,3 +1,5 @@
+
+
 #user-line {
     display: flex;
     align-self: center;
@@ -146,7 +148,7 @@
     -webkit-text-stroke: 0.5px black;
 }
 
-#show-more {
+#show-more-user {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -156,11 +158,11 @@
     padding: 10px 24px;
 }
 
-#show-more img {
+#show-more-user img {
     margin-left: 16px;
 }
 
-#show-more:hover {
+#show-more-user:hover {
     background-color: rgba(0,0,0,0.8);
     border-radius: 10px;
     cursor: pointer;
@@ -168,7 +170,7 @@
     -webkit-filter: brightness(1.2);
 }
 
-#show-more:active {
+#show-more-user:active {
     filter: brightness(0.8);
     -webkit-filter: brightness(0.8);
 }

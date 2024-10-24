@@ -37,7 +37,7 @@ const CharacterPage = () => {
     }, [id]);
 
     return (
-        <main>
+        <main id="char-main">
             {charData && (
                 <div id="char-content">
                     <img id="char-image" src={charData[0].image} alt="Character"/>
