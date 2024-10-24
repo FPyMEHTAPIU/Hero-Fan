@@ -32,10 +32,11 @@ const CharacterPage = () => {
     }, [token]);
 
     const fetchFavorites = async () => {
+        const userId = (await checkToken()).id;
         if (!token) return;
 
         try {
-            const response = await fetch(`/api/marv-chars/fav-list/${id}`, {
+            const response = await fetch(`/api/marv-chars/fav-list/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -106,6 +107,7 @@ const CharacterPage = () => {
                             characterName={charData[0].name}
                             favList={favList}
                             setFavList={setFavList}
+                            onClick={(e) => e.stopPropagation()}
                             openPopup={openPopup}
                         />
                     }
