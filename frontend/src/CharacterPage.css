@@ -105,26 +105,15 @@ ul {
     width: auto;
     max-width: 120px;
     margin: 0 0 0 10px;
+    position: relative;
 }
 
 #star {
-    display: flex;
-    justify-content: center;
-    justify-self: end;
+    scale: 1.25;
+    width: fit-content;
+    height: fit-content;
     align-self: start;
-    align-items: center;
-    width: 64px;
-    height: 64px;
-}
-
-#star:hover {
-    cursor: pointer;
-    background-color: rgba(175, 175, 175, 0.15);
-    border-radius: 8px;
-}
-
-#star:active {
-    filter: brightness(0.8);
+    justify-self: end;
 }
 
 #likes {

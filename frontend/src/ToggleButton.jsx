@@ -1,53 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { checkToken, getToken } from './Auth.js';
-import usePopup from './UsePopup.jsx';
 
-const ToggleButton = ({ characterName, favList, setFavList }) => {
-    const token = getToken();
+const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }) => {
     const [isClicked, setIsClicked] = useState(false);
-    const { openPopup } = usePopup();
 
     useEffect(() => {
         setIsClicked(favList.includes(characterName));
     }, [favList, characterName]);
 
-    const handleClickStar = async () => {
+    const handleClickStar = async (e) => {
+        e.stopPropagation();
+
         await checkToken();
 
-        if (!token) {
-            openPopup();
-        } else {
-            try {
-                const response = await fetch('/api/marv-chars/fav', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({
-                        name: characterName
-                    })
-                });
+        const currentToken = getToken();
 
-                const result = await response.json();
-                if (response.ok) {
-                    setFavList(prevFavList => {
-                        if (isClicked) {
-                            return prevFavList.filter(fav => fav !== characterName);
-                        } else {
-                            return [...prevFavList, characterName];
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Error adding/removing from favorites:', error);
+        if (!currentToken) {
+            openPopup();
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/marv-chars/fav', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentToken}`,
+                },
+                body: JSON.stringify({
+                    name: characterName
+                })
+            });
+
+            if (response.ok) {
+                setFavList(prevFavList => {
+                    if (isClicked) {
+                        return prevFavList.filter(fav => fav !== characterName);
+                    } else {
+                        return [...prevFavList, characterName];
+                    }
+                });
+            } else {
+                console.error('Failed to update favorites:', response.statusText); // Обработка ошибок
             }
+        } catch (error) {
+            console.error('Error adding/removing from favorites:', error);
         }
     };
 
     return (
         <button
-            onClick={handleClickStar}
+            onClick={(e) => {
+                if (onClick) onClick(e);
+                handleClickStar(e);
+            }}
             className={isClicked ? 'star-filled' : 'star'}
         >
             <img

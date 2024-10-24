@@ -35,6 +35,7 @@ const App = () => {
     useEffect(() => {
         checkToken();
         refreshList();
+        fetchFavorites();
     }, [token]);
 
     const fetchFavorites = async () => {
@@ -52,11 +53,6 @@ const App = () => {
             console.error('Error fetching favorites:', error);
         }
     };
-
-    useEffect(() => {
-        checkToken();
-        fetchFavorites();
-    }, [token]);
 
 
     const refreshList = () => {
@@ -85,6 +81,8 @@ const App = () => {
                     characterName={character.name}
                     favList={favList}
                     setFavList={setFavList}
+                    onClick={(e) => e.stopPropagation()}
+                    openPopup={openPopup}
                 />
                 <div className="char-name">
                     <p className="char-name">{character.name}</p>

@@ -304,6 +304,36 @@ app.get('/api/marv-chars/fav-list', async (req, res) => {
     }
 });
 
+// Check only one character in favlist
+app.get('/api/marv-chars/fav-list/:id', async (req, res) => {
+    const charId = parseInt(req.params.id);
+    const decoded = checkAuthorization(req, res);
+
+    if (decoded === 401 || decoded === 403)
+        return res.status(403).json({ message: 'Invalid or expired token' });
+
+    const userId = decoded.id;
+
+    try {
+        const result = await pool.query(
+            `SELECT c.name
+            FROM favorite_list f
+            JOIN characters c ON f.char_id = c.id
+            WHERE f.user_id = $1 AND f.char_id = $2;`,
+            [userId, charId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(200).json([]);}
+
+        const favCharNames = result.rows.map(row => row.name);
+        return res.status(200).json(favCharNames);
+    } catch (error) {
+        console.error('Error checking favorite character:', error);
+        return res.status(500).json({ error: 'Server error' });
+    }
+})
+
 // Update DB
 app.get('/api/marv-update-chars-db/', async (req, res) => {
     const apiData = {

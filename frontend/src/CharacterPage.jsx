@@ -2,6 +2,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "./Auth.js";
 import './CharacterPage.css'
+import ToggleButton from "./ToggleButton.jsx";
 
 const CharacterPage = () => {
     const { id } = useParams();
@@ -9,6 +10,28 @@ const CharacterPage = () => {
     const [error, setError] = useState(null);
     const token = getToken();
     const navigate = useNavigate();
+    const [favList, setFavList] = useState([]);
+
+    useEffect(() => {
+        checkToken();
+        fetchFavorites();
+    }, [token]);
+
+    const fetchFavorites = async () => {
+        if (!token) return;
+
+        try {
+            const response = await fetch(`/api/marv-chars/fav-list/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+            setFavList(data);
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
+        }
+    };
 
     useEffect(() => {
         const fetchCharData = async () => {
@@ -63,9 +86,15 @@ const CharacterPage = () => {
                 </div>
             )}
             <div id="actions">
-                <button id="star">
-                    <img src="../includes/Star%20Empty.svg" alt="Star"/>
-                </button>
+                <div id="star">
+                    {charData &&
+                        <ToggleButton
+                            characterName={charData[0].name}
+                            favList={favList}
+                            setFavList={setFavList}
+                        />
+                    }
+                </div>
                 <div id="likes">
                     <button className="like">
                         <img src="../includes/Like_empty.svg" alt="Like"/>
