@@ -67,7 +67,7 @@ const Search = () => {
             <h2>Searching results of: '{charName}'</h2>
             {!isUserSelected ?
                 <>
-                    <div className="heroes">
+                    <div className="heroes" style={{marginTop: "50px", marginBottom: "50px"}}>
                         {renderItems(
                             marvList,
                             favList,
