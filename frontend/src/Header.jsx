@@ -97,7 +97,7 @@ const Header = () => {
     return (
         <header>
             <a href="/1" id="logo">
-                <img src="../includes/HERO%20FAN.svg" alt="Logo" />
+                <img src="/HERO%20FAN.svg" alt="Logo" />
             </a>
             { !isSearchClicked &&
                 <button
@@ -105,7 +105,7 @@ const Header = () => {
                     onClick={handleSearchClick}
                 >
                     <div id="search-back">
-                        <img src="../includes/Search.svg" alt="Search" />
+                        <img src="/Search.svg" alt="Search" />
                     </div>
                     <p className="username">Search</p>
                 </button>
@@ -133,7 +133,7 @@ const Header = () => {
                                 onClick={handleSearch}
                             >
                                 <div id="search-back" style={{ marginRight: '0px' }}>
-                                    <img src="../includes/Search.svg" alt="Search" />
+                                    <img src="/Search.svg" alt="Search" />
                                 </div>
                             </button>
                             <div id="search-line">
@@ -150,7 +150,7 @@ const Header = () => {
                                         onClick={charName.length > 0 ? handleClear : {}}
                                 >
                                     <img
-                                        src="../includes/Cross.svg" alt="Clear"
+                                        src="/Cross.svg" alt="Clear"
                                         style={charName.length === 0 ? { visibility: 'hidden' } : { visibility: 'visible' }}
                                     />
                                 </button>
@@ -163,7 +163,7 @@ const Header = () => {
                 id="userblock"
                 onClick={handeUserBlock}
             >
-                <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar" />
+                <img src="/User%20Default_Cover.svg" className="avatar" alt="User Avatar" />
                 <p className="username">{username}</p>
             </button>
 

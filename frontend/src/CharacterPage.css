@@ -42,6 +42,7 @@
     line-height: 75px;
     justify-content: start;
     margin: 0 auto 25px 0;
+    text-align: left;
 }
 
 #main-info {

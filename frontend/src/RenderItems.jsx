@@ -1,4 +1,6 @@
 import ToggleButton from "./ToggleButton.jsx";
+import './App.css'
+import './CharsUsers.css'
 
 const renderItems = (currentCharacters, favList, setFavList, openPopup, navigate ) => {
 
@@ -17,8 +19,8 @@ const renderItems = (currentCharacters, favList, setFavList, openPopup, navigate
                 onClick={(e) => e.stopPropagation()}
                 openPopup={openPopup}
             />
-            <div className="user-name">
-                <p className="user-name">{character.name}</p>
+            <div className="char-name">
+                <p className="char-name">{character.name}</p>
             </div>
         </button>
     ));

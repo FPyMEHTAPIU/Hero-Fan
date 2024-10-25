@@ -158,7 +158,7 @@ const Popup = ({
             <h2 id="popup-header">{winType}</h2>
             <div className="popup">
                 <button className="cross-button" onClick={onClose}>
-                    <img src="../includes/Cross.svg" alt="Close"/>
+                    <img src="/Cross.svg" alt="Close"/>
                 </button>
                 <div className="popup-content">
                     <div className="input-div">

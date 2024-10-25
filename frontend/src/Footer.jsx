@@ -33,19 +33,19 @@ const Footer = () => {
                         className="button"
                         onClick={() => window.open('https://github.com/FPyMEHTAPIU', '_blank')}
                     >
-                        <img src="../includes/github.svg" alt="GitHub"/>
+                        <img src="/github.svg" alt="GitHub"/>
                     </button>
                     <button
                         className="button"
                         onClick={() => window.open('https://www.linkedin.com/in/mykolasaveliev/', '_blank')}
                     >
-                        <img src="../includes/linkedin.svg" alt="LinkedIn"/>
+                        <img src="/linkedin.svg" alt="LinkedIn"/>
                     </button>
                     <button
                         className="button"
                         onClick={() => window.open('mailto:kolya59264@gmail.com', '_blank')}
                     >
-                        <img src="../includes/gmail.svg" alt="Gmail"/>
+                        <img src="/gmail.svg" alt="Gmail"/>
                     </button>
                 </div>
             </div>

@@ -57,7 +57,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
             className={isClicked ? 'star-filled' : 'star'}
         >
             <img
-                src={isClicked ? "../includes/Star%20Filled.svg" : "../includes/Star%20Empty.svg"}
+                src={isClicked ? "/Star%20Filled.svg" : "/Star%20Empty.svg"}
                 alt="Star icon"
             />
         </div>

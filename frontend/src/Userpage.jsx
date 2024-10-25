@@ -148,7 +148,7 @@ const UserPage = () => {
         <main>
             <div id="user-line">
                 <div id="user-icon">
-                    <img src="../includes/User%20Default_Cover.svg" alt="userPhoto"/>
+                    <img src="/User%20Default_Cover.svg" alt="userPhoto"/>
                 </div>
                 <div id="user-data">
                     <div id="login-block">
@@ -158,7 +158,7 @@ const UserPage = () => {
                             id="change-login"
                             onClick={handleChangeLogin}
                         >
-                            <img src="../includes/Edit.svg" alt="Change Username"/>
+                            <img src="/Edit.svg" alt="Change Username"/>
                         </button> : <></>}
                     </div>
                     {id == userId ?
@@ -168,7 +168,7 @@ const UserPage = () => {
                             onClick={handleChangePassword}
                         >
                             Change password
-                            <img src="../includes/Password%20Arrow.svg" alt="Change Password"/>
+                            <img src="/Password%20Arrow.svg" alt="Change Password"/>
                         </button>
                     </div> : <></>}
                 </div>
@@ -178,7 +178,7 @@ const UserPage = () => {
                     onClick={handleLogout}
                 >
                     Log out
-                    <img src="../includes/Log%20out.svg" alt="Log out"/>
+                    <img src="/Log%20out.svg" alt="Log out"/>
                 </button> : <></>}
             </div>
             <div id="favorites">

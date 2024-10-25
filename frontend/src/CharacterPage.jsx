@@ -15,6 +15,9 @@ const CharacterPage = () => {
     const token = getToken();
     const navigate = useNavigate();
     const [favList, setFavList] = useState([]);
+    const [isLike, setIsLike] = useState(false);
+    const [isDislike, setIsDislike] = useState(false);
+
     const {
         isWindowShown,
         windowType,
@@ -75,6 +78,38 @@ const CharacterPage = () => {
         console.log(charData);
     }, [id]);
 
+    useEffect(() => {
+        const fetchLikes = async () => {
+            try {
+                const response = await fetch(`/api/char-likes/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch character data!');
+                }
+                const data = await response.json();
+                console.log (data);
+                setCharData(data);
+            } catch (error) {
+                console.error(error);
+                setError('Error fetching character data');
+            }
+        }
+    })
+
+    const handleLike = () => {
+        if (!token)
+            openPopup();
+    }
+
+    const handleDislike = () => {
+        if (!token)
+            openPopup();
+    }
+
     return (
         <main id="char-main">
             {charData && (
@@ -104,11 +139,17 @@ const CharacterPage = () => {
                     }
                 </div>
                 <div id="likes">
-                    <button className="like">
-                        <img src="../includes/Like_empty.svg" alt="Like"/>
+                    <button
+                        className="like"
+                        onClick={handleLike}
+                    >
+                        <img src={isLike ? "/Like_filled.svg" : "/Like_empty.svg"} alt="Like"/>
                     </button>
-                    <button className="like dislike">
-                        <img src="../includes/Dislike_empty.svg" alt="Dislike"/>
+                    <button
+                        className="like dislike"
+                        onClick={handleDislike}
+                    >
+                        <img src={isLike ? "/Dislike_filled.svg" : "/Dislike_empty.svg"} alt="Dislike"/>
                     </button>
                 </div>
             </div>

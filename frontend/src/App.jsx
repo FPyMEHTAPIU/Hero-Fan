@@ -43,9 +43,11 @@ const App = () => {
             await refreshList();
 
             const tokenData = await checkToken();
-            const id = tokenData.id;
-
-            await fetchFavorites(setFavList, id);
+            if (tokenData)
+            {
+                const id = tokenData.id;
+                await fetchFavorites(setFavList, id);
+            }
         };
 
         fetchData();
@@ -109,7 +111,7 @@ const App = () => {
                     (ascOrder ? <p>Sort Z to A</p> : <p>Sort A to Z</p>)
                     : <p>Sort A to Z</p>
                 }
-                <img src="../includes/Sort.svg" alt="Sort"/>
+                <img src="/Sort.svg" alt="Sort"/>
             </button>
             <div className="heroes">
                 {currentCharacters && renderItems(

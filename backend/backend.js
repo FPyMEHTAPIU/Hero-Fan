@@ -65,6 +65,14 @@ const checkCharInFav = (userId, charId) => {
     ));
 };
 
+const checkCharInLikes = (userId, charId) => {
+    return ( pool.query(
+        `SELECT * FROM likes
+         WHERE user_id = $1 AND char_id = $2;`,
+        [userId, charId]
+    ));
+};
+
 const checkPassword = async (user_id, password, res) => {
     const passwordDB = await pool.query(
         `SELECT password FROM users
@@ -577,6 +585,54 @@ app.post('/api/search/:name', async (req, res) => {
         }
     } catch (error) {
         return res.status(400).json({ error: 'Error searching user/hero!' })
+    }
+})
+
+app.get('/api/char-likes/:id', async (req, res) => {
+    try {
+        charId = req.params.id;
+
+        const result = await pool.query(
+            `SELECT * FROM likes
+            WHERE id = $1;`,
+            [charId]
+        );
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+// Add/Remove like
+app.post('/api/likes', async (req, res) => {
+    const {charId} = {
+        charId: parseInt(req.body.charId)
+    }
+
+    console.log (charId);
+
+    const decoded = checkAuthorization(req, res);
+
+    if (!decoded) return;
+
+    const userId = decoded.id;
+
+    const charInLikes = await checkCharInLikes(userId, charId);
+
+    if (charInLikes.rows.length === 0) {
+        const result = await pool.query(
+            `INSERT INTO likes (user_id, char_id)
+            VALUES ($1, $2);`,
+            [userId, charId]
+        );
+        res.json(result.rows);
+    }
+    else {
+        const result = await pool.query(
+            `DELETE FROM likes 
+            WHERE user_id = $1 AND char_id = $2;`,
+            [userId, charId]
+        );
+        res.json(result.rows);
     }
 })
 

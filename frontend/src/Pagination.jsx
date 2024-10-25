@@ -12,7 +12,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             className="page-button page-button-left"
             disabled={currentPage === 1}
         >
-            <img src="../includes/Left_arrow.svg" alt="Previous page"/>
+            <img src="/Left_arrow.svg" alt="Previous page"/>
         </button>,
         <div className="divider"></div>,
         <button
@@ -81,7 +81,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             className="page-button page-button-right"
             disabled={currentPage === totalPages}
         >
-            <img src="../includes/Right_arrow.svg" alt="Next page"/>
+            <img src="/Right_arrow.svg" alt="Next page"/>
         </button>
     );
 
