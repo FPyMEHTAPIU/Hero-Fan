@@ -71,14 +71,38 @@ const CharacterPage = () => {
                     throw new Error('Failed to fetch likes data!');
                 }
                 const data = await response.json();
-                console.log(data);
                 setIsLike(data);
             } catch (error) {
                 console.error("Error fetching like status:", error);
             }
         };
 
+        const checkIsDisliked = async () => {
+            if (!token) return;
+            try {
+                const response = await fetch(`/api/is-disliked`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        charId: id ? id : 0
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch likes data!');
+                }
+                const data = await response.json();
+                setIsDislike(data);
+            } catch (error) {
+                console.error("Error fetching like status:", error);
+            }
+        };
+
         checkIsLiked();
+        checkIsDisliked();
     }, [token, id]);
 
     useEffect(() => {
@@ -154,17 +178,45 @@ const CharacterPage = () => {
         }
     };
 
+    const doDislike = async () => {
+        try {
+            const response = await fetch(`/api/dislikes`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    charId: id
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch likes data!');
+            }
+            const data = await response.json();
+            setIsDislike(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleLike = async () => {
         if (!token)
             openPopup();
         else {
             await doLike();
+            setIsDislike(false);
         }
     }
 
-    const handleDislike = () => {
+    const handleDislike = async () => {
         if (!token)
             openPopup();
+        else {
+            await doDislike();
+            setIsLike(false);
+        }
     }
 
     return (

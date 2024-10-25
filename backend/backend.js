@@ -73,6 +73,14 @@ const checkCharInLikes = (userId, charId) => {
     ));
 };
 
+const checkCharInDislikes = (userId, charId) => {
+    return ( pool.query(
+        `SELECT * FROM dislikes
+         WHERE user_id = $1 AND char_id = $2;`,
+        [userId, charId]
+    ));
+};
+
 const checkPassword = async (user_id, password, res) => {
     const passwordDB = await pool.query(
         `SELECT password FROM users
@@ -615,6 +623,15 @@ app.post('/api/likes', async (req, res) => {
     const userId = decoded.id;
 
     const charInLikes = await checkCharInLikes(userId, charId);
+    const charInDislikes = await checkCharInDislikes(userId, charId);
+
+    if (charInDislikes.rows.length > 0) {
+        const result = await pool.query(
+            `DELETE FROM dislikes 
+            WHERE user_id = $1 AND char_id = $2;`,
+            [userId, charId]
+        );
+    }
 
     if (charInLikes.rows.length === 0) {
         const result = await pool.query(
@@ -634,6 +651,48 @@ app.post('/api/likes', async (req, res) => {
     }
 })
 
+// Add/Remove dislike
+app.post('/api/dislikes', async (req, res) => {
+    const {charId} = {
+        charId: parseInt(req.body.charId)
+    }
+
+    const decoded = checkAuthorization(req, res);
+
+    if (!decoded) return;
+
+    const userId = decoded.id;
+
+    const charInDislikes = await checkCharInDislikes(userId, charId);
+    const charInLikes = await checkCharInLikes(userId, charId);
+
+    if (charInLikes.rows.length > 0) {
+        const result = await pool.query(
+            `DELETE FROM likes
+             WHERE user_id = $1 AND char_id = $2;`,
+            [userId, charId]
+        );
+    }
+
+    if (charInDislikes.rows.length === 0) {
+        const result = await pool.query(
+            `INSERT INTO dislikes (user_id, char_id)
+            VALUES ($1, $2);`,
+            [userId, charId]
+        );
+        res.json(true);
+    }
+    else {
+        const result = await pool.query(
+            `DELETE FROM dislikes 
+            WHERE user_id = $1 AND char_id = $2;`,
+            [userId, charId]
+        );
+        res.json(false);
+    }
+})
+
+// check is character in user's likes
 app.post('/api/is-liked', async (req, res) => {
     try {
         const {charId} = {
@@ -649,6 +708,30 @@ app.post('/api/is-liked', async (req, res) => {
         const charInLikes = await checkCharInLikes(userId, charId);
 
         if (charInLikes.rows.length > 0)
+            return res.json(true);
+        else
+            return res.json(false);
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+// check is character in user's dislikes
+app.post('/api/is-disliked', async (req, res) => {
+    try {
+        const {charId} = {
+            charId: parseInt(req.body.charId)
+        }
+
+        const decoded = checkAuthorization(req, res);
+
+        if (!decoded) return;
+
+        const userId = decoded.id;
+
+        const charInDislikes = await checkCharInDislikes(userId, charId);
+
+        if (charInDislikes.rows.length > 0)
             return res.json(true);
         else
             return res.json(false);
