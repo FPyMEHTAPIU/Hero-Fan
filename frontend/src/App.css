@@ -39,6 +39,7 @@ h1 {
     font-weight: 400;
     -webkit-text-stroke: 0.4px black;
     align-self: center;
+    text-align: center;
 }
 
 h2 {
@@ -50,6 +51,7 @@ h2 {
     color: white;
     -webkit-text-stroke: 0.3px black;
     margin: 0 auto 0 auto;
+    text-align: center;
 }
 
 #sort {

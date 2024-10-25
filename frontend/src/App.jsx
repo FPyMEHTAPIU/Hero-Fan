@@ -63,7 +63,6 @@ const App = () => {
     const lastCharIndex = currentPage * charactersOnPage;
     const firstCharIndex = lastCharIndex - charactersOnPage;
     const [currentCharacters, setCurrentCharacters] = useState([]);
-    //const currentCharacters = marvList.slice(firstCharIndex, lastCharIndex);
 
     const fetchOrderedCharacters = async () => {
         try {
@@ -88,7 +87,7 @@ const App = () => {
     };
 
     const handleChangeOrder = () => {
-        setAscOrder(!ascOrder);  // Меняем порядок сортировки перед запросом
+        setAscOrder(!ascOrder);
         setIsSortClicked(true);
         fetchOrderedCharacters();
     };

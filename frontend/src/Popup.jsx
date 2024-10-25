@@ -195,7 +195,7 @@ const Popup = ({
                         />
                         {passwordError && <p id="password-message" className="error-message">{passwordError}</p>}
                     </div>
-                    {winType === 'Register' || winType === 'Change password' && (
+                    {(winType === 'Register' || winType === 'Change password') && (
                         <>
                             <div className="input-div">
                                 <p className="input-name">Confirm Password</p>
