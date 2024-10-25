@@ -18,7 +18,7 @@
 /* TODO: reduce popup to 75% */
 .popup {
     background-color: #1810AC;
-    padding: 55px 110px;
+    padding: 45px 70px;
     border-radius: 10px;
     position: relative;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -31,7 +31,7 @@
     display: flex;
     justify-content: center;
     padding: 0;
-    font-size: 72px;
+    font-size: 64px;
     color: white;
     font-family: "Gagalin", sans-serif;
     font-weight: 400;
@@ -43,9 +43,9 @@
     right: 0;
     position: absolute;
     border-radius: 4px;
-    margin: 40px 40px auto auto;
-    width: 64px;
-    height: 64px;
+    margin: 30px 30px auto auto;
+    width: 48px;
+    height: 48px;
 }
 
 .cross-button:hover {
@@ -59,8 +59,8 @@
 }
 
 .cross-button img {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     align-items: center;
 }
 
@@ -74,7 +74,7 @@
     height: fit-content;
     font-family: "Gagalin", sans-serif;
     font-weight: 400;
-    font-size: 48px;
+    font-size: 36px;
     color: #fff;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;
@@ -94,8 +94,11 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: "AA Stetica Medium", sans-serif;
-    font-size: 20px;
+    justify-self: center;
+}
+
+#switch p {
+    font-size: 14px;
     color: white;
     height: fit-content;
 }
@@ -115,27 +118,31 @@ input {
     color: red;
     font-family: "AA Stetica Regular", sans-serif;
     margin: 5px 0 0 0;
-    font-size: 15px;
+    font-size: 12px;
+    height: fit-content;
+    line-height: 15px;
 }
 
 #big-message {
     display: flex;
     justify-content: center;
     color: red;
-    margin: 20px auto 0;
+    margin: 10px auto 0;
     font-family: "AA Stetica Medium", sans-serif;
-    font-size: 32px;
+    font-size: 24px;
+    text-align: center;
+    line-height: 25px;
 }
 
 .input-div {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .confirm-button {
-    margin: 30px auto 0;
+    margin: 10px auto 0;
     background-color: #570A08;
     font-family: "Gagalin", sans-serif;
-    font-size: 64px;
+    font-size: 48px;
     text-align: center;
     -webkit-text-stroke-width: 0.5px;
     -webkit-text-stroke-color: black;

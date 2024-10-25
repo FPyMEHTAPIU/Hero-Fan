@@ -1,5 +1,4 @@
 import ToggleButton from "./ToggleButton.jsx";
-import { useNavigate } from "react-router-dom";
 
 const renderItems = (currentCharacters, favList, setFavList, openPopup, navigate ) => {
 
@@ -18,8 +17,8 @@ const renderItems = (currentCharacters, favList, setFavList, openPopup, navigate
                 onClick={(e) => e.stopPropagation()}
                 openPopup={openPopup}
             />
-            <div className="char-name">
-                <p className="char-name">{character.name}</p>
+            <div className="user-name">
+                <p className="user-name">{character.name}</p>
             </div>
         </button>
     ));

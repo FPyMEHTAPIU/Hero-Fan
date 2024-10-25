@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {useParams, useLocation, useNavigate} from "react-router-dom";
 import renderItems from "./RenderItems.jsx";
-import './App.css';
 import usePopup from "./UsePopup.jsx";
 import Popup from "./Popup.jsx";
+import renderUsers from "./RenderUsers.jsx";
+
+import './App.css';
 
 const Search = () => {
     const [marvList, setMarvList] = useState([]);
@@ -47,12 +49,11 @@ const Search = () => {
 
                 const data = await response.json();
                 setMarvList(data);
-                console.log(data);
                 if (!response.ok) {
                     throw new Error(`Failed to search ${isUserSelected ? 'user' : 'hero'}!`);
                 }
             } catch (error) {
-                console.error(error);
+                console.error({error: `Failed to search ${isUserSelected ? 'user' : 'hero'}!`});
             }
         };
 
@@ -64,15 +65,28 @@ const Search = () => {
     return (
         <main>
             <h2>Searching results of: '{charName}'</h2>
-            <div className="heroes">
-                {renderItems(
-                    marvList,
-                    favList,
-                    setFavList,
-                    openPopup,
-                    navigate
-                )}
-            </div>
+            {!isUserSelected ?
+                <>
+                    <div className="heroes">
+                        {renderItems(
+                            marvList,
+                            favList,
+                            setFavList,
+                            openPopup,
+                            navigate
+                        )}
+                    </div>
+                </>
+                :
+                <>
+                    <div id="user-block">
+                        {renderUsers(
+                            marvList,
+                            navigate
+                        )}
+                    </div>
+                </>
+            }
             {isWindowShown && (
                 <Popup
                     winType={windowType}
@@ -88,4 +102,4 @@ const Search = () => {
     );
 };
 
-export default Search;
+            export default Search;

@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "./Auth.js";
 import usePopup from "./UsePopup.jsx";
 import ToggleButton from "./ToggleButton.jsx";
+import Popup from "./Popup.jsx";
 
 import './CharacterPage.css'
-import Popup from "./Popup.jsx";
+import './CharsUsers.css'
 
 const CharacterPage = () => {
     const { id } = useParams();

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Popup from "./Popup.jsx";
 import usePopup from "./UsePopup.jsx";
-import { getToken, checkToken} from "./Auth.js";
+import { getToken, checkToken } from "./Auth.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import handleBeforeInput from "./InputCheck.js";
-import Search from "./Search.jsx";
 
 import './Header.css';
 
@@ -13,7 +12,7 @@ const Header = () => {
     const [username, setUsername] = useState('Log in');
     const navigate = useNavigate();
     const location = useLocation();
-    const [charName, setCharName] = useState('')
+    const [charName, setCharName] = useState('');
     const [isSearchClicked, setIsSearchClicked] = useState(false);
     const [searchError, setSearchError] = useState('');
     const [isUserSelected, setUserSelected] = useState(false);
@@ -45,11 +44,10 @@ const Header = () => {
         const newToken = await checkToken();
         if (!newToken) {
             await handleChangeUsername();
-            return ;
+            return;
         }
 
         const userId = newToken.id;
-        //console.log(userId);
         navigate(`/user/${userId}`);
     };
 
@@ -65,36 +63,41 @@ const Header = () => {
     };
 
     const handleSearchClick = () => {
-        setIsSearchClicked(true)
+        setIsSearchClicked(true);
     };
 
     const handleSearch = () => {
-        if (isUserSelected)
-            navigate(`/search/user/${charName}`);
-        else
-            navigate(`/search/char/${charName}`)
-    }
+        if (!charName) return; // Проверка, чтобы не отправлять пустой запрос
+
+        if (isUserSelected) {
+            if (token) {
+                navigate(`/search/user/${charName}`);
+            } else {
+                openPopup();
+            }
+        } else {
+            navigate(`/search/char/${charName}`);
+        }
+    };
 
     const handleClear = () => {
         setCharName('');
     }
 
     const chooseUser = () => {
-        if (!isUserSelected)
-            setCharSelected(false);
+        if (!isUserSelected) setCharSelected(false);
         setUserSelected(!isUserSelected);
     }
 
     const chooseChar = () => {
-        if (!isCharSelected)
-            setUserSelected(false);
+        if (!isCharSelected) setUserSelected(false);
         setCharSelected(!isCharSelected);
     }
 
     return (
         <header>
             <a href="/1" id="logo">
-                <img src="../includes/HERO%20FAN.svg" alt="Logo"/>
+                <img src="../includes/HERO%20FAN.svg" alt="Logo" />
             </a>
             { !isSearchClicked &&
                 <button
@@ -102,7 +105,7 @@ const Header = () => {
                     onClick={handleSearchClick}
                 >
                     <div id="search-back">
-                        <img src="../includes/Search.svg" alt="Search"/>
+                        <img src="../includes/Search.svg" alt="Search" />
                     </div>
                     <p className="username">Search</p>
                 </button>
@@ -127,10 +130,10 @@ const Header = () => {
                         <div className="search blue-back">
                             <button
                                 className="search-button"
-                                onClick={charName ? handleSearch : {}}
+                                onClick={handleSearch}
                             >
-                                <div id="search-back" style={{marginRight: '0px'}}>
-                                    <img src="../includes/Search.svg" alt="Search"/>
+                                <div id="search-back" style={{ marginRight: '0px' }}>
+                                    <img src="../includes/Search.svg" alt="Search" />
                                 </div>
                             </button>
                             <div id="search-line">
@@ -148,7 +151,7 @@ const Header = () => {
                                 >
                                     <img
                                         src="../includes/Cross.svg" alt="Clear"
-                                        style={charName.length === 0 ? {visibility: 'hidden'} : {visibility: 'visible'}}
+                                        style={charName.length === 0 ? { visibility: 'hidden' } : { visibility: 'visible' }}
                                     />
                                 </button>
                             </div>
@@ -160,7 +163,7 @@ const Header = () => {
                 id="userblock"
                 onClick={handeUserBlock}
             >
-                <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar"/>
+                <img src="../includes/User%20Default_Cover.svg" className="avatar" alt="User Avatar" />
                 <p className="username">{username}</p>
             </button>
 
@@ -178,28 +181,5 @@ const Header = () => {
         </header>
     );
 };
-
-/*
-
-<button id="DANGER" onClick={createByAPI}>
-                <p>DANGER!!!</p>
-            </button>
-            <button id="UPDATER" onClick={updateByAPI}>
-                <p>UPDATE DB!!!</p>
-            </button>
-
-const createByAPI = () => {
-    fetch('/api/marv-chars-api')
-        .then((response) => response.json())
-        .catch((error) => console.error('Error fetching characters', error));
-}
-
-const updateByAPI = () => {
-    fetch('/api/marv-update-chars-db')
-        .then((response) => response.json())
-        .catch((error) => console.error('Error fetching characters', error));
-}
-*/
-
 
 export default Header;

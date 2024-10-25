@@ -13,6 +13,7 @@ import Footer from "./Footer.jsx";
 import Search from "./Search.jsx";
 
 import './App.css';
+import './CharsUsers.css'
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);

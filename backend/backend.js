@@ -562,7 +562,7 @@ app.post('/api/search/:name', async (req, res) => {
 
         if (isUser) {
             const result = await pool.query(
-                `SELECT * FROM users
+                `SELECT id, login, photo FROM users
                 WHERE login ILIKE $1;`,
                 [`%${name}%`]
             )

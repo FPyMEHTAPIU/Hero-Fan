@@ -4,10 +4,11 @@ import { getToken, checkToken } from "./Auth.js";
 import fetchFavorites from "./FetchFavorites.js";
 import usePopup from "./UsePopup.jsx";
 import renderItems from "./RenderItems.jsx";
+import Popup from "./Popup.jsx";
 
 import './App.css'
 import './Userpage.css'
-import Popup from "./Popup.jsx";
+import './CharsUsers.css'
 
 const UserPage = () => {
     const { id } = useParams();
