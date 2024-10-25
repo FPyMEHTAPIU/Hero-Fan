@@ -17,6 +17,8 @@ const CharacterPage = () => {
     const [favList, setFavList] = useState([]);
     const [isLike, setIsLike] = useState(false);
     const [isDislike, setIsDislike] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
+    const [dislikeCount, setDislikeCount] = useState(0);
 
     const {
         isWindowShown,
@@ -101,9 +103,52 @@ const CharacterPage = () => {
             }
         };
 
+
+
         checkIsLiked();
         checkIsDisliked();
     }, [token, id]);
+
+    useEffect(() => {
+        const checkLikes = async () => {
+            try {
+                const response = await fetch(`/api/char-likes/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch likes count data!');
+                }
+                const data = await response.json();
+                setLikeCount(data);
+            } catch (error) {
+                console.error('Failed to fetch likes count data!', error);
+            }
+        };
+
+        const checkDislikes = async () => {
+            try {
+                const response = await fetch(`/api/char-dislikes/${id}`, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch likes count data!');
+                }
+                const data = await response.json();
+                setDislikeCount(data);
+            } catch (error) {
+                console.error('Failed to fetch likes count data!', error);
+            }
+        };
+
+        checkLikes();
+        checkDislikes()
+    }, [isLike, isDislike])
 
     useEffect(() => {
         const fetchCharData = async () => {
@@ -129,31 +174,6 @@ const CharacterPage = () => {
 
         fetchCharData();
     }, [id]);
-
-    useEffect(() => {
-        const fetchLikes = async () => {
-            try {
-                const response = await fetch(`/api/char-likes/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch character data!');
-                }
-                const data = await response.json();
-                console.log (data);
-                setCharData(data);
-            } catch (error) {
-                console.error(error);
-                setError('Error fetching character data');
-            }
-        };
-
-
-
-    }, [token]);
 
     const doLike = async () => {
         try {
@@ -253,12 +273,14 @@ const CharacterPage = () => {
                         onClick={handleLike}
                     >
                         <img src={isLike ? "/Like_filled.svg" : "/Like_empty.svg"} alt="Like"/>
+                        <p className="counter">{likeCount}</p>
                     </button>
                     <button
                         className="like dislike"
                         onClick={handleDislike}
                     >
                         <img src={isDislike ? "/Dislike_filled.svg" : "/Dislike_empty.svg"} alt="Dislike"/>
+                        <p className="counter">{dislikeCount}</p>
                     </button>
                 </div>
             </div>

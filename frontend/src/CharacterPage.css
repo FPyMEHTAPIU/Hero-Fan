@@ -106,7 +106,6 @@ ul {
 #actions {
     display: grid;
     width: auto;
-    max-width: 120px;
     margin: 0 0 0 10px;
     position: relative;
 }
@@ -135,8 +134,9 @@ ul {
     justify-self: end;
     align-self: start;
     align-items: center;
-    width: 64px;
-    height: 64px;
+    min-width: 64px;
+    min-height: 64px;
+    width: fit-content;
 }
 
 .like:hover {

@@ -598,13 +598,29 @@ app.post('/api/search/:name', async (req, res) => {
 
 app.get('/api/char-likes/:id', async (req, res) => {
     try {
-        charId = req.params.id;
+        const charId = req.params.id;
 
         const result = await pool.query(
             `SELECT * FROM likes
-            WHERE id = $1;`,
+            WHERE char_id = $1;`,
             [charId]
         );
+        return res.json(result.rows.length);
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+app.get('/api/char-dislikes/:id', async (req, res) => {
+    try {
+        const charId = req.params.id;
+
+        const result = await pool.query(
+            `SELECT * FROM dislikes
+            WHERE char_id = $1;`,
+            [charId]
+        );
+        return res.json(result.rows.length);
     } catch (error) {
         console.error(error);
     }
