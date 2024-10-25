@@ -49,7 +49,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
     };
 
     return (
-        <button
+        <div
             onClick={(e) => {
                 if (onClick) onClick(e);
                 handleClickStar(e);
@@ -60,7 +60,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
                 src={isClicked ? "../includes/Star%20Filled.svg" : "../includes/Star%20Empty.svg"}
                 alt="Star icon"
             />
-        </button>
+        </div>
     );
 };
 

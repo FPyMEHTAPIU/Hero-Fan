@@ -60,6 +60,48 @@ header {
     -webkit-text-stroke: 0.5px black;
 }
 
+#main-search {
+    display: flex;
+    flex-direction: row;
+}
+
+#search-type {
+    display: grid;
+    gap: 3px;
+    justify-content: center;
+    align-content: center;
+    margin-right: 10px;
+}
+
+.chuser {
+    display: flex;
+    flex: 5px;
+    justify-content: center;
+    background-color: #A2A2A2;
+    font-family: "AA Stetica Regular", sans-serif;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+}
+
+.chuser:hover {
+    cursor: pointer;
+    background-color: #1810AC;
+}
+
+.chuser:active, .chuser-fill:active {
+    filter: brightness(0.8);
+}
+
+.chuser-fill {
+    background-color: #1810AC;
+}
+
+.chuser-fill:hover {
+    cursor: pointer;
+    filter: brightness(1.1);
+}
+
 .search {
     display: flex;
     justify-content: center;
@@ -117,6 +159,9 @@ header {
     border: none;
     outline: none;
     caret-color: white;
+    color: white;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 20px;
 }
 
 #clear-cross {
@@ -138,8 +183,6 @@ header {
 
 #clear-cross:hover {
     cursor: pointer;
-    background-color: rgba(127,127,127,0.2);
-    border-radius: 4px;
 }
 
 #clear-cross:active {

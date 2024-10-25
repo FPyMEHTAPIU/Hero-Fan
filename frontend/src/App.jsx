@@ -10,6 +10,7 @@ import CharacterPage from "./CharacterPage.jsx";
 import renderItems from "./RenderItems.jsx";
 import fetchFavorites from "./FetchFavorites.js";
 import Footer from "./Footer.jsx";
+import Search from "./Search.jsx";
 
 import './App.css';
 
@@ -147,6 +148,8 @@ const RoutingApp = () => {
                 <Route path="/:page" element={<App />} />
                 <Route path="/user/:id" element={<UserPage />} />
                 <Route path="/character/:id" element={<CharacterPage />} />
+                <Route path="/search/char/:name" element={<Search />} />
+                <Route path="/search/user/:name" element={<Search />} />
                 <Route exact path="/" element={<App page="1" />} />
             </Routes>
             <Footer />

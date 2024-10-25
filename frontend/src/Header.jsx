@@ -4,6 +4,7 @@ import usePopup from "./UsePopup.jsx";
 import { getToken, checkToken} from "./Auth.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import handleBeforeInput from "./InputCheck.js";
+import Search from "./Search.jsx";
 
 import './Header.css';
 
@@ -15,6 +16,8 @@ const Header = () => {
     const [charName, setCharName] = useState('')
     const [isSearchClicked, setIsSearchClicked] = useState(false);
     const [searchError, setSearchError] = useState('');
+    const [isUserSelected, setUserSelected] = useState(false);
+    const [isCharSelected, setCharSelected] = useState(false);
 
     const {
         isWindowShown,
@@ -65,12 +68,27 @@ const Header = () => {
         setIsSearchClicked(true)
     };
 
-    const search = async () => {
-
+    const handleSearch = () => {
+        if (isUserSelected)
+            navigate(`/search/user/${charName}`);
+        else
+            navigate(`/search/char/${charName}`)
     }
 
-    const handleSearch = async () => {
-        await search();
+    const handleClear = () => {
+        setCharName('');
+    }
+
+    const chooseUser = () => {
+        if (!isUserSelected)
+            setCharSelected(false);
+        setUserSelected(!isUserSelected);
+    }
+
+    const chooseChar = () => {
+        if (!isCharSelected)
+            setUserSelected(false);
+        setCharSelected(!isCharSelected);
     }
 
     return (
@@ -90,35 +108,54 @@ const Header = () => {
                 </button>
             }
             {isSearchClicked &&
-                <div className="search blue-back">
-                    <button
-                        className="search-button"
-                        onClick={handleSearch}
-                    >
-                        <div id="search-back" style={{ marginRight: '0px'}}>
-                            <img src="../includes/Search.svg" alt="Search"/>
+                <>
+                    <div id="main-search">
+                        <div id="search-type">
+                            <button
+                                className={isUserSelected ? "chuser chuser-fill" : "chuser"}
+                                onClick={chooseUser}
+                            >
+                                user
+                            </button>
+                            <button
+                                className={isCharSelected ? "chuser chuser-fill" : "chuser"}
+                                onClick={chooseChar}
+                            >
+                                hero
+                            </button>
                         </div>
-                    </button>
-                    <div id="search-line">
-                        <input
-                            id={charName.length === 0 ? "search-empty" : "search-typing"}
-                            name="search input"
-                            value={charName}
-                            onChange={(e) => {
-                                setCharName(e.target.value);
-                            }}
-                            onBeforeInput={(e) => handleBeforeInput(e, setSearchError)}
-                        />
-                        <button id="clear-cross"
-                                onClick={charName.length > 0 ? handleClear : {}}
-                        >
-                            <img
-                                src="../includes/Cross.svg" alt="Clear"
-                                style={charName.length === 0 ? {visibility: 'hidden'} : {visibility: 'visible'}}
-                            />
-                        </button>
+                        <div className="search blue-back">
+                            <button
+                                className="search-button"
+                                onClick={charName ? handleSearch : {}}
+                            >
+                                <div id="search-back" style={{marginRight: '0px'}}>
+                                    <img src="../includes/Search.svg" alt="Search"/>
+                                </div>
+                            </button>
+                            <div id="search-line">
+                                <input
+                                    id={charName.length === 0 ? "search-empty" : "search-typing"}
+                                    name="search input"
+                                    value={charName}
+                                    onChange={(e) => {
+                                        setCharName(e.target.value);
+                                    }}
+                                    onBeforeInput={(e) => handleBeforeInput(e, setSearchError)}
+                                />
+                                <button id="clear-cross"
+                                        onClick={charName.length > 0 ? handleClear : {}}
+                                >
+                                    <img
+                                        src="../includes/Cross.svg" alt="Clear"
+                                        style={charName.length === 0 ? {visibility: 'hidden'} : {visibility: 'visible'}}
+                                    />
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>}
+                </>
+            }
             <button
                 id="userblock"
                 onClick={handeUserBlock}

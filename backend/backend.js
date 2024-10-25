@@ -555,6 +555,31 @@ app.patch('/api/marv-users/password/:id', async (req, res) => {
     }
 })
 
+app.post('/api/search/:name', async (req, res) => {
+    try {
+        const name = req.params.name;
+        const isUser = req.body.isUser;
+
+        if (isUser) {
+            const result = await pool.query(
+                `SELECT * FROM users
+                WHERE login ILIKE $1;`,
+                [`%${name}%`]
+            )
+            return res.status(200).json(result.rows);
+        } else {
+            const result = await pool.query(
+                `SELECT * FROM characters
+                WHERE name ILIKE $1;`,
+                [`%${name}%`]
+            )
+            return res.status(200).json(result.rows);
+        }
+    } catch (error) {
+        return res.status(400).json({ error: 'Error searching user/hero!' })
+    }
+})
+
 app.listen(port, () => {
     console.log(`A big hello from port ${port}`)
 })
