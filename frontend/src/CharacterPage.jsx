@@ -53,6 +53,35 @@ const CharacterPage = () => {
     };
 
     useEffect(() => {
+        const checkIsLiked = async () => {
+            if (!token) return;
+            try {
+                const response = await fetch(`/api/is-liked`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        charId: id ? id : 0
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch likes data!');
+                }
+                const data = await response.json();
+                console.log(data);
+                setIsLike(data);
+            } catch (error) {
+                console.error("Error fetching like status:", error);
+            }
+        };
+
+        checkIsLiked();
+    }, [token, id]);
+
+    useEffect(() => {
         const fetchCharData = async () => {
             await checkToken();
             try {
@@ -66,7 +95,7 @@ const CharacterPage = () => {
                     throw new Error('Failed to fetch character data!');
                 }
                 const data = await response.json();
-                console.log (data);
+
                 setCharData(data);
             } catch (error) {
                 console.error(error);
@@ -75,7 +104,6 @@ const CharacterPage = () => {
         };
 
         fetchCharData();
-        console.log(charData);
     }, [id]);
 
     useEffect(() => {
@@ -97,12 +125,41 @@ const CharacterPage = () => {
                 console.error(error);
                 setError('Error fetching character data');
             }
-        }
-    })
+        };
 
-    const handleLike = () => {
+
+
+    }, [token]);
+
+    const doLike = async () => {
+        try {
+            const response = await fetch(`/api/likes`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    charId: id
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch likes data!');
+            }
+            const data = await response.json();
+            setIsLike(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleLike = async () => {
         if (!token)
             openPopup();
+        else {
+            await doLike();
+        }
     }
 
     const handleDislike = () => {
@@ -149,7 +206,7 @@ const CharacterPage = () => {
                         className="like dislike"
                         onClick={handleDislike}
                     >
-                        <img src={isLike ? "/Dislike_filled.svg" : "/Dislike_empty.svg"} alt="Dislike"/>
+                        <img src={isDislike ? "/Dislike_filled.svg" : "/Dislike_empty.svg"} alt="Dislike"/>
                     </button>
                 </div>
             </div>

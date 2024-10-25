@@ -1,16 +1,16 @@
 @font-face {
     font-family: "AA Stetica Medium";
-    src: url('../public/fonts/stetica/AA Stetica Medium.otf')
+    src: url('/fonts/stetica/AA Stetica Medium.otf')
 }
 
 @font-face {
     font-family: "AA Stetica Regular";
-    src: url('../public/fonts/stetica/AA Stetica Regular.otf')
+    src: url('/fonts/stetica/AA Stetica Regular.otf')
 }
 
 @font-face {
     font-family: "Gagalin";
-    src: url('../public/fonts/Gagalin-Regular.otf')
+    src: url('/fonts/Gagalin-Regular.otf')
 }
 
 header {

@@ -608,8 +608,6 @@ app.post('/api/likes', async (req, res) => {
         charId: parseInt(req.body.charId)
     }
 
-    console.log (charId);
-
     const decoded = checkAuthorization(req, res);
 
     if (!decoded) return;
@@ -624,7 +622,7 @@ app.post('/api/likes', async (req, res) => {
             VALUES ($1, $2);`,
             [userId, charId]
         );
-        res.json(result.rows);
+        res.json(true);
     }
     else {
         const result = await pool.query(
@@ -632,7 +630,30 @@ app.post('/api/likes', async (req, res) => {
             WHERE user_id = $1 AND char_id = $2;`,
             [userId, charId]
         );
-        res.json(result.rows);
+        res.json(false);
+    }
+})
+
+app.post('/api/is-liked', async (req, res) => {
+    try {
+        const {charId} = {
+            charId: parseInt(req.body.charId)
+        }
+
+        const decoded = checkAuthorization(req, res);
+
+        if (!decoded) return;
+
+        const userId = decoded.id;
+
+        const charInLikes = await checkCharInLikes(userId, charId);
+
+        if (charInLikes.rows.length > 0)
+            return res.json(true);
+        else
+            return res.json(false);
+    } catch (error) {
+        console.error(error);
     }
 })
 
