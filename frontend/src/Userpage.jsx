@@ -56,7 +56,6 @@ const UserPage = () => {
                     throw new Error('Failed to fetch user data!');
                 }
                 const data = await response.json();
-                // console.log (data);
                 setUserData(data);
                 fetchFavorites(setFavList, id);
             } catch (error) {

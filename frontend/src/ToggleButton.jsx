@@ -41,7 +41,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
                     }
                 });
             } else {
-                console.error('Failed to update favorites:', response.statusText); // Обработка ошибок
+                console.error('Failed to update favorites:', response.statusText);
             }
         } catch (error) {
             console.error('Error adding/removing from favorites:', error);

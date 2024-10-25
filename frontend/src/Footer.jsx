@@ -1,11 +1,7 @@
-import { useState, useEffect } from 'react';
-import {useHref, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import './Footer.css'
 
-// TODO:
-// - add popup
-// - add token checker
 
 const Footer = () => {
     const navigate = useNavigate();

@@ -67,7 +67,7 @@ const Header = () => {
     };
 
     const handleSearch = () => {
-        if (!charName) return; // Проверка, чтобы не отправлять пустой запрос
+        if (!charName) return;
 
         if (isUserSelected) {
             if (token) {
