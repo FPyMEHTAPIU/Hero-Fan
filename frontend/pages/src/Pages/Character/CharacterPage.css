@@ -1,0 +1,150 @@
+#char-main {
+    display: flex;
+    justify-content: space-between;
+    padding: 55px 30px;
+    width: 90%;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    flex-direction: row;
+    margin-bottom: 50px;
+}
+
+#char-content {
+    height: fit-content;
+    display: flex;
+    justify-content: start;
+    width: fit-content;
+    max-width: calc(100% - 130px);
+}
+
+#char-image {
+    align-self: start;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    height: 100%;
+    max-height: 410px;
+    max-width: 410px;
+    border-radius: 25px;
+}
+
+#text-info {
+    display: grid;
+    margin-left: 110px;
+    max-width: 500px;
+    width: fit-content;
+}
+
+#char-name {
+    font-family: "Gagalin", sans-serif;
+    font-weight: 400;
+    font-size: 96px;
+    color: white;
+    line-height: 75px;
+    justify-content: start;
+    margin: 0 auto 25px 0;
+    text-align: left;
+}
+
+#main-info {
+    display: grid;
+    justify-content: start;
+}
+
+p {
+    margin: 0;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 20px;
+    color: white;
+}
+
+#events {
+    display: grid;
+    width: auto;
+    margin-top: 35px;
+    height: fit-content;
+}
+
+li {
+    color: white;
+}
+
+#show-more {
+    display: flex;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 16px;
+    color: white;
+    justify-content: start;
+    padding: 0;
+    margin-top: 20px;
+    width: 150px;
+    height: 40px;
+}
+
+#show-more:hover {
+    cursor: pointer;
+    background: none;
+    filter: brightness(1.5);
+    -webkit-filter: brightness(1.5);
+}
+
+#show-more:active {
+    filter: brightness(0.8);
+    -webkit-filter: brightness(0.8);
+}
+
+ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+#show-more img {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+}
+
+#actions {
+    display: grid;
+    width: auto;
+    margin: 0 0 0 10px;
+    position: relative;
+}
+
+#star {
+    scale: 1.25;
+    width: fit-content;
+    height: fit-content;
+    align-self: start;
+    justify-self: end;
+}
+
+.star {
+    visibility: visible;
+}
+
+#likes {
+    display: flex;
+    justify-content: space-between;
+    align-self: end;
+}
+
+.like {
+    display: flex;
+    justify-content: center;
+    justify-self: end;
+    align-self: start;
+    align-items: center;
+    min-width: 64px;
+    min-height: 64px;
+    width: fit-content;
+}
+
+.like:hover {
+    cursor: pointer;
+    background-color: rgba(175, 175, 175, 0.15);
+    border-radius: 8px;
+}
+
+.like:active {
+    filter: brightness(0.8);
+}
