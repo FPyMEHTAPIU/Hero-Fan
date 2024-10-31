@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Popup from "./Popup.jsx";
-import usePopup from "./UsePopup.jsx";
+import usePopup from "./usePopup.js";
 import { getToken, checkToken } from "./Auth.js";
 import { useNavigate, useLocation } from "react-router-dom";
 import handleBeforeInput from "./InputCheck.js";
@@ -66,7 +66,8 @@ const Header = () => {
         setIsSearchClicked(true);
     };
 
-    const handleSearch = () => {
+    const handleSearch = (e) => {
+        e.preventDefault();
         if (!charName) return;
 
         if (isUserSelected) {
@@ -127,10 +128,10 @@ const Header = () => {
                                 hero
                             </button>
                         </div>
-                        <div className="search blue-back">
+                        <form className="search blue-back" onSubmit={handleSearch}>
                             <button
                                 className="search-button"
-                                onClick={handleSearch}
+                                //onClick={handleSearch}
                             >
                                 <div id="search-back" style={{ marginRight: '0px' }}>
                                     <img src="/Search.svg" alt="Search" />
@@ -146,7 +147,7 @@ const Header = () => {
                                     }}
                                     onBeforeInput={(e) => handleBeforeInput(e, setSearchError)}
                                 />
-                                <button id="clear-cross"
+                                <button id="clear-cross" type="button"
                                         onClick={charName.length > 0 ? handleClear : {}}
                                 >
                                     <img
@@ -155,7 +156,7 @@ const Header = () => {
                                     />
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </>
             }

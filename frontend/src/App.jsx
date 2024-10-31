@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import { getToken, checkToken} from "./Auth.js";
 import Popup from "./Popup.jsx";
-import usePopup from "./UsePopup.jsx";
+import usePopup from "./usePopup.js";
 import Pagination from "./Pagination.jsx";
 import UserPage from "./Userpage.jsx";
 import Header from "./Header.jsx";

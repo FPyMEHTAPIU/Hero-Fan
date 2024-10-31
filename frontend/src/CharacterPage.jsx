@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "./Auth.js";
-import usePopup from "./UsePopup.jsx";
+import usePopup from "./usePopup.js";
 import ToggleButton from "./ToggleButton.jsx";
 import Popup from "./Popup.jsx";
 

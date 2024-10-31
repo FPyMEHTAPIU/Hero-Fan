@@ -182,17 +182,7 @@ const Popup = ({
                     </div>
                     <div className="input-div">
                         <p className="input-name">Password</p>
-                        <input
-                            id="password-field"
-                            name="password input"
-                            type="password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                setErrorMessage('');
-                            }}
-                            onBeforeInput={(e) => handleBeforeInput(e, setPasswordError)}
-                        />
+
                         {passwordError && <p id="password-message" className="error-message">{passwordError}</p>}
                     </div>
                     {(winType === 'Register' || winType === 'Change password') && (

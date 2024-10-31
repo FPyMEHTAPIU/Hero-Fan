@@ -2,7 +2,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "./Auth.js";
 import fetchFavorites from "./FetchFavorites.js";
-import usePopup from "./UsePopup.jsx";
+import usePopup from "./usePopup.js";
 import renderItems from "./RenderItems.jsx";
 import Popup from "./Popup.jsx";
 
