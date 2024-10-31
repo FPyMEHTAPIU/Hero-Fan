@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { checkToken, getToken } from './Auth.js';
+import { checkToken, getToken } from '../Windows/Auth.js';
 
 const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }) => {
     const [isClicked, setIsClicked] = useState(false);

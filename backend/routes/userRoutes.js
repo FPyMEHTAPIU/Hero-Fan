@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const secret = process.env.SECRET_KEY;
 const methods = require('../methods.js');
 const pool = require('../db.js');
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {useParams, useLocation, useNavigate} from "react-router-dom";
-import renderItems from "./RenderItems.jsx";
-import usePopup from "./usePopup.js";
-import Popup from "./Popup.jsx";
-import renderUsers from "./RenderUsers.jsx";
+import renderItems from "../../Render/RenderItems.jsx";
+import usePopup from "../../Windows/usePopup.js";
+import Popup from "../../Windows/Popup.jsx";
+import renderUsers from "../../Render/RenderUsers.jsx";
 
-import './App.css';
+import '../../Pages/Home/App.css';
 
 const Search = () => {
     const [marvList, setMarvList] = useState([]);

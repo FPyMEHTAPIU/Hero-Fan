@@ -10,8 +10,6 @@ const Popup = ({
                }) => {
     const [login, setLogin] = useState('');
     const [loginError, setLoginError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     const attemptLogin = async (username, password, setErrorMessage) => {
@@ -182,8 +180,16 @@ const Popup = ({
                     </div>
                     <div className="input-div">
                         <p className="input-name">Password</p>
-
-                        {passwordError && <p id="password-message" className="error-message">{passwordError}</p>}
+                        <input
+                            id="password-field"
+                            name="password input"
+                            type="password"
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrorMessage('');
+                            }}
+                        />
                     </div>
                     {(winType === 'Register' || winType === 'Change password') && (
                         <>
@@ -198,11 +204,7 @@ const Popup = ({
                                         setConfirmPassword(e.target.value);
                                         setErrorMessage('');
                                     }}
-                                    onBeforeInput={(e) => handleBeforeInput(e, setConfirmPasswordError)}
                                 />
-                                {confirmPasswordError && (
-                                    <p id="confirm-message" className="error-message">{confirmPasswordError}</p>
-                                )}
                             </div>
                         </>
                     )}

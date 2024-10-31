@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Popup from "./Popup.jsx";
-import usePopup from "./usePopup.js";
-import { getToken, checkToken } from "./Auth.js";
+import Popup from "../Windows/Popup.jsx";
+import usePopup from "../Windows/usePopup.js";
+import { getToken, checkToken } from "../Windows/Auth.js";
 import { useNavigate, useLocation } from "react-router-dom";
-import handleBeforeInput from "./InputCheck.js";
+import handleBeforeInput from "../Windows/InputCheck.js";
 
 import './Header.css';
 
@@ -16,7 +16,7 @@ const Header = () => {
     const [isSearchClicked, setIsSearchClicked] = useState(false);
     const [searchError, setSearchError] = useState('');
     const [isUserSelected, setUserSelected] = useState(false);
-    const [isCharSelected, setCharSelected] = useState(false);
+    const [isCharSelected, setCharSelected] = useState(true);
 
     const {
         isWindowShown,
@@ -87,12 +87,16 @@ const Header = () => {
 
     const chooseUser = () => {
         if (!isUserSelected) setCharSelected(false);
+        else if (isUserSelected) setCharSelected(true);
         setUserSelected(!isUserSelected);
     }
 
     const chooseChar = () => {
-        if (!isCharSelected) setUserSelected(false);
-        setCharSelected(!isCharSelected);
+        if (!isCharSelected) {
+            setUserSelected(false);
+            setCharSelected(true);
+        }
+        else setCharSelected(true);
     }
 
     return (
@@ -131,7 +135,6 @@ const Header = () => {
                         <form className="search blue-back" onSubmit={handleSearch}>
                             <button
                                 className="search-button"
-                                //onClick={handleSearch}
                             >
                                 <div id="search-back" style={{ marginRight: '0px' }}>
                                     <img src="/Search.svg" alt="Search" />

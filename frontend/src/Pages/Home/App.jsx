@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
-import { getToken, checkToken} from "./Auth.js";
-import Popup from "./Popup.jsx";
-import usePopup from "./usePopup.js";
-import Pagination from "./Pagination.jsx";
-import UserPage from "./Userpage.jsx";
-import Header from "./Header.jsx";
-import CharacterPage from "./CharacterPage.jsx";
-import renderItems from "./RenderItems.jsx";
-import fetchFavorites from "./FetchFavorites.js";
-import Footer from "./Footer.jsx";
-import Search from "./Search.jsx";
+import { getToken, checkToken} from "../../Windows/Auth.js";
+import Popup from "../../Windows/Popup.jsx";
+import usePopup from "../../Windows/usePopup.js";
+import Pagination from "../../Pagination/Pagination.jsx";
+import UserPage from "../User/Userpage.jsx";
+import Header from "../../Header/Header.jsx";
+import CharacterPage from "../Character/CharacterPage.jsx";
+import renderItems from "../../Render/RenderItems.jsx";
+import fetchFavorites from "../../FavoritesHandling/FetchFavorites.js";
+import Footer from "../../Footer/Footer.jsx";
+import Search from "../../Header/Search/Search.jsx";
 
 import './App.css';
-import './CharsUsers.css'
+import '../../Render/CharsUsers.css'
 
 const App = () => {
     const [marvList, setMarvList] = useState([]);

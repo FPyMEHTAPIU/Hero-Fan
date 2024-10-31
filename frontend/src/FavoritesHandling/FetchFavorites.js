@@ -1,4 +1,4 @@
-import { getToken, checkToken} from "./Auth.js";
+import { getToken, checkToken} from "../Windows/Auth.js";
 
 const fetchFavorites = async (setFavList, id) => {
     const token = getToken();

@@ -1,5 +1,5 @@
-import ToggleButton from "./ToggleButton.jsx";
-import './App.css'
+import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
+import '../Pages/Home/App.css'
 import './CharsUsers.css'
 
 const renderItems = (currentCharacters, favList, setFavList, openPopup, navigate ) => {
