@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Popup from "../Windows/Popup.jsx";
 import usePopup from "../Windows/usePopup.js";
 import { getToken, checkToken } from "../Windows/Auth.js";
@@ -17,6 +17,7 @@ const Header = () => {
     const [searchError, setSearchError] = useState('');
     const [isUserSelected, setUserSelected] = useState(false);
     const [isCharSelected, setCharSelected] = useState(true);
+    const inputRef = useRef(null);
 
     const {
         isWindowShown,
@@ -65,6 +66,12 @@ const Header = () => {
     const handleSearchClick = () => {
         setIsSearchClicked(true);
     };
+
+    useEffect(() => {
+        if (isSearchClicked && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [isSearchClicked]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -143,6 +150,7 @@ const Header = () => {
                             <div id="search-line">
                                 <input
                                     id={charName.length === 0 ? "search-empty" : "search-typing"}
+                                    ref={inputRef}
                                     name="search input"
                                     value={charName}
                                     onChange={(e) => {
