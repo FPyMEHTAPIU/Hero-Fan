@@ -1,5 +1,7 @@
+import storage from 'next-storage'
+
 export const getToken = () => {
-    return localStorage.getItem('token');
+    return storage.getItem('token');
 };
 
 export const checkToken = async () => {

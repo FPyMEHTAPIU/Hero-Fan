@@ -52,7 +52,7 @@ router.post('/api/login', async (req, res) => {
             [login]
         )
         if (result.rows.length === 0)
-            return res.status(400).json({ error: 'User not found' });
+            return res.status(400).json({ error: 'user not found' });
 
         const id = result.rows[0].id
 

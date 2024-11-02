@@ -1,10 +1,10 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { getToken, checkToken } from "../../Windows/Auth.js";
-import fetchFavorites from "../../FavoritesHandling/FetchFavorites.js";
-import usePopup from "../../Windows/usePopup.js";
-import renderItems from "../../Render/RenderItems.jsx";
-import Popup from "../../Windows/Popup.jsx";
+import { getToken, checkToken } from "../Windows/Auth.js";
+import fetchFavorites from "../FavoritesHandling/FetchFavorites.js";
+import usePopup from "../Windows/usePopup.js";
+import renderItems from "../Render/RenderItems.jsx";
+import Popup from "../Windows/Popup.jsx";
 
 const UserPage = () => {
     const { id } = useParams();
