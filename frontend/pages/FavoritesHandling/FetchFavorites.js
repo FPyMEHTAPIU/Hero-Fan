@@ -2,11 +2,12 @@ import { getToken, checkToken} from "../Windows/Auth.js";
 
 const fetchFavorites = async (setFavList, id) => {
     const token = getToken();
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     if (!token) return;
 
     try {
-        const response = await fetch(`/api/marv-chars/fav-list/${id}`, {
+        const response = await fetch(`${url}/marv-chars/fav-list/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

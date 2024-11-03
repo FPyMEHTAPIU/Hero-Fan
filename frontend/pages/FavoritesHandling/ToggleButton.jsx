@@ -3,6 +3,7 @@ import { checkToken, getToken } from '../Windows/Auth.js';
 
 const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }) => {
     const [isClicked, setIsClicked] = useState(false);
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         setIsClicked(favList.includes(characterName));
@@ -21,7 +22,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
         }
 
         try {
-            const response = await fetch('/api/marv-chars/fav', {
+            const response = await fetch(`${url}/marv-chars/fav`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

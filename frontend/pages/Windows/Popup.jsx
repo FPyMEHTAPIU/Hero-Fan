@@ -10,10 +10,11 @@ const Popup = ({
     const [login, setLogin] = useState('');
     const [loginError, setLoginError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const attemptLogin = async (username, password, setErrorMessage) => {
         try {
-            const loginResponse = await fetch('/api/login', {
+            const loginResponse = await fetch(`${url}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +47,7 @@ const Popup = ({
 
     const registerUser = async (username, password) => {
         try {
-            const registerResponse = await fetch('/api/new-user', {
+            const registerResponse = await fetch(`${url}/new-user`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ const Popup = ({
         const userId = token.id;
 
         try {
-            const response = await fetch(`/api/marv-users/login/${userId}`, {
+            const response = await fetch(`${url}/marv-users/login/${userId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -123,7 +124,7 @@ const Popup = ({
         const userId = token.id;
 
         try {
-            const response = await fetch(`/api/marv-users/password/${userId}`, {
+            const response = await fetch(`${url}/marv-users/password/${userId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

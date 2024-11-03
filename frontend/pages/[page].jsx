@@ -6,7 +6,6 @@ import usePopup from "./Windows/usePopup.js";
 import Pagination from "./Pagination/Pagination.jsx";
 import renderItems from "./Render/RenderItems.jsx";
 import fetchFavorites from "./FavoritesHandling/FetchFavorites.js";
-require('dotenv').config();
 
 const Index = () => {
     const [marvList, setMarvList] = useState([]);
@@ -118,7 +117,7 @@ const Index = () => {
                     favList,
                     setFavList,
                     openPopup,
-                    router.push
+                    router
                 )}
             </div>
             <Pagination

@@ -16,6 +16,7 @@ const CharacterPage = () => {
     const [isDislike, setIsDislike] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [dislikeCount, setDislikeCount] = useState(0);
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
         isWindowShown,
@@ -39,7 +40,7 @@ const CharacterPage = () => {
         if (!token) return;
 
         try {
-            const response = await fetch(`/api/marv-chars/fav-list/${userId}`, {
+            const response = await fetch(`${url}/marv-chars/fav-list/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -55,7 +56,7 @@ const CharacterPage = () => {
         const checkIsLiked = async () => {
             if (!token) return;
             try {
-                const response = await fetch(`/api/is-liked`, {
+                const response = await fetch(`${url}/is-liked`, {
                     method: "POST",
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -79,7 +80,7 @@ const CharacterPage = () => {
         const checkIsDisliked = async () => {
             if (!token) return;
             try {
-                const response = await fetch(`/api/is-disliked`, {
+                const response = await fetch(`${url}/is-disliked`, {
                     method: "POST",
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -109,7 +110,7 @@ const CharacterPage = () => {
     useEffect(() => {
         const checkLikes = async () => {
             try {
-                const response = await fetch(`/api/char-likes/${id}`, {
+                const response = await fetch(`${url}/char-likes/${id}`, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -127,7 +128,7 @@ const CharacterPage = () => {
 
         const checkDislikes = async () => {
             try {
-                const response = await fetch(`/api/char-dislikes/${id}`, {
+                const response = await fetch(`${url}/char-dislikes/${id}`, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -151,7 +152,7 @@ const CharacterPage = () => {
         const fetchCharData = async () => {
             await checkToken();
             try {
-                const response = await fetch(`/api/marv-chars/${id}`, {
+                const response = await fetch(`${url}/marv-chars/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -174,7 +175,7 @@ const CharacterPage = () => {
 
     const doLike = async () => {
         try {
-            const response = await fetch(`/api/likes`, {
+            const response = await fetch(`${url}/likes`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -197,7 +198,7 @@ const CharacterPage = () => {
 
     const doDislike = async () => {
         try {
-            const response = await fetch(`/api/dislikes`, {
+            const response = await fetch(`${url}/dislikes`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${token}`,

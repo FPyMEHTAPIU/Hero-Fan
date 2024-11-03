@@ -1,3 +1,5 @@
+const url = process.env.NEXT_PUBLIC_API_URL;
+
 export const getToken = () => {
     if (typeof window !== 'undefined') {
         return localStorage.getItem('token');
@@ -14,7 +16,7 @@ export const checkToken = async () => {
     }
 
     try {
-        const isTokenValid = await fetch('/api/marv-user/check-token', {
+        const isTokenValid = await fetch(`${url}/marv-user/check-token`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

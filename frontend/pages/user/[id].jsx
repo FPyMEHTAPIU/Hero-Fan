@@ -5,18 +5,21 @@ import fetchFavorites from "../FavoritesHandling/FetchFavorites.js";
 import usePopup from "../Windows/usePopup.js";
 import renderItems from "../Render/RenderItems.jsx";
 import Popup from "../Windows/Popup.jsx";
+import {useRouter} from "next/router";
+require('dotenv').config();
 
 const UserPage = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
     const [token, setToken] = useState(getToken());
-    const navigate = useNavigate();
+    const router = useRouter();
     const [favList, setFavList] = useState([]);
     const [personalFavList, setPersonalFavList] = useState([]);
     const [marvList, setMarvList] = useState([]);
     const [userId, setUserId] = useState(0);
     const [login, setLogin] = useState(localStorage.getItem('login'));
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
         isWindowShown,
@@ -38,11 +41,11 @@ const UserPage = () => {
             console.log(login);
 
             if (!token) {
-                navigate('/1');
+                router.push('/1');
                 return;
             }
             try {
-                const response = await fetch(`/api/marv-users/${id}`, {
+                const response = await fetch(`${url}/marv-users/${id}`, {
                     headers: {
                     'Authorization': `Bearer ${token}`
                     }
@@ -71,13 +74,13 @@ const UserPage = () => {
         const fetchCharData = async (favList) => {
             await checkToken();
             if (!token) {
-                navigate('/1');
+                router.push('/1');
                 return;
             }
             try {
                 if (favList.length === 0)
                     return;
-                const response = await fetch('/api/marv-chars-db/fav', {
+                const response = await fetch(`${url}/marv-chars-db/fav`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -116,7 +119,7 @@ const UserPage = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         setToken(getToken());
-        navigate('/1');
+        router.push('/1');
     }
 
     const handleChangeLogin = async () => {
@@ -184,7 +187,7 @@ const UserPage = () => {
                         personalFavList,
                         setPersonalFavList,
                         openPopup,
-                        navigate
+                        router
                     )}
                 </div>
             </div>

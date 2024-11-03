@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {useParams, useLocation, useNavigate} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import renderItems from "../Render/RenderItems.jsx";
 import usePopup from "../Windows/usePopup.js";
 import Popup from "../Windows/Popup.jsx";
 import renderUsers from "../Render/RenderUsers.jsx";
+import {useRouter} from "next/router";
+require('dotenv').config();
 
 const Search = () => {
     const [marvList, setMarvList] = useState([]);
     const { name: charName } = useParams();
-    const location = useLocation();
+    const router = useRouter();
     const [isUserSelected, setIsUserSelected] = useState(false);
     const [favList, setFavList] = useState([]);
-    const navigate = useNavigate();
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
         isWindowShown,
@@ -27,7 +29,7 @@ const Search = () => {
     } = usePopup();
 
     useEffect(() => {
-        if (location.pathname.includes("/search/user")) {
+        if (router.asPath.includes("/search/user")) {
             setIsUserSelected(true);
         } else {
             setIsUserSelected(false);
@@ -35,7 +37,7 @@ const Search = () => {
 
         const searchData = async () => {
             try {
-                const response = await fetch(`/api/search/${charName}`, {
+                const response = await fetch(`${url}/search/${charName}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -58,7 +60,7 @@ const Search = () => {
         if (charName) {
             searchData();
         }
-    }, [charName, isUserSelected, location.pathname]);
+    }, [charName, isUserSelected, router.asPath]);
 
     return (
         <main>
@@ -71,7 +73,7 @@ const Search = () => {
                             favList,
                             setFavList,
                             openPopup,
-                            navigate
+                            router
                         )}
                     </div>
                 </>
@@ -80,7 +82,7 @@ const Search = () => {
                     <div id="user-block">
                         {renderUsers(
                             marvList,
-                            navigate
+                            router
                         )}
                     </div>
                 </>
