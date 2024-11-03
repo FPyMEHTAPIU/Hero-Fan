@@ -1,7 +1,8 @@
-import storage from 'next-storage'
-
 export const getToken = () => {
-    return storage.getItem('token');
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('token');
+    }
+    return null;
 };
 
 export const checkToken = async () => {
@@ -11,20 +12,27 @@ export const checkToken = async () => {
         console.log('Token not found');
         return;
     }
-    const isTokenValid = await fetch('/api/marv-user/check-token', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+
+    try {
+        const isTokenValid = await fetch('/api/marv-user/check-token', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+
+        if (isTokenValid.status === 403) {
+            console.error('Invalid or expired token. Removing token...');
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('token');
+            }
         }
-    });
 
-    if (isTokenValid.status === 403) {
-        console.error('Invalid or expired token. Removing token...');
-        localStorage.removeItem('token');
-    }
-
-    if (isTokenValid.status === 200) {
-        return await isTokenValid.json();
+        if (isTokenValid.status === 200) {
+            return await isTokenValid.json();
+        }
+    } catch (error) {
+        console.error('Error during token validation:', error);
     }
 };

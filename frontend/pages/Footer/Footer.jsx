@@ -1,8 +1,7 @@
-import {useNavigate} from "react-router-dom";
-
+import { useRouter } from "next/router";
 
 const Footer = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const id = 16;
 
     return (
@@ -11,13 +10,13 @@ const Footer = () => {
                 <div className="buttons">
                     <button
                         className="button"
-                        onClick={() => navigate('/1')}
+                        onClick={() => router.push('/1')}
                     >
                         Home
                     </button>
                     <button
                         className="button"
-                        onClick={() => navigate(`/user/${id}`)}
+                        onClick={() => router.push(`/user/${id}`)}
                     >
                         Profile
                     </button>

@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import Popup from "../Windows/Popup.jsx";
 import usePopup from "../Windows/usePopup.js";
 import { getToken, checkToken } from "../Windows/Auth.js";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useRouter } from "next/router";
 import handleBeforeInput from "../Windows/InputCheck.js";
 
 const Header = () => {
     const [token, setToken] = useState(getToken());
     const [username, setUsername] = useState('Log in');
-    const navigate = useNavigate();
-    const location = useLocation();
+    const router = useRouter();
     const [charName, setCharName] = useState('');
     const [isSearchClicked, setIsSearchClicked] = useState(false);
     const [searchError, setSearchError] = useState('');
@@ -37,7 +36,7 @@ const Header = () => {
 
     useEffect(() => {
         handleChangeUsername();
-    }, [token, location]);
+    }, [token, router.asPath]);
 
     const openUserProfile = async () => {
         const newToken = await checkToken();
@@ -47,7 +46,7 @@ const Header = () => {
         }
 
         const userId = newToken.id;
-        navigate(`/user/${userId}`);
+        router.push(`/user/${userId}`);
     };
 
     const handeUserBlock = async () => {
@@ -77,12 +76,12 @@ const Header = () => {
 
         if (isUserSelected) {
             if (token) {
-                navigate(`/search/user/${charName}`);
+                router.push(`/search/user/${charName}`);
             } else {
                 openPopup();
             }
         } else {
-            navigate(`/search/char/${charName}`);
+            router.push(`/search/char/${charName}`);
         }
     };
 

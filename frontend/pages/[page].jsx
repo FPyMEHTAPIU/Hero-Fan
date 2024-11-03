@@ -1,17 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
-import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from "react-router-dom";
 import { getToken, checkToken} from "./Windows/Auth.js";
 import Popup from "./Windows/Popup.jsx";
 import usePopup from "./Windows/usePopup.js";
 import Pagination from "./Pagination/Pagination.jsx";
-import UserPage from "./user/[id].jsx";
-import Header from "./Header/Header.jsx";
-import CharacterPage from "./сharacter/[id].jsx";
 import renderItems from "./Render/RenderItems.jsx";
 import fetchFavorites from "./FavoritesHandling/FetchFavorites.js";
-import Footer from "./Footer/Footer.jsx";
-import Search from "./search/[name].jsx";
+require('dotenv').config();
 
 const Index = () => {
     const [marvList, setMarvList] = useState([]);
@@ -23,6 +18,7 @@ const Index = () => {
     const token = getToken();
     const [isSortClicked, setIsSortClicked] = useState(false);
     const [ascOrder, setAscOrder] = useState(false);
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
         isWindowShown,
@@ -57,7 +53,7 @@ const Index = () => {
     }, [token]);
 
     const refreshList = () => {
-        fetch('/api/marv-chars-db')
+        fetch(`${url}/marv-chars-db`)
             .then((response) => response.json())
             .then((data) => {
                 setMarvList(data);
