@@ -44,6 +44,7 @@ const Index = () => {
             if (tokenData)
             {
                 const id = tokenData.id;
+                console.log(id)
                 await fetchFavorites(setFavList, id);
             }
         };
@@ -67,7 +68,7 @@ const Index = () => {
 
     const fetchOrderedCharacters = async () => {
         try {
-            const response = await fetch(`${url}/marv-chars-db/sorted`, {
+            const response = await fetch(`${url}/character/sorted`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

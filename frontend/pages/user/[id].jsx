@@ -1,4 +1,3 @@
-import {useNavigate, useParams} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "../Windows/Auth.js";
 import fetchFavorites from "../FavoritesHandling/FetchFavorites.js";
@@ -9,16 +8,22 @@ import {useRouter} from "next/router";
 require('dotenv').config();
 
 const UserPage = () => {
-    const { id } = useParams();
+    const router = useRouter();
+    const { id } = router.query;
+
     const [userData, setUserData] = useState(null);
     const [error, setError] = useState(null);
     const [token, setToken] = useState(getToken());
-    const router = useRouter();
     const [favList, setFavList] = useState([]);
     const [personalFavList, setPersonalFavList] = useState([]);
     const [marvList, setMarvList] = useState([]);
     const [userId, setUserId] = useState(0);
-    const [login, setLogin] = useState(localStorage.getItem('login'));
+    const [login, setLogin] = useState(() => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem('login');
+        }
+        return null;
+    });
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
@@ -37,7 +42,8 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             await checkToken();
-            setLogin(localStorage.getItem('login'));
+            if (typeof window !== "undefined")
+                setLogin(localStorage.getItem('login'));
             console.log(login);
 
             if (!token) {
@@ -117,7 +123,8 @@ const UserPage = () => {
     }, [token]);
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        if (typeof window !== "undefined")
+            localStorage.removeItem('token');
         setToken(getToken());
         router.push('/1');
     }
@@ -150,7 +157,7 @@ const UserPage = () => {
                 </div>
                 <div id="user-data">
                     <div id="login-block">
-                        {userData && userData[0].login}
+                        {userData && userData[0] && userData[0].login}
                         {id == userId ?
                         <button
                             id="change-login"
