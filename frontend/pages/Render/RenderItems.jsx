@@ -1,10 +1,16 @@
 import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 
-const renderItems = (currentCharacters, favList, setFavList, openPopup, router ) => {
+const renderItems = (currentCharacters, favList, setFavList, openPopup, router) => {
+    const handleCharacterClick = async (id) => {
+        console.log(`Navigating to character with ID: ${id}`);
+        await router.push(`/character/${id}`);
+        console.log(`Navigation completed`);
+    };
+
     return currentCharacters.map((character) => (
         <button
             className="hero" key={character.id}
-            onClick={() => router.push(`/character/${character.id}`)}
+            onClick={() => handleCharacterClick(character.id)}
         >
             <img src={character.image} alt={character.name} className="hero-image"/>
 

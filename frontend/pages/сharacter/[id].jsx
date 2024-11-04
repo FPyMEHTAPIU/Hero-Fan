@@ -6,19 +6,19 @@ import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 import Popup from "../Windows/Popup.jsx";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
+const [userId, setUserId] = useState(0);
 
-const CharacterPage = () => {
+const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, initialDislikeCount, initialIsLike, initialIsDislike }) => {
     const router = useRouter();
     const { id } = router.query;
 
-    const [charData, setCharData] = useState(null);
+    const [charData, setCharData] = useState(initialCharData);
+    const [favList, setFavList] = useState(initialFavList);
+    const [isLike, setIsLike] = useState(initialIsLike);
+    const [isDislike, setIsDislike] = useState(initialIsDislike);
+    const [likeCount, setLikeCount] = useState(initialLikeCount);
+    const [dislikeCount, setDislikeCount] = useState(initialDislikeCount);
     const [error, setError] = useState(null);
-    const token = getToken();
-    const [favList, setFavList] = useState([]);
-    const [isLike, setIsLike] = useState(false);
-    const [isDislike, setIsDislike] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
-    const [dislikeCount, setDislikeCount] = useState(0);
 
     const {
         isWindowShown,
@@ -31,6 +31,8 @@ const CharacterPage = () => {
         openPopup,
         closePopup
     } = usePopup();
+
+    const token = getToken();
 
     useEffect(() => {
         checkToken();
@@ -53,131 +55,6 @@ const CharacterPage = () => {
             console.error('Error fetching favorites:', error);
         }
     };
-
-    useEffect(() => {
-        const checkIsLiked = async () => {
-            if (!token) return;
-            try {
-                const response = await fetch(`${url}/is-liked`, {
-                    method: "POST",
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        charId: id ? id : 0
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch likes data!');
-                }
-                const data = await response.json();
-                setIsLike(data);
-            } catch (error) {
-                console.error("Error fetching like status:", error);
-            }
-        };
-
-        const checkIsDisliked = async () => {
-            if (!token) return;
-            try {
-                const response = await fetch(`${url}/is-disliked`, {
-                    method: "POST",
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        charId: id ? id : 0
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch likes data!');
-                }
-                const data = await response.json();
-                setIsDislike(data);
-            } catch (error) {
-                console.error("Error fetching like status:", error);
-            }
-        };
-
-        if (id) {
-            checkIsLiked();
-            checkIsDisliked();
-        }
-    }, [token, id]);
-
-    useEffect(() => {
-        const checkLikes = async () => {
-            if (!id) return;
-            try {
-                const response = await fetch(`${url}/char-likes/${id}`, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch likes count data!');
-                }
-                const data = await response.json();
-                setLikeCount(data);
-            } catch (error) {
-                console.error('Failed to fetch likes count data!', error);
-            }
-        };
-
-        const checkDislikes = async () => {
-            if (!id) return;
-            try {
-                const response = await fetch(`${url}/char-dislikes/${id}`, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch dislikes count data!');
-                }
-                const data = await response.json();
-                setDislikeCount(data);
-            } catch (error) {
-                console.error('Failed to fetch dislikes count data!', error);
-            }
-        };
-
-        if (id) {
-            checkLikes();
-            checkDislikes();
-        }
-    }, [isLike, isDislike, id]);
-
-    useEffect(() => {
-        const fetchCharData = async () => {
-            await checkToken();
-            if (!id) return;
-            try {
-                const response = await fetch(`${url}/marv-chars/${id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch character data!');
-                }
-                const data = await response.json();
-                setCharData(data);
-            } catch (error) {
-                console.error(error);
-                setError('Error fetching character data');
-            }
-        };
-
-        fetchCharData();
-    }, [id]);
 
     const doLike = async () => {
         try {
@@ -295,5 +172,83 @@ const CharacterPage = () => {
         </main>
     );
 };
+
+export async function getServerSideProps(context) {
+    const { id } = context.params;
+    const token = getToken();
+    if (token)
+        setUserId(token.id);
+    const url = process.env.NEXT_PUBLIC_API_URL;
+
+    console.log(`Fetching data for character ID: ${id}`);
+
+    try {
+        const [charResponse, favListResponse, likeCountResponse, dislikeCountResponse, isLikeResponse, isDislikeResponse] = await Promise.all([
+            fetch(`${url}/marv-chars/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }),
+            fetch(`${url}/marv-chars/fav-list/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }),
+            fetch(`${url}/char-likes/${id}`),
+            fetch(`${url}/char-dislikes/${id}`),
+            fetch(`${url}/is-liked`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ charId: id })
+            }),
+            fetch(`${url}/is-disliked`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ charId: id })
+            })
+        ]);
+
+        if (!charResponse.ok || !favListResponse.ok || !likeCountResponse.ok || !dislikeCountResponse.ok || !isLikeResponse.ok || !isDislikeResponse.ok) {
+            throw new Error('Failed to fetch data');
+        }
+
+        const charData = await charResponse.json();
+        const favList = await favListResponse.json();
+        const likeCount = await likeCountResponse.json();
+        const dislikeCount = await dislikeCountResponse.json();
+        const isLike = await isLikeResponse.json();
+        const isDislike = await isDislikeResponse.json();
+
+        return {
+            props: {
+                initialCharData: charData,
+                initialFavList: favList,
+                initialLikeCount: likeCount,
+                initialDislikeCount: dislikeCount,
+                initialIsLike: isLike,
+                initialIsDislike: isDislike,
+            }
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            props: {
+                initialCharData: null,
+                initialFavList: [],
+                initialLikeCount: 0,
+                initialDislikeCount: 0,
+                initialIsLike: false,
+                initialIsDislike: false,
+                error: 'Error fetching character data',
+            }
+        };
+    }
+}
 
 export default CharacterPage;
