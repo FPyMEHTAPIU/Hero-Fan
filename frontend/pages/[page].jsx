@@ -67,7 +67,7 @@ const Index = () => {
 
     const fetchOrderedCharacters = async () => {
         try {
-            const response = await fetch(`/api/marv-chars-db/sorted`, {
+            const response = await fetch(`${url}/marv-chars-db/sorted`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

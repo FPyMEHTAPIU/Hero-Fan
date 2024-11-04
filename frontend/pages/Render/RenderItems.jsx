@@ -1,8 +1,6 @@
 import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 
 const renderItems = (currentCharacters, favList, setFavList, openPopup, router ) => {
-
-
     return currentCharacters.map((character) => (
         <button
             className="hero" key={character.id}

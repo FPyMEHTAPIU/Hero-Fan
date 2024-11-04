@@ -1,22 +1,24 @@
-import {useNavigate, useParams} from 'react-router-dom';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { getToken, checkToken } from "../Windows/Auth.js";
 import usePopup from "../Windows/usePopup.js";
 import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 import Popup from "../Windows/Popup.jsx";
 
+const url = process.env.NEXT_PUBLIC_API_URL;
+
 const CharacterPage = () => {
-    const { id } = useParams();
+    const router = useRouter();
+    const { id } = router.query;
+
     const [charData, setCharData] = useState(null);
     const [error, setError] = useState(null);
     const token = getToken();
-    const navigate = useNavigate();
     const [favList, setFavList] = useState([]);
     const [isLike, setIsLike] = useState(false);
     const [isDislike, setIsDislike] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [dislikeCount, setDislikeCount] = useState(0);
-    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
         isWindowShown,
@@ -101,14 +103,15 @@ const CharacterPage = () => {
             }
         };
 
-
-
-        checkIsLiked();
-        checkIsDisliked();
+        if (id) {
+            checkIsLiked();
+            checkIsDisliked();
+        }
     }, [token, id]);
 
     useEffect(() => {
         const checkLikes = async () => {
+            if (!id) return;
             try {
                 const response = await fetch(`${url}/char-likes/${id}`, {
                     headers: {
@@ -127,6 +130,7 @@ const CharacterPage = () => {
         };
 
         const checkDislikes = async () => {
+            if (!id) return;
             try {
                 const response = await fetch(`${url}/char-dislikes/${id}`, {
                     headers: {
@@ -135,22 +139,25 @@ const CharacterPage = () => {
                 });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch likes count data!');
+                    throw new Error('Failed to fetch dislikes count data!');
                 }
                 const data = await response.json();
                 setDislikeCount(data);
             } catch (error) {
-                console.error('Failed to fetch likes count data!', error);
+                console.error('Failed to fetch dislikes count data!', error);
             }
         };
 
-        checkLikes();
-        checkDislikes()
-    }, [isLike, isDislike])
+        if (id) {
+            checkLikes();
+            checkDislikes();
+        }
+    }, [isLike, isDislike, id]);
 
     useEffect(() => {
         const fetchCharData = async () => {
             await checkToken();
+            if (!id) return;
             try {
                 const response = await fetch(`${url}/marv-chars/${id}`, {
                     headers: {
@@ -162,7 +169,6 @@ const CharacterPage = () => {
                     throw new Error('Failed to fetch character data!');
                 }
                 const data = await response.json();
-
                 setCharData(data);
             } catch (error) {
                 console.error(error);
@@ -210,7 +216,7 @@ const CharacterPage = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch likes data!');
+                throw new Error('Failed to fetch dislikes data!');
             }
             const data = await response.json();
             setIsDislike(data);
@@ -226,7 +232,7 @@ const CharacterPage = () => {
             await doLike();
             setIsDislike(false);
         }
-    }
+    };
 
     const handleDislike = async () => {
         if (!token)
@@ -235,7 +241,7 @@ const CharacterPage = () => {
             await doDislike();
             setIsLike(false);
         }
-    }
+    };
 
     return (
         <main id="char-main">
@@ -246,8 +252,7 @@ const CharacterPage = () => {
                         <div id="main-info">
                             <h2 id="char-name">{charData[0].name}</h2>
                             <p>
-                                {charData[0].description !== '' ? charData[0].description :
-                                    'Can\'t say much about this character yet, but who knows what their story will be...'}
+                                {charData[0].description || 'Can\'t say much about this character yet.'}
                             </p>
                         </div>
                     </div>
@@ -266,17 +271,11 @@ const CharacterPage = () => {
                     }
                 </div>
                 <div id="likes">
-                    <button
-                        className="like"
-                        onClick={handleLike}
-                    >
+                    <button className="like" onClick={handleLike}>
                         <img src={isLike ? "/Like_filled.svg" : "/Like_empty.svg"} alt="Like"/>
                         <p className="counter">{likeCount}</p>
                     </button>
-                    <button
-                        className="like dislike"
-                        onClick={handleDislike}
-                    >
+                    <button className="like dislike" onClick={handleDislike}>
                         <img src={isDislike ? "/Dislike_filled.svg" : "/Dislike_empty.svg"} alt="Dislike"/>
                         <p className="counter">{dislikeCount}</p>
                     </button>
@@ -294,7 +293,7 @@ const CharacterPage = () => {
                 />
             )}
         </main>
-    )
-}
+    );
+};
 
 export default CharacterPage;
