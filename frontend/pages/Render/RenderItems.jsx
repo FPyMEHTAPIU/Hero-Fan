@@ -1,16 +1,17 @@
 import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
+import {getServerSideProps} from "../сharacter/[id].jsx";
+import Link from "next/link.js";
 
 const renderItems = (currentCharacters, favList, setFavList, openPopup, router) => {
     const handleCharacterClick = async (id) => {
-        console.log(`Navigating to character with ID: ${id}`);
-        await router.push(`/character/${id}`);
-        console.log(`Navigation completed`);
+        router.push(`/character/${id}`);
     };
 
+
     return currentCharacters.map((character) => (
-        <button
+        <Link
             className="hero" key={character.id}
-            onClick={() => handleCharacterClick(character.id)}
+            href={`/character/${character.id}`}
         >
             <img src={character.image} alt={character.name} className="hero-image"/>
 
@@ -24,7 +25,7 @@ const renderItems = (currentCharacters, favList, setFavList, openPopup, router) 
             <div className="char-name">
                 <p className="char-name">{character.name}</p>
             </div>
-        </button>
+        </Link>
     ));
 };
 

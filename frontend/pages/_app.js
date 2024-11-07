@@ -1,5 +1,5 @@
 import './Footer/Footer.css'
-import './App.css';
+import './app/App.css';
 import './Header/Header.css';
 import './сharacter/CharacterPage.css'
 import './Render/CharsUsers.css'

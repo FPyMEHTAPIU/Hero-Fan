@@ -6,7 +6,6 @@ import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 import Popup from "../Windows/Popup.jsx";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
-const [userId, setUserId] = useState(0);
 
 const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, initialDislikeCount, initialIsLike, initialIsDislike }) => {
     const router = useRouter();
@@ -173,9 +172,13 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
     );
 };
 
+export default CharacterPage;
+
 export async function getServerSideProps(context) {
-    const { id } = context.params;
+    const { id } = context.params.id;
+    const [userId, setUserId] = useState(0);
     const token = getToken();
+    console.log(id);
     if (token)
         setUserId(token.id);
     const url = process.env.NEXT_PUBLIC_API_URL;
@@ -250,5 +253,3 @@ export async function getServerSideProps(context) {
         };
     }
 }
-
-export default CharacterPage;
