@@ -13,7 +13,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         >
             <img src="/Left_arrow.svg" alt="Previous page"/>
         </button>,
-        <div className="divider"></div>,
+        <div key="divider" className="divider"></div>,
         <button
             key={1}
             onClick={() => onPageChange(1)}
@@ -22,7 +22,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         >
             1
         </button>,
-        <div className="divider"></div>
+        <div key="divider" className="divider"></div>
     );
 
     // divider from the start
@@ -31,7 +31,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <button key="dots-prev" className="page-button disabled">
                 ...
             </button>,
-            <div className="divider"></div>
+            <div key="divider" className="divider"></div>
         );
     }
 
@@ -49,7 +49,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             >
                 {i}
             </button>,
-            <div className="divider"></div>
+            <div key="divider" className="divider"></div>
         );
     }
 
@@ -59,7 +59,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <button key="dots-next" className="page-button disabled">
                 ...
             </button>,
-            <div className="divider"></div>
+            <div key="divider" className="divider"></div>
         );
     }
 
@@ -73,7 +73,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         >
             {totalPages}
         </button>,
-        <div className="divider"></div>,
+        <div key="divider" className="divider"></div>,
         <button
             key="next"
             onClick={() => onPageChange(currentPage + 1)}
@@ -84,7 +84,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </button>
     );
 
-    return <div className="pagination">{visiblePages}</div>;
+    return <div key="pagination" className="pagination">{visiblePages}</div>;
 };
 
 export default Pagination;

@@ -1,23 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
-import { getToken, checkToken} from "./Windows/Auth.js";
-import Popup from "./Windows/Popup.jsx";
-import usePopup from "./Windows/usePopup.js";
-import Pagination from "./Pagination/Pagination.jsx";
-import renderItems from "./Render/RenderItems.jsx";
-import fetchFavorites from "./FavoritesHandling/FetchFavorites.js";
+import Popup from "../components/Windows/Popup.jsx";
+import usePopup from "../components/Windows/usePopup.js";
+import Pagination from "../components/Pagination/Pagination.jsx";
+import renderItems from "../components/Render/RenderItems.js";
+import fetchFavorites from "../components/FavoritesHandling/FetchFavorites.js";
+import { getToken, checkToken } from "../components/Windows/Auth.js";
 
-const Index = () => {
-    const [marvList, setMarvList] = useState([]);
-    const [favList, setFavList] = useState([]);
-    const router = useRouter();
-    const charactersOnPage = 16;
-    const { page= 1 } = router.query;
-    const currentPage = page;
-    const token = getToken();
+const Index = ({ initialCharacters, initialFavList, initialPage }) => {
+    const [marvList, setMarvList] = useState(initialCharacters);
+    const [favList, setFavList] = useState(initialFavList);
+    const [currentCharacters, setCurrentCharacters] = useState([]);
     const [isSortClicked, setIsSortClicked] = useState(false);
     const [ascOrder, setAscOrder] = useState(false);
-    const url = process.env.NEXT_PUBLIC_API_URL;
+    const router = useRouter();
+    const charactersOnPage = 16;
+    const currentPage = Number(initialPage) || 1;
 
     const {
         isWindowShown,
@@ -32,59 +30,33 @@ const Index = () => {
     } = usePopup();
 
     useEffect(() => {
-        if (!page)
+        if (!currentPage) {
             router.replace('/1');
-    }, [page]);
+        }
+    }, [currentPage]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            await refreshList();
-
-            const tokenData = await checkToken();
-            if (tokenData)
-            {
-                const id = tokenData.id;
-                console.log(id)
-                await fetchFavorites(setFavList, id);
-            }
-        };
-
-        fetchData();
-    }, [token]);
-
-    const refreshList = () => {
-        fetch(`${url}/marv-chars-db`)
-            .then((response) => response.json())
-            .then((data) => {
-                setMarvList(data);
-            })
-            .catch((error) => console.error('Error fetching characters', error));
-    };
-
-    const totalPages = Math.ceil(marvList.length / charactersOnPage);
-    const lastCharIndex = currentPage * charactersOnPage;
-    const firstCharIndex = lastCharIndex - charactersOnPage;
-    const [currentCharacters, setCurrentCharacters] = useState([]);
+        const lastCharIndex = currentPage * charactersOnPage;
+        const firstCharIndex = lastCharIndex - charactersOnPage;
+        setCurrentCharacters(marvList.slice(firstCharIndex, lastCharIndex));
+    }, [marvList, currentPage]);
 
     const fetchOrderedCharacters = async () => {
         try {
-            const response = await fetch(`${url}/marv-chars-db/sorted`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/marv-chars-db/sorted`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    order: ascOrder
-                })
+                body: JSON.stringify({ order: ascOrder })
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch ordered characters!');
-            }
+            if (!response.ok) throw new Error('Failed to fetch ordered characters!');
+
             const data = await response.json();
             setMarvList(data);
         } catch (error) {
-            console.error({error: 'Failed to fetch ordered characters!'});
+            console.error('Failed to fetch ordered characters!', error);
         }
     };
 
@@ -94,9 +66,7 @@ const Index = () => {
         fetchOrderedCharacters();
     };
 
-    useEffect(() => {
-        setCurrentCharacters(marvList.slice(firstCharIndex, lastCharIndex));
-    }, [marvList, currentPage]);
+    const totalPages = Math.ceil(marvList.length / charactersOnPage);
 
     return (
         <main>
@@ -106,10 +76,7 @@ const Index = () => {
                 id="sort"
                 onClick={handleChangeOrder}
             >
-                {isSortClicked ?
-                    (ascOrder ? <p>Sort Z to A</p> : <p>Sort A to Z</p>)
-                    : <p>Sort A to Z</p>
-                }
+                {isSortClicked ? (ascOrder ? <p>Sort Z to A</p> : <p>Sort A to Z</p>) : <p>Sort A to Z</p>}
                 <img src="/Sort.svg" alt="Sort"/>
             </button>
             <div className="heroes">
@@ -140,5 +107,33 @@ const Index = () => {
         </main>
     );
 };
+
+export async function getServerSideProps(context) {
+    const { page = 1 } = context.query;
+    const url = process.env.NEXT_PUBLIC_API_URL;
+
+    try {
+        const res = await fetch(`${url}/marv-chars-db`);
+        const initialCharacters = await res.json();
+
+        const tokenData = await checkToken();
+        let initialFavList = [];
+        if (tokenData) {
+            const userId = tokenData.id;
+            initialFavList = await fetchFavorites(userId);
+        }
+
+        return {
+            props: {
+                initialCharacters,
+                initialFavList,
+                initialPage: page
+            }
+        };
+    } catch (error) {
+        console.error('Error fetching data in getServerSideProps:', error);
+        return { props: { initialCharacters: [], initialFavList: [], initialPage: page } };
+    }
+}
 
 export default Index;

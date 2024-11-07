@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
-import { getToken, checkToken } from "../Windows/Auth.js";
-import usePopup from "../Windows/usePopup.js";
-import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
-import Popup from "../Windows/Popup.jsx";
+import { getToken, checkToken } from "../../components/Windows/Auth.js";
+import usePopup from "../../components/Windows/usePopup.js";
+import ToggleButton from "../../components/FavoritesHandling/ToggleButton.jsx";
+import Popup from "../../components/Windows/Popup.jsx";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -176,6 +176,7 @@ export default CharacterPage;
 
 export async function getServerSideProps(context) {
     const { id } = context.params.id;
+    console.log(id);
     const [userId, setUserId] = useState(0);
     const token = getToken();
     console.log(id);

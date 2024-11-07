@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getToken, checkToken } from "../Windows/Auth.js";
-import fetchFavorites from "../FavoritesHandling/FetchFavorites.js";
-import usePopup from "../Windows/usePopup.js";
-import renderItems from "../Render/RenderItems.jsx";
-import Popup from "../Windows/Popup.jsx";
+import { getToken, checkToken } from "../../components/Windows/Auth.js";
+import fetchFavorites from "../../components/FavoritesHandling/FetchFavorites.js";
+import usePopup from "../../components/Windows/usePopup.js";
+import renderItems from "../../components/Render/RenderItems.js";
+import Popup from "../../components/Windows/Popup.jsx";
 import {useRouter} from "next/router";
 require('dotenv').config();
 

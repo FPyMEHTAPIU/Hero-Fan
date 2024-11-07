@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {useParams} from "react-router-dom";
-import renderItems from "../Render/RenderItems.jsx";
-import usePopup from "../Windows/usePopup.js";
-import Popup from "../Windows/Popup.jsx";
-import renderUsers from "../Render/RenderUsers.jsx";
+import renderItems from "../../components/Render/RenderItems.js";
+import usePopup from "../../components/Windows/usePopup.js";
+import Popup from "../../components/Windows/Popup.jsx";
+import renderUsers from "../../components/Render/RenderUsers.js";
 import {useRouter} from "next/router";
 require('dotenv').config();
 

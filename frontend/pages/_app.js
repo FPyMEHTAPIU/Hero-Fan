@@ -1,15 +1,14 @@
-import './Footer/Footer.css'
-import './app/App.css';
-import './Header/Header.css';
-import './сharacter/CharacterPage.css'
-import './Render/CharsUsers.css'
+import '../styles/Footer.css'
+import '../styles/app.css';
+import '../styles/Header.css';
+import '../styles/characterPage.css'
+import '../styles/CharsUsers.css'
 import './user/Userpage.css'
-import './Pagination/Pagination.css'
-import './Windows/Popup.css'
+import '../styles/Pagination.css'
+import '../styles/Popup.css'
 
-import Header from './Header/Header.jsx'
-import Footer from './Footer/Footer.jsx'
-
+import Header from '../components/Header/Header.jsx'
+import Footer from '../components/Footer/Footer.jsx'
 
 function MyApp({ Component, pageProps }) {
     return (

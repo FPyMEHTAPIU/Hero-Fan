@@ -23,13 +23,13 @@ footer {
 .buttons {
     display: flex;
     align-content: center;
-    justify-content: start;
+    justify-content: flex-start;
     margin-left: 0;
     width: 100%;
 }
 
 .social {
-    justify-content: end;
+    justify-content: flex-end;
     margin-right: 0;
 }
 
@@ -58,7 +58,7 @@ footer {
 
 .social {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
 }
 
