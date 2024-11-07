@@ -10,6 +10,7 @@ const url = process.env.NEXT_PUBLIC_API_URL;
 const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, initialDislikeCount, initialIsLike, initialIsDislike }) => {
     const router = useRouter();
     const { id } = router.query;
+    console.log(router.query);
 
     const [charData, setCharData] = useState(initialCharData);
     const [favList, setFavList] = useState(initialFavList);
@@ -38,9 +39,13 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
         fetchFavorites();
     }, [token]);
 
+    useEffect(() => {
+        setCharData(initialCharData);
+    }, [initialCharData]);
+
     const fetchFavorites = async () => {
-        const userId = (await checkToken()).id;
         if (!token) return;
+        const userId = (await checkToken()).id;
 
         try {
             const response = await fetch(`${url}/marv-chars/fav-list/${userId}`, {
@@ -175,68 +180,76 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
 export default CharacterPage;
 
 export async function getServerSideProps(context) {
-    const { id } = context.params.id;
-    console.log(id);
-    const [userId, setUserId] = useState(0);
+    const { id } = context.params;
     const token = getToken();
-    console.log(id);
+    let userId;
+
     if (token)
-        setUserId(token.id);
+        userId = token.id;
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     console.log(`Fetching data for character ID: ${id}`);
 
     try {
-        const [charResponse, favListResponse, likeCountResponse, dislikeCountResponse, isLikeResponse, isDislikeResponse] = await Promise.all([
-            fetch(`${url}/marv-chars/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }),
-            fetch(`${url}/marv-chars/fav-list/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }),
+        const [charResponse, likeCountResponse, dislikeCountResponse] = await Promise.all([
+            fetch(`${url}/marv-chars/${id}`),
             fetch(`${url}/char-likes/${id}`),
-            fetch(`${url}/char-dislikes/${id}`),
-            fetch(`${url}/is-liked`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ charId: id })
-            }),
-            fetch(`${url}/is-disliked`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ charId: id })
-            })
+            fetch(`${url}/char-dislikes/${id}`)
         ]);
 
-        if (!charResponse.ok || !favListResponse.ok || !likeCountResponse.ok || !dislikeCountResponse.ok || !isLikeResponse.ok || !isDislikeResponse.ok) {
+        if (!charResponse.ok || !likeCountResponse.ok || !dislikeCountResponse.ok) {
             throw new Error('Failed to fetch data');
         }
 
+        let favListResponse, isLikeResponse, isDislikeResponse;
+        if (token) {
+            [ favListResponse, isLikeResponse, isDislikeResponse ] = await Promise.all([
+                fetch(`${url}/marv-chars/fav-list/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }),
+                fetch(`${url}/is-liked`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ charId: id })
+                }),
+                fetch(`${url}/is-disliked`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ charId: id })
+                })
+            ])
+
+            if (!favListResponse.ok || !isLikeResponse.ok || !isDislikeResponse.ok) {
+                throw new Error('Failed to fetch personal data');
+            }
+        }
+
+        let favList, isLike, isDislike;
+        if (favListResponse && isLikeResponse && isDislikeResponse) {
+            favList = await favListResponse.json();
+            isLike = await isLikeResponse.json();
+            isDislike = await isDislikeResponse.json();
+        }
         const charData = await charResponse.json();
-        const favList = await favListResponse.json();
         const likeCount = await likeCountResponse.json();
         const dislikeCount = await dislikeCountResponse.json();
-        const isLike = await isLikeResponse.json();
-        const isDislike = await isDislikeResponse.json();
 
         return {
             props: {
                 initialCharData: charData,
-                initialFavList: favList,
+                initialFavList: favList ? favList : [],
                 initialLikeCount: likeCount,
                 initialDislikeCount: dislikeCount,
-                initialIsLike: isLike,
-                initialIsDislike: isDislike,
+                initialIsLike: isLike ? isLike : false,
+                initialIsDislike: isDislike ? isDislike : false,
             }
         };
     } catch (error) {

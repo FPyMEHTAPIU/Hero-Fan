@@ -8,7 +8,7 @@ import '../styles/Pagination.css'
 import '../styles/Popup.css'
 
 import Header from '../components/Header/Header.jsx'
-import Footer from '../components/Footer/Footer.jsx'
+import Footer from '../components/Footer/Footer.js'
 
 function MyApp({ Component, pageProps }) {
     return (

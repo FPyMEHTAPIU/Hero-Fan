@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from "next/router";
 import Popup from "../components/Windows/Popup.jsx";
 import usePopup from "../components/Windows/usePopup.js";
-import Pagination from "../components/Pagination/Pagination.jsx";
+import Pagination from "../components/Pagination/Pagination.js";
 import renderItems from "../components/Render/RenderItems.js";
 import fetchFavorites from "../components/FavoritesHandling/FetchFavorites.js";
 import { getToken, checkToken } from "../components/Windows/Auth.js";
 
-const Index = ({ initialCharacters, initialFavList, initialPage }) => {
+const url = process.env.NEXT_PUBLIC_API_URL;
+
+const Index = ({ initialCharacters, initialFavList }) => {
     const [marvList, setMarvList] = useState(initialCharacters);
     const [favList, setFavList] = useState(initialFavList);
     const [currentCharacters, setCurrentCharacters] = useState([]);
@@ -15,7 +17,8 @@ const Index = ({ initialCharacters, initialFavList, initialPage }) => {
     const [ascOrder, setAscOrder] = useState(false);
     const router = useRouter();
     const charactersOnPage = 16;
-    const currentPage = Number(initialPage) || 1;
+
+    const currentPage = Number(router.query.index) || 1;
 
     const {
         isWindowShown,
@@ -30,9 +33,13 @@ const Index = ({ initialCharacters, initialFavList, initialPage }) => {
     } = usePopup();
 
     useEffect(() => {
-        if (!currentPage) {
-            router.replace('/1');
-        }
+        const fetchCharacters = async () => {
+            const res = await fetch(`${url}/marv-chars-db`);
+            const data = await res.json();
+            setMarvList(data);
+        };
+
+        fetchCharacters();
     }, [currentPage]);
 
     useEffect(() => {
@@ -43,7 +50,7 @@ const Index = ({ initialCharacters, initialFavList, initialPage }) => {
 
     const fetchOrderedCharacters = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/marv-chars-db/sorted`, {
+            const response = await fetch(`${url}/marv-chars-db/sorted`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -108,10 +115,7 @@ const Index = ({ initialCharacters, initialFavList, initialPage }) => {
     );
 };
 
-export async function getServerSideProps(context) {
-    const { page = 1 } = context.query;
-    const url = process.env.NEXT_PUBLIC_API_URL;
-
+export async function getServerSideProps() {
     try {
         const res = await fetch(`${url}/marv-chars-db`);
         const initialCharacters = await res.json();
@@ -126,13 +130,12 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 initialCharacters,
-                initialFavList,
-                initialPage: page
+                initialFavList
             }
         };
     } catch (error) {
         console.error('Error fetching data in getServerSideProps:', error);
-        return { props: { initialCharacters: [], initialFavList: [], initialPage: page } };
+        return { props: { initialCharacters: [], initialFavList: [] } };
     }
 }
 

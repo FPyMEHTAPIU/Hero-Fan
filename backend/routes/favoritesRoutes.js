@@ -38,7 +38,7 @@ router.post('/api/marv-chars/fav', async (req, res) => {
     const charId = await methods.getCharId(charName);
 
     if (charId.rows.length === 0)
-        return res.status(400).json({ error: 'сharacter not found' });
+        return res.status(400).json({ error: 'character not found' });
 
     const charInFav = await methods.checkCharInFav(userId, charId.rows[0].id);
 
