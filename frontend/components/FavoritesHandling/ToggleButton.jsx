@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { checkToken, getToken } from '../Windows/Auth.js';
 
-const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }) => {
+const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup, charPage }) => {
     const [isClicked, setIsClicked] = useState(false);
     const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -56,7 +56,8 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
                 if (onClick) onClick(e);
                 handleClickStar(e);
             }}
-            className={isClicked ? 'star star-filled' : 'star'}
+            className={charPage ? 'star star-filled' :
+                (isClicked ? 'star star-filled' : 'star')}
         >
             <img
                 src={isClicked ? "/Star%20Filled.svg" : "/Star%20Empty.svg"}

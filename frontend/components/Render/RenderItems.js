@@ -1,7 +1,7 @@
 import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 import Link from "next/link";
 
-const renderItems = (currentCharacters, favList, setFavList, openPopup) => {
+const renderItems = (currentCharacters, favList, setFavList, openPopup, charPage) => {
     return currentCharacters.map((character) => (
         <Link
             className="hero" key={character.id}
@@ -19,6 +19,7 @@ const renderItems = (currentCharacters, favList, setFavList, openPopup) => {
                         e.preventDefault();
                     }}
                     openPopup={openPopup}
+                    charPage={charPage}
                 />
                 <div className="char-name">
                     <p className="char-name">{character.name}</p>

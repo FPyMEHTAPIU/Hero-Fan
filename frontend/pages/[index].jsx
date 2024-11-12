@@ -17,7 +17,6 @@ const Index = ({ initialCharacters }) => {
     const [ascOrder, setAscOrder] = useState(false);
     const router = useRouter();
     const charactersOnPage = 16;
-    const [token, setToken] = useState(getToken());
 
     if (!marvList) {
         return <p>Loading...</p>;
@@ -75,7 +74,7 @@ const Index = ({ initialCharacters }) => {
                 <img src="/Sort.svg" alt="Sort"/>
             </button>
             <div className="heroes">
-                {currentCharacters && renderItems(currentCharacters, favList, setFavList, openPopup)}
+                {currentCharacters && renderItems(currentCharacters, favList, setFavList, openPopup, false)}
             </div>
             <Pagination
                 currentPage={currentPage}

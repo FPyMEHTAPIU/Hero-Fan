@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
-import { getToken, checkToken } from "../../components/Windows/Auth.js";
+import { getToken, checkToken } from "@/components/Windows/Auth";
 import usePopup from "../../components/Windows/usePopup.js";
 import ToggleButton from "../../components/FavoritesHandling/ToggleButton.jsx";
 import Popup from "../../components/Windows/Popup.jsx";
+import fetchFavorites from "@/components/FavoritesHandling/FetchFavorites";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -12,13 +13,13 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
     const { id } = router.query;
     console.log(router.query);
 
-    const [charData, setCharData] = useState(initialCharData);
-    const [favList, setFavList] = useState(initialFavList);
+    const [charData, setCharData] = useState(initialCharData || []);
+    const [favList, setFavList] = useState(initialFavList || []);
     const [isLike, setIsLike] = useState(initialIsLike);
     const [isDislike, setIsDislike] = useState(initialIsDislike);
     const [likeCount, setLikeCount] = useState(initialLikeCount);
     const [dislikeCount, setDislikeCount] = useState(initialDislikeCount);
-    const [error, setError] = useState(null);
+    const [token, setToken] = useState(getToken());
 
     const {
         isWindowShown,
@@ -32,33 +33,21 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
         closePopup
     } = usePopup();
 
-    const token = getToken();
+    useEffect(() => {
+        const loadToken = async () => {
+            const tokenData = await checkToken();
+            setToken(tokenData);
+        }
+        loadToken();
+    }, []);
 
     useEffect(() => {
-        checkToken();
-        fetchFavorites();
+        fetchFavorites(setFavList, token ? token.id : 0);
     }, [token]);
 
     useEffect(() => {
         setCharData(initialCharData);
     }, [initialCharData]);
-
-    const fetchFavorites = async () => {
-        if (!token) return;
-        const userId = (await checkToken()).id;
-
-        try {
-            const response = await fetch(`${url}/marv-chars/fav-list/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = await response.json();
-            setFavList(data);
-        } catch (error) {
-            console.error('Error fetching favorites:', error);
-        }
-    };
 
     const doLike = async () => {
         try {
@@ -148,6 +137,7 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
                             setFavList={setFavList}
                             onClick={(e) => e.stopPropagation()}
                             openPopup={openPopup}
+                            charPage={true}
                         />
                     }
                 </div>

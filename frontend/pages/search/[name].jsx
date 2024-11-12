@@ -73,7 +73,7 @@ const Search = () => {
                             favList,
                             setFavList,
                             openPopup,
-                            router
+                            false
                         )}
                     </div>
                 </>

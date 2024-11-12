@@ -192,7 +192,8 @@ const UserPage = () => {
                         marvList,
                         personalFavList,
                         setPersonalFavList,
-                        openPopup
+                        openPopup,
+                        false
                     )}
                 </div>
             </div>
