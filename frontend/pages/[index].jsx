@@ -5,7 +5,7 @@ import usePopup from "../components/Windows/usePopup.js";
 import Pagination from "../components/Pagination/Pagination.js";
 import renderItems from "../components/Render/RenderItems.js";
 import fetchFavorites from "../components/FavoritesHandling/FetchFavorites.js";
-import { checkToken } from "@/components/Windows/Auth";
+import { getToken, checkToken } from "@/components/Windows/Auth";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,6 +17,7 @@ const Index = ({ initialCharacters }) => {
     const [ascOrder, setAscOrder] = useState(false);
     const router = useRouter();
     const charactersOnPage = 16;
+    const [token, setToken] = useState(getToken());
 
     if (!marvList) {
         return <p>Loading...</p>;
@@ -30,8 +31,7 @@ const Index = ({ initialCharacters }) => {
         const verifyTokenAndFetchFavorites = async () => {
             const tokenData = await checkToken();
             if (tokenData) {
-                const favorites = await fetchFavorites(tokenData.id);
-                setFavList(favorites);
+                await fetchFavorites(setFavList, tokenData.id);
             }
         };
         verifyTokenAndFetchFavorites();
@@ -41,7 +41,7 @@ const Index = ({ initialCharacters }) => {
         const lastCharIndex = currentPage * charactersOnPage;
         const firstCharIndex = lastCharIndex - charactersOnPage;
         setCurrentCharacters(marvList.slice(firstCharIndex, lastCharIndex));
-    }, [marvList, currentPage]);
+    }, [marvList, currentPage, favList]);
 
     const handleChangeOrder = async () => {
         setAscOrder(!ascOrder);

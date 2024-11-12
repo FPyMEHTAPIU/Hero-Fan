@@ -35,7 +35,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
             });
 
             if (response.ok) {
-                setFavList(prevFavList => {
+                setFavList((prevFavList = []) => {
                     if (isClicked) {
                         return prevFavList.filter(fav => fav !== characterName);
                     } else {
@@ -56,7 +56,7 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
                 if (onClick) onClick(e);
                 handleClickStar(e);
             }}
-            className={isClicked ? 'star-filled' : 'star'}
+            className={isClicked ? 'star star-filled' : 'star'}
         >
             <img
                 src={isClicked ? "/Star%20Filled.svg" : "/Star%20Empty.svg"}

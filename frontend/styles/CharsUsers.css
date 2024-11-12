@@ -82,17 +82,7 @@
 }
 
 .star-filled {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 12px;
-    right: 12px;
-    z-index: 2;
-    position: absolute;
-    transition: background-color 0.3s ease;
-    background: none;
+    visibility: visible;
 }
 
 .star-filled:hover {
