@@ -1,10 +1,9 @@
+import Cookies from "js-cookie";
+
 const url = process.env.NEXT_PUBLIC_API_URL;
 
 export const getToken = () => {
-    if (typeof window !== 'undefined') {
-        return localStorage.getItem('token');
-    }
-    return null;
+    return Cookies.get('token') || null;
 };
 
 export const checkToken = async () => {
@@ -12,7 +11,7 @@ export const checkToken = async () => {
 
     if (!token) {
         console.log('Token not found');
-        return;
+        return null;
     }
 
     try {
@@ -27,7 +26,8 @@ export const checkToken = async () => {
         if (isTokenValid.status === 403) {
             console.error('Invalid or expired token. Removing token...');
             if (typeof window !== 'undefined') {
-                localStorage.removeItem('token');
+                Cookies.remove('token');
+                //localStorage.removeItem('token');
             }
         }
 

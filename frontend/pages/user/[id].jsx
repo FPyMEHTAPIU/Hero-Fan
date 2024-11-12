@@ -5,7 +5,6 @@ import usePopup from "../../components/Windows/usePopup.js";
 import renderItems from "../../components/Render/RenderItems.js";
 import Popup from "../../components/Windows/Popup.jsx";
 import {useRouter} from "next/router";
-require('dotenv').config();
 
 const UserPage = () => {
     const router = useRouter();
@@ -70,7 +69,7 @@ const UserPage = () => {
         };
 
         fetchUserData();
-        fetchFavorites(setFavList, id);
+        //fetchFavorites(setFavList, id);
 
         console.log(favList);
 
@@ -193,8 +192,7 @@ const UserPage = () => {
                         marvList,
                         personalFavList,
                         setPersonalFavList,
-                        openPopup,
-                        router
+                        openPopup
                     )}
                 </div>
             </div>

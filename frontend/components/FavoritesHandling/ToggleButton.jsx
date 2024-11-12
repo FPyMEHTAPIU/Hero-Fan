@@ -6,7 +6,8 @@ const ToggleButton = ({ characterName, favList, setFavList, onClick, openPopup }
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
-        setIsClicked(favList.includes(characterName));
+        if (favList)
+            setIsClicked(favList.includes(characterName));
     }, [favList, characterName]);
 
     const handleClickStar = async (e) => {

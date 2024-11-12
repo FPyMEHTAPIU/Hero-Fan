@@ -1,7 +1,7 @@
 import ToggleButton from "../FavoritesHandling/ToggleButton.jsx";
 import Link from "next/link";
 
-const renderItems = (currentCharacters, favList, setFavList, openPopup, router) => {
+const renderItems = (currentCharacters, favList, setFavList, openPopup) => {
     return currentCharacters.map((character) => (
         <Link
             className="hero" key={character.id}

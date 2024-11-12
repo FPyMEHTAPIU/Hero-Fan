@@ -5,42 +5,37 @@ import usePopup from "../components/Windows/usePopup.js";
 import Pagination from "../components/Pagination/Pagination.js";
 import renderItems from "../components/Render/RenderItems.js";
 import fetchFavorites from "../components/FavoritesHandling/FetchFavorites.js";
-import { getToken, checkToken } from "../components/Windows/Auth.js";
+import { checkToken } from "@/components/Windows/Auth";
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
-const Index = ({ initialCharacters, initialFavList }) => {
-    const [marvList, setMarvList] = useState(initialCharacters);
-    const [favList, setFavList] = useState(initialFavList);
+const Index = ({ initialCharacters }) => {
+    const [marvList, setMarvList] = useState(initialCharacters || []);
+    const [favList, setFavList] = useState([]);
     const [currentCharacters, setCurrentCharacters] = useState([]);
     const [isSortClicked, setIsSortClicked] = useState(false);
     const [ascOrder, setAscOrder] = useState(false);
     const router = useRouter();
     const charactersOnPage = 16;
 
+    if (!marvList) {
+        return <p>Loading...</p>;
+    }
+
     const currentPage = Number(router.query.index) || 1;
 
-    const {
-        isWindowShown,
-        windowType,
-        password,
-        confirmPassword,
-        setPassword,
-        setConfirmPassword,
-        changeWindowType,
-        openPopup,
-        closePopup
-    } = usePopup();
+    const { isWindowShown, windowType, openPopup, closePopup } = usePopup();
 
     useEffect(() => {
-        const fetchCharacters = async () => {
-            const res = await fetch(`${url}/marv-chars-db`);
-            const data = await res.json();
-            setMarvList(data);
+        const verifyTokenAndFetchFavorites = async () => {
+            const tokenData = await checkToken();
+            if (tokenData) {
+                const favorites = await fetchFavorites(tokenData.id);
+                setFavList(favorites);
+            }
         };
-
-        fetchCharacters();
-    }, [currentPage]);
+        verifyTokenAndFetchFavorites();
+    }, []);
 
     useEffect(() => {
         const lastCharIndex = currentPage * charactersOnPage;
@@ -48,29 +43,25 @@ const Index = ({ initialCharacters, initialFavList }) => {
         setCurrentCharacters(marvList.slice(firstCharIndex, lastCharIndex));
     }, [marvList, currentPage]);
 
+    const handleChangeOrder = async () => {
+        setAscOrder(!ascOrder);
+        setIsSortClicked(true);
+        await fetchOrderedCharacters();
+    };
+
     const fetchOrderedCharacters = async () => {
         try {
             const response = await fetch(`${url}/marv-chars-db/sorted`, {
                 method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ order: ascOrder })
             });
-
             if (!response.ok) throw new Error('Failed to fetch ordered characters!');
-
             const data = await response.json();
             setMarvList(data);
         } catch (error) {
             console.error('Failed to fetch ordered characters!', error);
         }
-    };
-
-    const handleChangeOrder = () => {
-        setAscOrder(!ascOrder);
-        setIsSortClicked(true);
-        fetchOrderedCharacters();
     };
 
     const totalPages = Math.ceil(marvList.length / charactersOnPage);
@@ -79,38 +70,19 @@ const Index = ({ initialCharacters, initialFavList }) => {
         <main>
             <h1>Choose your hero!</h1>
             <h2>Page {currentPage}</h2>
-            <button
-                id="sort"
-                onClick={handleChangeOrder}
-            >
+            <button id="sort" onClick={handleChangeOrder}>
                 {isSortClicked ? (ascOrder ? <p>Sort Z to A</p> : <p>Sort A to Z</p>) : <p>Sort A to Z</p>}
                 <img src="/Sort.svg" alt="Sort"/>
             </button>
             <div className="heroes">
-                {currentCharacters && renderItems(
-                    currentCharacters,
-                    favList,
-                    setFavList,
-                    openPopup,
-                    router
-                )}
+                {currentCharacters && renderItems(currentCharacters, favList, setFavList, openPopup)}
             </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={(page) => router.push(`/${page}`)}
             />
-            {isWindowShown && (
-                <Popup
-                    winType={windowType}
-                    onChange={changeWindowType}
-                    onClose={closePopup}
-                    password={password}
-                    setPassword={setPassword}
-                    confirmPassword={confirmPassword}
-                    setConfirmPassword={setConfirmPassword}
-                />
-            )}
+            {isWindowShown && <Popup winType={windowType} onClose={closePopup} />}
         </main>
     );
 };
@@ -119,23 +91,15 @@ export async function getServerSideProps() {
     try {
         const res = await fetch(`${url}/marv-chars-db`);
         const initialCharacters = await res.json();
-
-        const tokenData = await checkToken();
-        let initialFavList = [];
-        if (tokenData) {
-            const userId = tokenData.id;
-            initialFavList = await fetchFavorites(userId);
-        }
-
+        console.log(initialCharacters[0])
         return {
             props: {
-                initialCharacters,
-                initialFavList
+                initialCharacters
             }
         };
     } catch (error) {
         console.error('Error fetching data in getServerSideProps:', error);
-        return { props: { initialCharacters: [], initialFavList: [] } };
+        return { props: { initialCharacters: [] } };
     }
 }
 

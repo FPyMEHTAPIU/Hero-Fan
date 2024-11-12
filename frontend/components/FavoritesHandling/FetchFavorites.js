@@ -4,7 +4,7 @@ const fetchFavorites = async (setFavList, id) => {
     const token = getToken();
     const url = process.env.NEXT_PUBLIC_API_URL;
 
-    if (!token) return;
+    if (!token || !id) return;
 
     try {
         const response = await fetch(`${url}/marv-chars/fav-list/${id}`, {

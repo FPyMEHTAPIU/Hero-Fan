@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import {getToken, checkToken } from "./Auth.js";
 import handleBeforeInput from "./InputCheck.js";
+import Cookies from "js-cookie";
 
 const Popup = ({
                    winType, onChange, onClose,
@@ -28,8 +29,10 @@ const Popup = ({
             const loginData = await loginResponse.json();
 
             if (loginResponse.ok && loginData.token) {
-                localStorage.setItem('token', loginData.token);
-                localStorage.setItem('login', username);
+                Cookies.set('token', loginData.token, { expires: 1 });
+                Cookies.set('login', username, { expires: 1 });
+                //localStorage.setItem('token', loginData.token);
+                //localStorage.setItem('login', username);
 
                 window.location.href = '/1';
             } else {
@@ -105,8 +108,10 @@ const Popup = ({
                 throw new Error('Failed to update username!');
             }
             console.log('successfully');
-            localStorage.removeItem('login');
-            localStorage.setItem('login', login);
+            Cookies.remove('login');
+            Cookies.set('login', login, { expires: 1 });
+            //localStorage.removeItem('login');
+            //localStorage.setItem('login', login);
             onChange();
             onClose();
             window.location.reload();
