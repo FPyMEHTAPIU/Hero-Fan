@@ -94,7 +94,6 @@ router.post('/api/dislikes', async (req, res) => {
                 `DELETE FROM likes WHERE user_id = $1 AND char_id = $2;`,
                 [userId, charId]
             );
-            console.log("error 1")
         }
 
         if (charInDislikes.rows.length === 0) {
@@ -102,14 +101,12 @@ router.post('/api/dislikes', async (req, res) => {
                 `INSERT INTO dislikes (user_id, char_id) VALUES ($1, $2);`,
                 [userId, charId]
             );
-            console.log("error 2")
             return res.status(200).json(true);
         } else {
             await pool.query(
                 `DELETE FROM dislikes WHERE user_id = $1 AND char_id = $2;`,
                 [userId, charId]
             );
-            console.log("error 3")
             return res.status(200).json(false);
         }
     } catch (error) {

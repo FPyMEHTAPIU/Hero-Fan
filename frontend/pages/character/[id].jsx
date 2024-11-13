@@ -41,6 +41,35 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
         setCharData(initialCharData);
     }, [initialCharData]);
 
+    useEffect(() => {
+        const updateLikes = async () => {
+            try {
+                const response = await fetch(`${url}/char-likes/${id}`);
+                if (!response.ok)
+                    throw new Error('Error updating char-likes.');
+                const newLikes = await response.json();
+                setLikeCount(newLikes);
+            } catch (error) {
+                console.error('Error updating char-likes.', error);
+            }
+        }
+
+        const updateDislikes = async () => {
+            try {
+                const response = await fetch(`${url}/char-dislikes/${id}`);
+                if (!response.ok)
+                    throw new Error('Error updating char-dislikes.');
+                const newDislikes = await response.json();
+                setDislikeCount(newDislikes);
+            } catch (error) {
+                console.error('Error updating char-dislikes.', error);
+            }
+        }
+
+        updateLikes();
+        updateDislikes();
+    }, [isLike, isDislike]);
+
     const doDislike = async () => {
         if (!token) {
             openPopup();
