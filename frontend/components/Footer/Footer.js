@@ -1,8 +1,31 @@
 import { useRouter } from "next/router";
+import { getToken } from '@/components/Windows/Auth'
+import usePopup from '@/components/Windows/usePopup'
+import Popup from "@/components/Windows/Popup";
+import React from "react";
 
 const Footer = () => {
     const router = useRouter();
     const id = 16;
+    const {
+        isWindowShown,
+        windowType,
+        password,
+        confirmPassword,
+        setPassword,
+        setConfirmPassword,
+        changeWindowType,
+        openPopup,
+        closePopup
+    } = usePopup();
+
+    const handleProfileClick = () => {
+        const token = getToken();
+        if (token)
+            router.push(`/user/${id}`)
+        else
+            openPopup();
+    }
 
     return (
         <footer>
@@ -16,7 +39,7 @@ const Footer = () => {
                     </button>
                     <button
                         className="button"
-                        onClick={() => router.push(`/user/${id}`)}
+                        onClick={handleProfileClick}
                     >
                         Profile
                     </button>
@@ -45,6 +68,18 @@ const Footer = () => {
             <div id="credits">
                 Nick Saveliev, 2024
             </div>
+
+            {isWindowShown && (
+                <Popup
+                    winType={windowType}
+                    onChange={changeWindowType}
+                    onClose={closePopup}
+                    password={password}
+                    setPassword={setPassword}
+                    confirmPassword={confirmPassword}
+                    setConfirmPassword={setConfirmPassword}
+                />
+            )}
         </footer>
     )
 };

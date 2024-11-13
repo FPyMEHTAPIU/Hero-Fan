@@ -9,6 +9,7 @@ import '../styles/Popup.css'
 
 import Header from '../components/Header/Header.jsx'
 import Footer from '../components/Footer/Footer.js'
+import Index from "@/pages/[index]";
 
 function MyApp({ Component, pageProps }) {
     return (
