@@ -11,7 +11,6 @@ const url = process.env.NEXT_PUBLIC_API_URL;
 const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, initialDislikeCount, initialIsLike, initialIsDislike }) => {
     const router = useRouter();
     const { id } = router.query;
-    console.log(router.query);
 
     const [charData, setCharData] = useState(initialCharData || []);
     const [favList, setFavList] = useState(initialFavList || []);
@@ -20,6 +19,7 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
     const [likeCount, setLikeCount] = useState(initialLikeCount);
     const [dislikeCount, setDislikeCount] = useState(initialDislikeCount);
     const [token, setToken] = useState(getToken());
+    const [userId, setUserId] = useState(0);
 
     const {
         isWindowShown,
@@ -34,7 +34,55 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
     } = usePopup();
 
     useEffect(() => {
-        fetchFavorites(setFavList, token ? token.id : 0);
+        const fetchData = async () => {
+            const tokenData = await checkToken();
+            const userId = tokenData.id;
+
+            setUserId(userId);
+            await fetchFavorites(setFavList, userId);
+        };
+
+        const fetchLike = async () => {
+            try {
+                const response = await fetch(`${url}/is-liked`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ charId: id })
+                });
+                if (!response.ok)
+                    throw new Error('Error fetching like status');
+                const data = await response.json();
+                setIsLike(data);
+            } catch (error) {
+                console.error('Error fetching like status', error);
+            }
+        }
+
+        const fetchDislike = async () => {
+            try {
+                const response = await fetch(`${url}/is-disliked`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({charId: id})
+                });
+                if (!response.ok)
+                    throw new Error('Error fetching dislike status');
+                const data = await response.json();
+                setIsDislike(data);
+            } catch (error) {
+                console.error('Error fetching dislike status', error);
+            }
+        }
+
+        fetchData();
+        fetchLike();
+        fetchDislike();
     }, [token]);
 
     useEffect(() => {

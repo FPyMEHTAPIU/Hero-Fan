@@ -19,9 +19,6 @@ const UserPage = () => {
     const [marvList, setMarvList] = useState([]);
     const [userId, setUserId] = useState(0);
     const [login, setLogin] = useState(() => {
-        // if (typeof window !== "undefined") {
-        //     return localStorage.getItem('login');
-        // }
         return Cookies.get('login') || null;
     });
     const url = process.env.NEXT_PUBLIC_API_URL;
@@ -42,8 +39,7 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             await checkToken();
-            // if (typeof window !== "undefined")
-            //     setLogin(localStorage.getItem('login'));
+
             setLogin(Cookies.get('login'))
             console.log(login);
 
@@ -71,8 +67,6 @@ const UserPage = () => {
         };
 
         fetchUserData();
-        //fetchFavorites(setFavList, id);
-
         console.log(favList);
 
     }, [id, personalFavList, login]);
@@ -124,8 +118,6 @@ const UserPage = () => {
     }, [token]);
 
     const handleLogout = () => {
-        // if (typeof window !== "undefined")
-        //     localStorage.removeItem('token');
         Cookies.remove('token');
         setToken(getToken());
         router.push('/1');
