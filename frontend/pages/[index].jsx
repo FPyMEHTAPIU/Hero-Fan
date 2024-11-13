@@ -18,18 +18,11 @@ const Index = ({ initialCharacters }) => {
     const router = useRouter();
     const charactersOnPage = 16;
 
-    if (!marvList) {
-        return <p>Loading...</p>;
-    }
-
     const currentPage = Number(router.query.index) || 1;
 
     const { isWindowShown, windowType, openPopup, closePopup } = usePopup();
 
     useEffect(() => {
-        if (!router.query.index)
-            router.push('/1');
-
         const verifyTokenAndFetchFavorites = async () => {
             const tokenData = await checkToken();
             if (tokenData) {
@@ -90,19 +83,9 @@ const Index = ({ initialCharacters }) => {
 };
 
 export async function getServerSideProps(context) {
-    if (!context.query.index) {
-        return {
-            redirect: {
-                destination: '/1',
-                permanent: false,
-            },
-        };
-    }
-
     try {
         const res = await fetch(`${url}/marv-chars-db`);
         const initialCharacters = await res.json();
-        console.log(initialCharacters[0])
         return {
             props: {
                 initialCharacters
