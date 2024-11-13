@@ -27,7 +27,6 @@ export const checkToken = async () => {
             console.error('Invalid or expired token. Removing token...');
             if (typeof window !== 'undefined') {
                 Cookies.remove('token');
-                //localStorage.removeItem('token');
             }
         }
 

@@ -31,8 +31,6 @@ const Popup = ({
             if (loginResponse.ok && loginData.token) {
                 Cookies.set('token', loginData.token, { expires: 1 });
                 Cookies.set('login', username, { expires: 1 });
-                //localStorage.setItem('token', loginData.token);
-                //localStorage.setItem('login', username);
 
                 window.location.href = '/1';
             } else {
@@ -110,8 +108,6 @@ const Popup = ({
             console.log('successfully');
             Cookies.remove('login');
             Cookies.set('login', login, { expires: 1 });
-            //localStorage.removeItem('login');
-            //localStorage.setItem('login', login);
             onChange();
             onClose();
             window.location.reload();

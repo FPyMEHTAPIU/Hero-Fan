@@ -4,6 +4,7 @@ import usePopup from "../Windows/usePopup.js";
 import { getToken, checkToken } from "../Windows/Auth.js";
 import { useRouter } from "next/router";
 import handleBeforeInput from "../Windows/InputCheck.js";
+import Cookies from "js-cookie";
 
 const Header = () => {
     const [token, setToken] = useState(getToken());
@@ -30,7 +31,7 @@ const Header = () => {
 
     const handleChangeUsername = async () => {
         const token = getToken();
-        const username = token ? localStorage.getItem('login') : 'Log in';
+        const username = token ? /*localStorage.getItem('login')*/ Cookies.get('login') : 'Log in';
         setUsername(username);
     }
 

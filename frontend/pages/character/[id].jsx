@@ -34,14 +34,6 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
     } = usePopup();
 
     useEffect(() => {
-        const loadToken = async () => {
-            const tokenData = await checkToken();
-            setToken(tokenData);
-        }
-        loadToken();
-    }, []);
-
-    useEffect(() => {
         fetchFavorites(setFavList, token ? token.id : 0);
     }, [token]);
 
@@ -49,30 +41,11 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
         setCharData(initialCharData);
     }, [initialCharData]);
 
-    const doLike = async () => {
-        try {
-            const response = await fetch(`${url}/likes`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    charId: id
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch likes data!');
-            }
-            const data = await response.json();
-            setIsLike(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const doDislike = async () => {
+        if (!token) {
+            openPopup();
+            return;
+        }
         try {
             const response = await fetch(`${url}/dislikes`, {
                 method: "POST",
@@ -80,18 +53,41 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    charId: id
-                })
+                body: JSON.stringify({ charId: id })
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch dislikes data!');
+                throw new Error(`Failed to fetch dislikes data! Status: ${response.status}`);
             }
             const data = await response.json();
             setIsDislike(data);
         } catch (error) {
-            console.error(error);
+            console.error("Error in doDislike:", error);
+        }
+    };
+
+    const doLike = async () => {
+        if (!token) {
+            openPopup();
+            return;
+        }
+        try {
+            const response = await fetch(`${url}/likes`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ charId: id })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch likes data! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            setIsLike(data);
+        } catch (error) {
+            console.error("Error in doLike:", error);
         }
     };
 

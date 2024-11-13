@@ -5,6 +5,7 @@ import usePopup from "../../components/Windows/usePopup.js";
 import renderItems from "../../components/Render/RenderItems.js";
 import Popup from "../../components/Windows/Popup.jsx";
 import {useRouter} from "next/router";
+import Cookies from "js-cookie";
 
 const UserPage = () => {
     const router = useRouter();
@@ -18,10 +19,10 @@ const UserPage = () => {
     const [marvList, setMarvList] = useState([]);
     const [userId, setUserId] = useState(0);
     const [login, setLogin] = useState(() => {
-        if (typeof window !== "undefined") {
-            return localStorage.getItem('login');
-        }
-        return null;
+        // if (typeof window !== "undefined") {
+        //     return localStorage.getItem('login');
+        // }
+        return Cookies.get('login') || null;
     });
     const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -41,8 +42,9 @@ const UserPage = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             await checkToken();
-            if (typeof window !== "undefined")
-                setLogin(localStorage.getItem('login'));
+            // if (typeof window !== "undefined")
+            //     setLogin(localStorage.getItem('login'));
+            setLogin(Cookies.get('login'))
             console.log(login);
 
             if (!token) {
@@ -122,8 +124,9 @@ const UserPage = () => {
     }, [token]);
 
     const handleLogout = () => {
-        if (typeof window !== "undefined")
-            localStorage.removeItem('token');
+        // if (typeof window !== "undefined")
+        //     localStorage.removeItem('token');
+        Cookies.remove('token');
         setToken(getToken());
         router.push('/1');
     }
