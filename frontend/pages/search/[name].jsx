@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {useParams} from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 import renderItems from "../../components/Render/RenderItems.js";
 import usePopup from "../../components/Windows/usePopup.js";
 import Popup from "../../components/Windows/Popup.jsx";
 import renderUsers from "../../components/Render/RenderUsers.js";
-import {useRouter} from "next/router";
-require('dotenv').config();
+import { useRouter } from "next/router";
 
 const Search = () => {
     const [marvList, setMarvList] = useState([]);
-    const { name: charName } = useParams();
     const router = useRouter();
-    const [isUserSelected, setIsUserSelected] = useState(false);
-    const [favList, setFavList] = useState([]);
+    const { name: charName } = router.query;
+    const isUserSelected = router.query.isUser === 'true'
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
@@ -29,12 +26,6 @@ const Search = () => {
     } = usePopup();
 
     useEffect(() => {
-        if (router.asPath.includes("/search/user")) {
-            setIsUserSelected(true);
-        } else {
-            setIsUserSelected(false);
-        }
-
         const searchData = async () => {
             try {
                 const response = await fetch(`${url}/search/${charName}`, {
@@ -53,7 +44,7 @@ const Search = () => {
                     throw new Error(`Failed to search ${isUserSelected ? 'user' : 'hero'}!`);
                 }
             } catch (error) {
-                console.error({error: `Failed to search ${isUserSelected ? 'user' : 'hero'}!`});
+                console.error({ error: `Failed to search ${isUserSelected ? 'user' : 'hero'}!` });
             }
         };
 
@@ -66,26 +57,13 @@ const Search = () => {
         <main>
             <h2>Searching results of: '{charName}'</h2>
             {!isUserSelected ?
-                <>
-                    <div className="heroes" style={{marginTop: "50px", marginBottom: "50px"}}>
-                        {renderItems(
-                            marvList,
-                            favList,
-                            setFavList,
-                            openPopup,
-                            false
-                        )}
-                    </div>
-                </>
+                <div className="heroes" style={{ marginTop: "50px", marginBottom: "50px" }}>
+                    {renderItems(marvList, openPopup, false)}
+                </div>
                 :
-                <>
-                    <div id="user-block">
-                        {renderUsers(
-                            marvList,
-                            router
-                        )}
-                    </div>
-                </>
+                <div id="user-block">
+                    {renderUsers(marvList, router)}
+                </div>
             }
             {isWindowShown && (
                 <Popup

@@ -31,7 +31,7 @@ const Header = () => {
 
     const handleChangeUsername = async () => {
         const token = getToken();
-        const username = token ? /*localStorage.getItem('login')*/ Cookies.get('login') : 'Log in';
+        const username = token ? Cookies.get('login') : 'Log in';
         setUsername(username);
     }
 
@@ -45,18 +45,15 @@ const Header = () => {
             await handleChangeUsername();
             return;
         }
-
         const userId = newToken.id;
         router.push(`/user/${userId}`);
     };
 
     const handeUserBlock = async () => {
         const newToken = getToken();
-
         if (newToken) {
             openUserProfile();
-        }
-        else {
+        } else {
             openPopup();
         }
     };
@@ -75,14 +72,20 @@ const Header = () => {
         e.preventDefault();
         if (!charName) return;
 
-        if (isUserSelected) {
-            if (token) {
-                router.push(`/search/user/${charName}`);
-            } else {
-                openPopup();
-            }
+        if (isUserSelected && token) {
+            router.push({
+                pathname: `/search/${charName}`,
+                query: { isUser: 'true' }
+            });
+        }
+
+        else if (!isUserSelected) {
+            router.push({
+                pathname: `/search/${charName}`,
+                query: { isUser: 'false' }
+            });
         } else {
-            router.push(`/search/char/${charName}`);
+            openPopup();
         }
     };
 
