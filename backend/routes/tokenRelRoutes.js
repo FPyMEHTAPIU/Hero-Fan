@@ -50,7 +50,7 @@ router.post('/api/new-user/', async (req, res) => {
                 [userData.login, hashedPassword]
             )
 
-            res.status(201).json({ message: 'User registered successfully!' });
+            res.status(201).json({ message: 'user registered successfully!' });
         }
     } catch (error) {
         if (error.toString().includes('Password')) {
@@ -98,7 +98,7 @@ router.patch('/api/marv-users/login/:id', async (req, res) => {
     } catch (error) {
         if (error === 'Duplicate') {
             console.error(error);
-            res.json({error: "Unable to use provided login. User already exists!"})
+            res.json({error: "Unable to use provided login. user already exists!"})
         }
         else {
             console.error(error)

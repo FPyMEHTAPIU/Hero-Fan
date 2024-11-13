@@ -1,0 +1,219 @@
+@font-face {
+    font-family: "AA Stetica Medium";
+    src: url('/fonts/stetica/AA Stetica Medium.otf')
+}
+
+@font-face {
+    font-family: "AA Stetica Regular";
+    src: url('/fonts/stetica/AA Stetica Regular.otf')
+}
+
+@font-face {
+    font-family: "Gagalin";
+    src: url('/fonts/Gagalin-Regular.otf')
+}
+
+header {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    width: 90%;
+    margin: 30px auto;
+    padding: 0 40px;
+    height: fit-content;
+    z-index: 10;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(8px);
+}
+
+#userblock {
+    display: inline-block;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#userblock:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+}
+
+#userblock:active {
+    filter: brightness(0.8);
+}
+
+.avatar {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.username {
+    display: inline-block;
+    font-family: "Gagalin", sans-serif;
+    font-weight: 400;
+    font-size: 32px;
+    color: white;
+    -webkit-text-stroke: 0.5px black;
+}
+
+#main-search {
+    display: flex;
+    flex-direction: row;
+}
+
+#search-type {
+    display: grid;
+    gap: 3px;
+    justify-content: center;
+    align-content: center;
+    margin-right: 10px;
+}
+
+.chuser {
+    display: flex;
+    flex: 5px;
+    justify-content: center;
+    background-color: #A2A2A2;
+    font-family: "AA Stetica Regular", sans-serif;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+}
+
+.chuser:hover {
+    cursor: pointer;
+    background-color: #1810AC;
+}
+
+.chuser:active, .chuser-fill:active {
+    filter: brightness(0.8);
+}
+
+.chuser-fill {
+    background-color: #1810AC;
+}
+
+.chuser-fill:hover {
+    cursor: pointer;
+    filter: brightness(1.1);
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 48px;
+}
+
+#search-back img {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    max-width: 26px;
+    max-height: 26px;
+}
+
+#search-back {
+    display: flex;
+    padding: 9px 7px;
+    width: 48px;
+    height: 48px;
+    background-color: #1810AC;
+    border-radius: 50px;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.blue-back {
+    background-color: #1810AC;
+    border-radius: 50px;
+}
+
+.search-button {
+    padding: 0;
+}
+
+.search-button:hover {
+    cursor: pointer;
+    filter: brightness(1.1);
+}
+
+.search-button:active {
+    filter: brightness(0.8);
+}
+
+#search-line {
+    display: flex;
+    justify-content: flex-start;
+    margin: 12px 16px 12px 8px;
+}
+
+#search-empty, #search-typing,
+#search-empty:active, #search-typing:active,
+#search-typing:focus, #search-typing:active {
+    background: none;
+    border: none;
+    outline: none;
+    caret-color: white;
+    color: white;
+    font-family: "AA Stetica Medium", sans-serif;
+    font-size: 20px;
+}
+
+#clear-cross {
+    width: 24px;
+    height: 24px;
+    align-self: center;
+    justify-self: flex-end;
+    justify-content: center;
+    align-content: center;
+    padding: 0;
+}
+
+#clear-cross img {
+    display: flex;
+    width: 12px;
+    height: 12px;
+    justify-self: center;
+}
+
+#clear-cross:hover {
+    cursor: pointer;
+}
+
+#clear-cross:active {
+    filter: brightness(0.8);
+}
+
+#logo {
+    margin-top: 10px;
+    display: inline-block;
+    align-self: center;
+}
+
+#logo:hover, .search:hover {
+    cursor: pointer;
+    filter: brightness(1.2);
+}
+
+#logo:active {
+    filter: brightness(0.8);
+}
+
+#DANGER {
+    display: flex;
+    justify-content: center;
+    color: white;
+    align-items: center;
+}
+
+#UPDATER {
+    display: flex;
+    justify-content: center;
+    color: white;
+    align-items: center;
+}
