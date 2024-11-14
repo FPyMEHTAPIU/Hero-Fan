@@ -109,10 +109,12 @@ const UserPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const tokenData = await checkToken();
-            const userId = tokenData.id;
+            if (tokenData) {
+                const userId = tokenData.id;
 
-            setUserId(userId);
-            await fetchFavorites(setPersonalFavList, userId);
+                setUserId(userId);
+                await fetchFavorites(setPersonalFavList, userId);
+            }
         };
 
         fetchData();

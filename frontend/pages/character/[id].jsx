@@ -36,10 +36,12 @@ const CharacterPage = ({ initialCharData, initialFavList, initialLikeCount, init
     useEffect(() => {
         const fetchData = async () => {
             const tokenData = await checkToken();
-            const userId = tokenData.id;
+            if (tokenData) {
+                const userId = tokenData.id;
 
-            setUserId(userId);
-            await fetchFavorites(setFavList, userId);
+                setUserId(userId);
+                await fetchFavorites(setFavList, userId);
+            }
         };
 
         const fetchLike = async () => {
