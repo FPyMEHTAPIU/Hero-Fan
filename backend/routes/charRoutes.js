@@ -131,11 +131,13 @@ router.get('/api/marv-chars/:id', async (req, res) => {
             WHERE id = $1;`,
             [charId]
         );
+        if (response.rows.length === 0)
+            throw new Error('Character not found')
 
-        res.json(response.rows);
+        res.status(200).json(response.rows);
     } catch (error) {
         console.error(error)
-        res.json({ error: 'Error getting character\'s info' });
+        res.status(404).json({ error: 'Character not found' });
     }
 })
 

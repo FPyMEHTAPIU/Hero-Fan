@@ -254,13 +254,19 @@ export async function getServerSideProps(context) {
     console.log(`Fetching data for character ID: ${id}`);
 
     try {
-        const [charResponse, likeCountResponse, dislikeCountResponse] = await Promise.all([
-            fetch(`${url}/marv-chars/${id}`),
+        const charResponse = await fetch(`${url}/marv-chars/${id}`);
+        if (!charResponse.ok) {
+            return {
+                notFound: true,
+            }
+        }
+
+        const [ likeCountResponse, dislikeCountResponse] = await Promise.all([
             fetch(`${url}/char-likes/${id}`),
             fetch(`${url}/char-dislikes/${id}`)
         ]);
 
-        if (!charResponse.ok || !likeCountResponse.ok || !dislikeCountResponse.ok) {
+        if (!likeCountResponse.ok || !dislikeCountResponse.ok) {
             throw new Error('Failed to fetch data');
         }
 
