@@ -23,7 +23,6 @@ router.get('/api/marv-users', async (req, res) => {
 router.get('/api/marv-users/:id', async (req, res) => {
     try {
         const userId = parseInt(req.params.id);
-
         const response = await pool.query(
             `SELECT u.login, u.photo, ARRAY_AGG(f.char_id) AS favorite_characters
             FROM users u
@@ -33,11 +32,12 @@ router.get('/api/marv-users/:id', async (req, res) => {
             GROUP BY u.id;`,
             [userId]
         );
-
-        res.json(response.rows);
+        if (response.rows.length === 0)
+            throw new Error('User not found');
+        res.status(200).json(response.rows);
     } catch (error) {
         console.error(error)
-        res.json({ error: 'Error getting user\'s info' });
+        res.status(404).json({ error: 'User not found' });
     }
 });
 

@@ -7,6 +7,8 @@ import Popup from "../../components/Windows/Popup.jsx";
 import {useRouter} from "next/router";
 import Cookies from "js-cookie";
 
+const url = process.env.NEXT_PUBLIC_API_URL;
+
 const UserPage = () => {
     const router = useRouter();
     const { id } = router.query;
@@ -21,7 +23,6 @@ const UserPage = () => {
     const [login, setLogin] = useState(() => {
         return Cookies.get('login') || null;
     });
-    const url = process.env.NEXT_PUBLIC_API_URL;
 
     const {
         isWindowShown,
@@ -205,6 +206,25 @@ const UserPage = () => {
             )}
         </main>
     )
+}
+
+export async function getServerSideProps(context) {
+    const { id } = context.params;
+
+    try {
+        const response = await fetch(`${url}/marv-users/${id}`);
+        console.log(response)
+        if (!response.ok) {
+            return {
+                notFound: true,
+            }
+        }
+        const userData = await response.json();
+        return { props: { userData: userData }};
+    } catch (error) {
+        console.error('Error fetching data in getServerSideProps:', error);
+        return { props: { userData: [] } };
+    }
 }
 
 export default UserPage;
