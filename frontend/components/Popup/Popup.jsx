@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import {getToken, checkToken } from "./Auth.js";
-import handleBeforeInput from "./InputCheck.js";
+import {getToken, checkToken } from "@/components/Utils/Auth.js";
+import handleBeforeInput from "@/components/Utils/InputCheck.js";
 import Cookies from "js-cookie";
 
 const Popup = ({

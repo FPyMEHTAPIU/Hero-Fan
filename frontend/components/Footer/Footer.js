@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import { getToken } from '@/components/Windows/Auth'
-import usePopup from '@/components/Windows/usePopup'
-import Popup from "@/components/Windows/Popup";
+import { getToken } from '@/components/Utils/Auth'
+import usePopup from '@/components/Popup/usePopup'
+import Popup from "@/components/Popup/Popup";
 import React from "react";
 
 const Footer = () => {

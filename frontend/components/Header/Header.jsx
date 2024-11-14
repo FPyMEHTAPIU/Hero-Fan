@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Popup from "../Windows/Popup.jsx";
-import usePopup from "../Windows/usePopup.js";
-import { getToken, checkToken } from "../Windows/Auth.js";
+import Popup from "../Popup/Popup.jsx";
+import usePopup from "../Popup/usePopup.js";
+import { getToken, checkToken } from "@/components/Utils/Auth.js";
 import { useRouter } from "next/router";
-import handleBeforeInput from "../Windows/InputCheck.js";
+import handleBeforeInput from "@/components/Utils/InputCheck.js";
 import Cookies from "js-cookie";
 
 const Header = () => {

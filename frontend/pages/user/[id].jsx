@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getToken, checkToken } from "../../components/Windows/Auth.js";
+import { getToken, checkToken } from "@/components/Utils/Auth.js";
 import fetchFavorites from "../../components/FavoritesHandling/FetchFavorites.js";
-import usePopup from "../../components/Windows/usePopup.js";
+import usePopup from "../../components/Popup/usePopup.js";
 import renderItems from "../../components/Render/RenderItems.js";
-import Popup from "../../components/Windows/Popup.jsx";
+import Popup from "../../components/Popup/Popup.jsx";
 import {useRouter} from "next/router";
 import Cookies from "js-cookie";
 

@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
-import { getToken, checkToken } from "@/components/Windows/Auth";
-import usePopup from "../../components/Windows/usePopup.js";
+import { getToken, checkToken } from "@/components/Utils/Auth";
+import usePopup from "../../components/Popup/usePopup.js";
 import ToggleButton from "../../components/FavoritesHandling/ToggleButton.jsx";
-import Popup from "../../components/Windows/Popup.jsx";
+import Popup from "../../components/Popup/Popup.jsx";
 import fetchFavorites from "@/components/FavoritesHandling/FetchFavorites";
 
 const url = process.env.NEXT_PUBLIC_API_URL;

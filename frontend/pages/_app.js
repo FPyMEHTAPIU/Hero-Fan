@@ -10,10 +10,12 @@ import '../styles/404.css'
 
 import Header from '../components/Header/Header.jsx'
 import Footer from '../components/Footer/Footer.js'
+import HeadData from "@/components/Metadata/head";
 
 function MyApp({ Component, pageProps }) {
     return (
         <>
+            <HeadData />
             <Header />
             <Component {...pageProps} />
             <Footer />

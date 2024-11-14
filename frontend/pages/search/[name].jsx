@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import renderItems from "../../components/Render/RenderItems.js";
-import usePopup from "../../components/Windows/usePopup.js";
-import Popup from "../../components/Windows/Popup.jsx";
+import usePopup from "../../components/Popup/usePopup.js";
+import Popup from "../../components/Popup/Popup.jsx";
 import renderUsers from "../../components/Render/RenderUsers.js";
 import { useRouter } from "next/router";
 
