@@ -1,0 +1,26 @@
+.home-button {
+    display: flex;
+    background-color: #1810AC;
+    width: 350px;
+    height: 75px;
+    border-radius: 10px;
+    margin: 0 auto 50px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.home-button:hover {
+    filter: brightness(1.2);
+}
+
+.home-button:active {
+    filter: brightness(0.8);
+}
+
+.button-text {
+    font-family: "Gagalin", sans-serif;
+    font-size: 48px;
+    color: white;
+    font-weight: 400;
+}
