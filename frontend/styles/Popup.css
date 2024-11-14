@@ -112,20 +112,16 @@ input {
 }
 
 .error-message {
-    display: flex;
-    justify-content: left;
     color: red;
-    font-family: "AA Stetica Regular", sans-serif;
-    margin: 5px 0 0 0;
-    font-size: 12px;
-    height: fit-content;
-    line-height: 15px;
 }
 
-#big-message {
+.success-message {
+    color: green;
+}
+
+.big-message {
     display: flex;
     justify-content: center;
-    color: red;
     margin: 10px auto 0;
     font-family: "AA Stetica Medium", sans-serif;
     font-size: 24px;

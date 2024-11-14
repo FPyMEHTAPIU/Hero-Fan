@@ -11,6 +11,7 @@ const Popup = ({
     const [login, setLogin] = useState('');
     const [loginError, setLoginError] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     const attemptLogin = async (username, password, setErrorMessage) => {
@@ -63,8 +64,11 @@ const Popup = ({
                 throw new Error('That username already exists. Please try another one!');
             }
             else if (registerResponse.ok) {
-                console.log('You\'ve successfully created your account!');
-                onClose();
+                setSuccessMessage("You've successfully created your account! Redirecting to the Home page...");
+                setTimeout(() => {
+                    setSuccessMessage('');
+                    onClose();
+                }, 3000);
             } else {
                 setErrorMessage('Registration error. Please try again.');
             }
@@ -220,7 +224,8 @@ const Popup = ({
                     </button>
                     : <></>
                 }
-                {errorMessage && <div id="big-message" className="error-message">{errorMessage}</div>}
+                {errorMessage && <div className="big-message error-message">{errorMessage}</div>}
+                {successMessage && <div className="big-message success-message">{successMessage}</div>}
                 <button
                     className="confirm-button"
                     onClick={() => {
