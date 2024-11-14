@@ -15,9 +15,8 @@ const Index = ({ initialCharacters }) => {
     const [currentCharacters, setCurrentCharacters] = useState([]);
     const [isSortClicked, setIsSortClicked] = useState(false);
     const [ascOrder, setAscOrder] = useState(false);
-    const router = useRouter();
     const charactersOnPage = 16;
-
+    const router = useRouter();
     const currentPage = Number(router.query.index) || 1;
 
     const { isWindowShown, windowType, openPopup, closePopup } = usePopup();
@@ -83,9 +82,18 @@ const Index = ({ initialCharacters }) => {
 };
 
 export async function getServerSideProps(context) {
+    const charactersOnPage = 16;
+    const { index } = context.params;
+
     try {
         const res = await fetch(`${url}/marv-chars-db`);
         const initialCharacters = await res.json();
+        const totalPages = Math.ceil(initialCharacters.length / charactersOnPage);
+        if (index < 1 || index > totalPages) {
+            return {
+                notFound: true,
+            }
+        }
         return {
             props: {
                 initialCharacters
