@@ -25,6 +25,7 @@
 }
 
 .page-button:hover {
+    cursor: pointer;
     background-color: #1810AC;
 }
 
