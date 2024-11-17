@@ -1,6 +1,10 @@
 # Hero Fan
 A full-stack (Marvel) Hero Fan webpage created for the Web Express Coding Challenge at Hive Helsinki
 
+### Watch demo (click on the image bellow)
+[![Watch the video](https://github.com/FPyMEHTAPIU/Hero-Fan/blob/main/content/Hero%20Fan%20Thumbnail.png)](https://vimeo.com/1030456870)
+
+
 ## Table of Contents
 1. [Technologies Used](#technologies-used)
 2. [Website Functionality](#website-functionality)
